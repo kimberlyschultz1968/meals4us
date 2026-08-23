@@ -417,29 +417,69 @@ function renameForProtein(name, oldProteinKey, newWord) {
 // Returns the recipe as it should actually be shown/shopped-for — the base
 // library recipe, or that recipe with its protein swapped if this meal has
 // an override applied via "Swap Meat".
+// A small set of "main" vegetables — recipes whose whole identity is
+// vegetable-forward (name starts with "Veggie ") draw their produce from
+// this instead of whatever was originally written in, so a family that
+// only likes a few vegetables doesn't get surprised by zucchini/spinach/
+// mushrooms buried in a dish they picked because it looked safe.
+const MAIN_VEGGIE_INGREDIENT = {
+  corn: { name: "corn", qty: 1, unit: "cup", category: "Produce" },
+  carrot: { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+  broccoli: { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
+  potato: { name: "potatoes", qty: 1, unit: "lb", category: "Produce" },
+  zucchini: { name: "zucchini", qty: 2, unit: "whole", category: "Produce" },
+  spinach: { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+  pepper: { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" }
+};
+const DEFAULT_MAIN_VEGGIES = ["corn", "carrot", "broccoli"]; // used until she's told the app which veggies her family likes
+
+// Aromatics/standalone favorites that stay put even in a veggie-forward
+// recipe — it's the bulk vegetable filler that gets swapped, not these.
+const VEGGIE_SWAP_KEEP = ["garlic", "onion", "green onion", "lime", "lemon", "cilantro", "basil", "avocado"];
+
+// Her "Favorite vegetables" picks (Screen 1) if she's made any, else the default set.
+function mainVeggies() {
+  const liked = (state.profile?.likes || []).filter(w => KEYWORD_MAP.vegetables.includes(w));
+  return liked.length ? liked : DEFAULT_MAIN_VEGGIES;
+}
+
+function applyVeggieNormalization(recipe) {
+  if (!recipe.name.startsWith("Veggie ") || !recipe.proteins.includes("vegetarian")) return recipe;
+  const kept = recipe.ingredients.filter(i => i.category !== "Produce" || VEGGIE_SWAP_KEEP.some(k => i.name.includes(k)));
+  const veggies = mainVeggies().slice(0, 2).map(v => MAIN_VEGGIE_INGREDIENT[v]).filter(Boolean);
+  if (!veggies.length) return recipe;
+  return { ...recipe, ingredients: [...kept, ...veggies] };
+}
+
 function getEffectiveRecipe(entry) {
   const base = recipeById(entry.recipeId);
-  if (!base || !entry.proteinOverride) return base;
-  const sub = PROTEIN_SUBSTITUTES[entry.proteinOverride];
-  if (!sub) return base;
+  if (!base) return base;
 
-  const keptIngredients = base.ingredients.filter(i => i.category !== "Meat & Seafood");
-  const ingredients = sub.ingredient.category === "Meat & Seafood"
-    ? [sub.ingredient, ...keptIngredients]
-    : [...keptIngredients, sub.ingredient];
+  let recipe = base;
+  if (entry.proteinOverride) {
+    const sub = PROTEIN_SUBSTITUTES[entry.proteinOverride];
+    if (sub) {
+      const keptIngredients = base.ingredients.filter(i => i.category !== "Meat & Seafood");
+      const ingredients = sub.ingredient.category === "Meat & Seafood"
+        ? [sub.ingredient, ...keptIngredients]
+        : [...keptIngredients, sub.ingredient];
 
-  const oldAllergen = PROTEIN_ALLERGEN[base.proteins[0]];
-  let allergens = oldAllergen ? base.allergens.filter(a => a !== oldAllergen) : base.allergens.slice();
-  if (PROTEIN_ALLERGEN[entry.proteinOverride]) allergens = [...new Set([...allergens, PROTEIN_ALLERGEN[entry.proteinOverride]])];
+      const oldAllergen = PROTEIN_ALLERGEN[base.proteins[0]];
+      let allergens = oldAllergen ? base.allergens.filter(a => a !== oldAllergen) : base.allergens.slice();
+      if (PROTEIN_ALLERGEN[entry.proteinOverride]) allergens = [...new Set([...allergens, PROTEIN_ALLERGEN[entry.proteinOverride]])];
 
-  return {
-    ...base,
-    name: renameForProtein(base.name, base.proteins[0], sub.word),
-    proteins: [entry.proteinOverride],
-    emoji: sub.emoji,
-    ingredients,
-    allergens
-  };
+      recipe = {
+        ...base,
+        name: renameForProtein(base.name, base.proteins[0], sub.word),
+        proteins: [entry.proteinOverride],
+        emoji: sub.emoji,
+        ingredients,
+        allergens
+      };
+    }
+  }
+
+  return applyVeggieNormalization(recipe);
 }
 
 // Whole-word match (with simple plural tolerance), not raw substring —
@@ -485,6 +525,10 @@ function scoreRecipe(recipe, profile, feedback) {
   for (const style of profile.cookingStyle) {
     if (recipe.tags.includes(style)) score += 1.5;
   }
+  // A family that hasn't said they like vegetarian/veggie food gets fewer
+  // vegetarian dishes suggested overall — not banned outright (one might
+  // still fit via cuisine/dish-family match), just deprioritized as filler.
+  if (recipe.proteins.includes("vegetarian") && !profile.likes.includes("vegetarian")) score -= 1.5;
   score += (feedback[recipe.id] || 0); // learned from Love it / Change it over time
   score += Math.random() * 0.5; // small jitter so the week isn't identical every time
   return score;
