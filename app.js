@@ -1742,6 +1742,23 @@ document.getElementById("recipe-modal").addEventListener("click", e => {
   if (e.target.id === "recipe-modal") e.currentTarget.classList.add("hidden");
 });
 
+// TEMPORARY recovery tool (23 Aug 2026) — brought back just to rescue meal
+// plans that were built before accounts existed, on a device that never got
+// signed in. Remove again once she's moved off local-only data.
+document.getElementById("btn-export-data").addEventListener("click", async () => {
+  const text = JSON.stringify(state);
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied! Paste it wherever you're sending it.");
+  } catch (e) {
+    openModal(`
+      <div class="modal-body-title">Your Data</div>
+      <div class="modal-body-meta">Couldn't copy automatically — tap in the box, select all, and copy.</div>
+      <textarea readonly onclick="this.select()" style="width:100%;min-height:200px;font-family:inherit;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);word-break:break-all;">${text}</textarea>
+    `);
+  }
+});
+
 // ---------- Boot ----------
 
 function boot() {
