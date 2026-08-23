@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Meals4Us — Weekly Family Meal Planner</title>
+<meta name="description" content="Tell us about your family's food and Meals4Us builds a weekly meal plan and grocery list for you." />
+<meta name="theme-color" content="#E4572E" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-emoji">🍽️</span>
+      <span class="brand-name">Meals4Us</span>
+    </div>
+    <ol class="progress" id="progress" aria-label="Steps">
+      <li data-step="1" class="active">Family</li>
+      <li data-step="2">Profile</li>
+      <li data-step="3">This Week</li>
+      <li data-step="4">Grocery</li>
+    </ol>
+  </header>
+
+  <main id="app">
+
+    <!-- SCREEN 1: Tell Us About Your Family -->
+    <section class="screen" id="screen-1" data-screen="1">
+      <div class="screen-inner">
+        <h1>Let's get to know your family.</h1>
+        <p class="subtitle">Tell us what your family loves, what you don't like, and how you like to eat.</p>
+
+        <textarea id="family-text" class="family-textarea"
+          placeholder="Tell us about your family...&#10;&#10;Example: We love tacos, burgers and pasta. We don't eat fish. The kids don't like spicy food. We like easy meals and leftovers."></textarea>
+
+        <div class="chip-row" id="chip-row" aria-label="Tap to add a prompt">
+          <button type="button" class="chip" data-hint="Favorite meals: ">Favorite meals</button>
+          <button type="button" class="chip" data-hint="Foods we love: ">Foods we love</button>
+          <button type="button" class="chip" data-hint="Foods we don't like: ">Foods we don't like</button>
+          <button type="button" class="chip" data-hint="Allergies: ">Allergies</button>
+          <button type="button" class="chip" data-hint="Favorite meats: ">Favorite meats</button>
+          <button type="button" class="chip" data-hint="Favorite vegetables: ">Favorite vegetables</button>
+          <button type="button" class="chip" data-hint="Favorite cuisines: ">Favorite cuisines</button>
+          <button type="button" class="chip" data-hint="We like quick, easy meals: ">Quick/easy meals</button>
+          <button type="button" class="chip" data-hint="We always keep this at home: ">Foods we keep at home</button>
+        </div>
+      </div>
+
+      <div class="screen-footer">
+        <button class="btn btn-primary btn-full" id="btn-continue-1">Continue →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: What We Learned -->
+    <section class="screen hidden" id="screen-2" data-screen="2">
+      <div class="screen-inner">
+        <h1>Here's what we learned.</h1>
+        <p class="subtitle">Did we get it right?</p>
+
+        <div class="learned-card">
+          <h2>❤️ You Like</h2>
+          <div class="tag-list" id="learned-likes"></div>
+        </div>
+
+        <div class="learned-card">
+          <h2>🚫 You Don't Like</h2>
+          <div class="tag-list" id="learned-dislikes"></div>
+        </div>
+
+        <div class="learned-card">
+          <h2>🍳 How You Like to Cook</h2>
+          <div class="tag-list" id="learned-style"></div>
+        </div>
+
+        <p class="empty-note hidden" id="learned-empty">We didn't catch much from your description — no problem, tap Edit to tell us more.</p>
+      </div>
+
+      <div class="screen-footer screen-footer-split">
+        <button class="btn btn-secondary" id="btn-edit-2">Edit</button>
+        <button class="btn btn-primary" id="btn-confirm-2">Yes, looks good</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: Let's Plan Your Week -->
+    <section class="screen hidden" id="screen-3" data-screen="3">
+      <div class="screen-inner">
+        <h1>Let's plan your week.</h1>
+        <p class="subtitle">Here's what we've got so far — change anything that's not a fit.</p>
+
+        <div class="week-list" id="week-list"></div>
+      </div>
+
+      <div class="screen-footer">
+        <button class="btn btn-primary btn-full" id="btn-continue-3">Create Grocery List →</button>
+      </div>
+    </section>
+
+    <!-- SCREEN 4: Grocery List -->
+    <section class="screen hidden" id="screen-4" data-screen="4">
+      <div class="screen-inner">
+        <h1>🛒 Your Grocery List</h1>
+        <p class="subtitle">Built from this week's meals. Check off what you already have.</p>
+
+        <div class="grocery-list" id="grocery-list"></div>
+
+        <button class="btn btn-secondary btn-full" id="btn-add-item">+ Add an item</button>
+      </div>
+
+      <div class="screen-footer">
+        <button class="btn btn-primary btn-full" id="btn-start-over">Start a New Week</button>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<template id="tpl-tag">
+  <span class="tag"></span>
+</template>
+
+<template id="tpl-day-card">
+  <div class="day-card">
+    <div class="day-name"></div>
+    <div class="meal-row">
+      <span class="meal-emoji"></span>
+      <div class="meal-info">
+        <div class="meal-name"></div>
+        <div class="meal-meta"></div>
+      </div>
+    </div>
+    <div class="meal-actions">
+      <button type="button" class="meal-btn love-btn">❤️ Love it</button>
+      <button type="button" class="meal-btn change-btn">🔄 Change it</button>
+      <button type="button" class="meal-btn view-btn">👁 View</button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-grocery-category">
+  <div class="grocery-category">
+    <h2 class="grocery-category-title"></h2>
+    <div class="grocery-items"></div>
+  </div>
+</template>
+
+<template id="tpl-grocery-item">
+  <label class="grocery-item">
+    <input type="checkbox" class="grocery-check" />
+    <span class="grocery-item-name"></span>
+    <span class="grocery-item-qty"></span>
+    <button type="button" class="grocery-remove" aria-label="Remove item">✕</button>
+  </label>
+</template>
+
+<div class="modal-backdrop hidden" id="recipe-modal">
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close" aria-label="Close">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script src="recipes.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Meals4Us",
+  "short_name": "Meals4Us",
+  "description": "Tell us about your family's food and we'll build your weekly meal plan and grocery list.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FBF7F0",
+  "theme_color": "#E4572E",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
