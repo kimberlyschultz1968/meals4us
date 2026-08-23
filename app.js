@@ -264,7 +264,7 @@ function parseFamilyText(text) {
     keepAtHome: new Set()
   };
 
-  const NEGATION = /\b(don't|dont|doesn't|doesnt|won't|wont|not a fan of|no |never|hate|dislike|allerg|can't have|cant have|avoid)\b/;
+  const NEGATION = /\b(don't|dont|do not|doesn't|doesnt|does not|didn't|didnt|did not|won't|wont|will not|not a fan of|no |never|hate|dislike|allerg|can't have|cant have|cannot have|can not have|avoid)\b/;
 
   function isNegated(sentence) {
     return NEGATION.test(sentence);
@@ -296,10 +296,13 @@ function parseFamilyText(text) {
       }
     }
 
-    // known allergen phrases
-    for (const [allergen, phrases] of Object.entries(KEYWORD_MAP.allergens)) {
-      for (const phrase of phrases) {
-        if (sentence.includes(phrase)) profile.allergies.add(allergen);
+    // Allergen words — matched against ANY sentence that mentions "allerg"
+    // at all, regardless of word order ("nut allergy" and "allergic to
+    // nuts" both need to catch this; the old version only matched rigid
+    // phrases like "nut allerg" and missed "allergic to ... nuts").
+    if (isAllergyLine) {
+      for (const [allergen, words] of Object.entries(KEYWORD_MAP.allergens)) {
+        if (words.some(w => sentence.includes(w))) profile.allergies.add(allergen);
       }
     }
     // "allergic to X" / "allergy to X" free-form capture

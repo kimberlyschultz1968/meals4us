@@ -2589,14 +2589,18 @@ const KEYWORD_MAP = {
     onepot: ["one pot", "one-pot", "sheet pan", "easy cleanup"],
     grill: ["grill", "grilling", "bbq", "barbecue"]
   },
+  // Bare words, not phrases — these only get checked against sentences that
+  // already mention "allerg" somewhere (see parseFamilyText), so a plain
+  // word is enough and catches phrasing in either order ("nut allergy" or
+  // "allergic to nuts").
   allergens: {
-    fish: ["fish", "no seafood"],
-    shellfish: ["shellfish", "shrimp allerg", "no shrimp"],
-    dairy: ["dairy", "lactose", "no cheese", "no milk"],
-    gluten: ["gluten", "celiac", "wheat allerg"],
-    egg: ["egg allerg", "no eggs"],
-    peanut: ["peanut", "nut allerg", "tree nut"],
-    soy: ["soy allerg", "no soy"]
+    fish: ["fish", "seafood"],
+    shellfish: ["shellfish", "shrimp", "crab", "lobster"],
+    dairy: ["dairy", "milk", "cheese", "lactose"],
+    gluten: ["gluten", "wheat", "celiac"],
+    egg: ["egg"],
+    peanut: ["peanut", "nut"],
+    soy: ["soy"]
   },
   // Singular stems only — "onion" already matches "onions" as a substring,
   // so a plural entry here would just double-add the same tag.
