@@ -20,6 +20,21 @@ function userDocRef(uid) {
   return db.collection("users").doc(uid);
 }
 
+// Firestore flatly rejects an array that directly contains another array
+// (state.recentWeeksHistory is exactly that — an array of completed weeks,
+// each one an array of recipe ids). Encoding just that one field as a JSON
+// string at the cloud boundary keeps app.js's in-memory shape untouched.
+function toCloudDoc(s) {
+  return { ...s, recentWeeksHistory: JSON.stringify(s.recentWeeksHistory || []) };
+}
+function fromCloudDoc(doc) {
+  const s = { ...doc };
+  if (typeof s.recentWeeksHistory === "string") {
+    try { s.recentWeeksHistory = JSON.parse(s.recentWeeksHistory); } catch (e) { s.recentWeeksHistory = []; }
+  }
+  return s;
+}
+
 // Called from app.js's saveState() every time anything changes locally.
 function queueCloudSave() {
   if (!currentUser || applyingRemoteState) return;
@@ -32,7 +47,7 @@ function pushCloudState() {
   const json = JSON.stringify(state);
   if (json === lastSyncedJSON) return;
   lastSyncedJSON = json;
-  userDocRef(currentUser.uid).set(state).catch(err => {
+  userDocRef(currentUser.uid).set(toCloudDoc(state)).catch(err => {
     console.error("Meals4Us: cloud save failed", err);
   });
 }
@@ -42,12 +57,13 @@ function attachRealtimeListener(uid) {
   unsubscribeSnapshot = userDocRef(uid).onSnapshot(snap => {
     if (!snap.exists) return;
     if (snap.metadata.hasPendingWrites) return; // this is the echo of our own write, not a change from elsewhere
-    const json = JSON.stringify(snap.data());
+    const incoming = fromCloudDoc(snap.data());
+    const json = JSON.stringify(incoming);
     if (json === lastSyncedJSON) return; // already up to date
     lastSyncedJSON = json;
     applyingRemoteState = true;
     try {
-      state = hydrateStateDefaults(snap.data());
+      state = hydrateStateDefaults(incoming);
       boot(); // re-renders every screen from the new state, same function used at startup
     } finally {
       applyingRemoteState = false;
@@ -62,7 +78,7 @@ function connectCloud(user) {
     if (snap.exists) {
       applyingRemoteState = true;
       try {
-        state = hydrateStateDefaults(snap.data());
+        state = hydrateStateDefaults(fromCloudDoc(snap.data()));
         lastSyncedJSON = JSON.stringify(state);
         boot();
       } finally {
