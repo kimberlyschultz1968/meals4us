@@ -1811,8 +1811,11 @@ function boot() {
 
 boot();
 
+// No service worker for now — it was causing devices to keep showing an
+// old cached version instead of checking the network for updates. Offline
+// support isn't worth that tradeoff yet. This also actively unregisters
+// any service worker a device already installed from before, so anyone
+// who visited earlier gets un-stuck automatically.
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => { /* offline support is optional */ });
-  });
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
 }
