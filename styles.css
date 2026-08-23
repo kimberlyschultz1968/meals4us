@@ -750,6 +750,41 @@ h1 {
   color: var(--ink);
 }
 
+.pick-recipe-btn {
+  display: block;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.recipe-picker-search {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card);
+  margin-bottom: 12px;
+}
+
+.recipe-picker-search:focus { outline: none; border-color: var(--red); }
+
+.recipe-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 48vh;
+  overflow-y: auto;
+}
+
+.recipe-picker-empty {
+  font-size: 14px;
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 20px 0;
+}
+
 .meal-btn.remove-btn:hover {
   border-color: var(--red);
   background: var(--red);

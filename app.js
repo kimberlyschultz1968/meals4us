@@ -615,6 +615,7 @@ function renderWeek(weekPlan) {
       saveState();
       renderWeek(state.weekPlan);
     });
+    node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker(index));
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
@@ -1010,6 +1011,50 @@ function openMeatPicker(dayIndex) {
       closeModal();
     });
   });
+}
+
+// "Pick a Recipe for This Day" — browse the whole library (built-in +
+// her own) and drop one straight onto a day, search by name only.
+function openRecipePicker(dayIndex) {
+  const entry = state.weekPlan[dayIndex];
+  const all = [...allRecipes()].sort((a, b) => a.name.localeCompare(b.name));
+
+  function renderResults(query) {
+    const q = query.trim().toLowerCase();
+    const matches = q ? all.filter(r => r.name.toLowerCase().includes(q)) : all;
+    const list = document.getElementById("rp-results");
+    if (!matches.length) {
+      list.innerHTML = `<p class="recipe-picker-empty">No recipes match "${query}".</p>`;
+      return;
+    }
+    list.innerHTML = matches.map(r => {
+      const flagged = recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "";
+      return `<button type="button" class="day-pick-option" data-recipe-id="${r.id}">
+        <span class="day-pick-meal" style="text-align:left;">${r.emoji} ${r.name}${flagged}</span>
+        <span class="day-pick-day" style="text-transform:none;letter-spacing:0;">${r.timeMinutes} min</span>
+      </button>`;
+    }).join("");
+    list.querySelectorAll("[data-recipe-id]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.weekPlan[dayIndex] = { day: entry.day, recipeId: btn.dataset.recipeId, proteinOverride: null, freeDay: false };
+        saveState();
+        renderWeek(state.weekPlan);
+        closeModal();
+      });
+    });
+  }
+
+  openModal(`
+    <div class="modal-body-title">Pick a recipe for ${entry.day}</div>
+    <div class="modal-body-meta">⚠️ means it conflicts with an allergy or dislike in your profile — still pickable, just flagged.</div>
+    <input type="text" id="rp-search" class="recipe-picker-search" placeholder="Search by name..." />
+    <div class="recipe-picker-list" id="rp-results"></div>
+  `);
+
+  renderResults("");
+  const searchInput = document.getElementById("rp-search");
+  searchInput.addEventListener("input", () => renderResults(searchInput.value));
+  searchInput.focus();
 }
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
