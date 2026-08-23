@@ -59,7 +59,7 @@ if (window.caches) {
             </div>
           </div>
 
-          <p class="field-label" style="margin:14px 0 0">Don't repeat a meal for <span>(how long before a dish can come back around)</span></p>
+          <p class="field-label" style="margin:10px 0 6px">Don't repeat a meal for <span>(how long before a dish can come back around)</span></p>
           <select id="no-repeat-weeks" class="household-field-select">
             <option value="2">2 weeks</option>
             <option value="3" selected>3 weeks</option>
@@ -98,6 +98,8 @@ if (window.caches) {
         <p class="field-label">Anything else? <span>(totally optional — type freely, this is never touched by the buttons above)</span></p>
         <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
           placeholder="Anything the bubbles above didn't cover — allergies in your own words, a foster kid who won't eat anything green, whatever's on your mind..."></textarea>
+
+        <button type="button" class="reset-everything-btn" id="btn-reset-everything">⚠️ Reset everything and start over</button>
       </div>
 
       <div class="screen-footer">
@@ -184,7 +186,10 @@ if (window.caches) {
 
 <template id="tpl-day-card">
   <div class="day-card">
-    <div class="day-name"></div>
+    <div class="day-name-row">
+      <div class="day-name"></div>
+      <button type="button" class="free-day-toggle">🍽️ Free day</button>
+    </div>
     <div class="meal-row">
       <span class="meal-emoji"></span>
       <div class="meal-info">
@@ -201,6 +206,22 @@ if (window.caches) {
       <button type="button" class="meal-btn day-btn">📅 Change Day</button>
       <button type="button" class="meal-btn swap-btn">🔁 Swap Meat</button>
       <button type="button" class="meal-btn remove-btn">🚫 Remove It</button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-free-day-card">
+  <div class="day-card free-day-card">
+    <div class="day-name-row">
+      <div class="day-name"></div>
+      <button type="button" class="free-day-toggle undo-free-day">📅 Pick a meal</button>
+    </div>
+    <div class="free-day-body">
+      <span class="free-day-emoji">🍽️</span>
+      <div>
+        <div class="free-day-title">Free day</div>
+        <div class="free-day-subtitle">Eating out, leftovers, or whatever sounds good</div>
+      </div>
     </div>
   </div>
 </template>

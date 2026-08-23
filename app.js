@@ -117,31 +117,35 @@ function profileFromSelections(selections) {
   return profile;
 }
 
-let state = loadState() || {
-  familyText: "",
-  familyNotes: "",      // free-typed text — never touched by tapping a suggestion word
-  selections: {},      // { categoryKey: [word, word, ...] } — what's been tapped on Screen 1
-  customSuggestions: {}, // { categoryKey: [word, ...] } — words she's added herself, become reusable bubbles
-  profile: null,
-  weekPlan: null,      // [{ day, recipeId }]
-  feedback: {},         // { recipeId: score }
-  neverSuggest: [],     // recipeIds removed forever via "Remove It"
-  nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
-  customRecipes: [],    // recipes she's added herself — same shape as the built-in library
-  household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
-  noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
-  recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
-  heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
-  staples: [             // recurring items added to every week's grocery list automatically
-    { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
-    { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
-    { id: "bread", name: "bread", qty: "", unit: "", category: "Pantry" },
-    { id: "lunch-meat", name: "lunch meat", qty: "", unit: "", category: "Meat & Seafood" },
-    { id: "cheese-slices", name: "cheese", qty: "", unit: "", category: "Dairy & Eggs" }
-  ],
-  groceryList: null,    // [{ id, name, qty, unit, category, checked, custom, staple }]
-  currentScreen: 1
-};
+function defaultState() {
+  return {
+    familyText: "",
+    familyNotes: "",      // free-typed text — never touched by tapping a suggestion word
+    selections: {},      // { categoryKey: [word, word, ...] } — what's been tapped on Screen 1
+    customSuggestions: {}, // { categoryKey: [word, ...] } — words she's added herself, become reusable bubbles
+    profile: null,
+    weekPlan: null,      // [{ day, recipeId }]
+    feedback: {},         // { recipeId: score }
+    neverSuggest: [],     // recipeIds removed forever via "Remove It"
+    nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
+    customRecipes: [],    // recipes she's added herself — same shape as the built-in library
+    household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
+    noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
+    recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
+    heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
+    staples: [             // recurring items added to every week's grocery list automatically
+      { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
+      { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
+      { id: "bread", name: "bread", qty: "", unit: "", category: "Pantry" },
+      { id: "lunch-meat", name: "lunch meat", qty: "", unit: "", category: "Meat & Seafood" },
+      { id: "cheese-slices", name: "cheese", qty: "", unit: "", category: "Dairy & Eggs" }
+    ],
+    groceryList: null,    // [{ id, name, qty, unit, category, checked, custom, staple }]
+    currentScreen: 1
+  };
+}
+
+let state = loadState() || defaultState();
 if (!state.selections) state.selections = {};
 if (!state.neverSuggest) state.neverSuggest = [];
 if (!state.customSuggestions) state.customSuggestions = {};
@@ -587,11 +591,30 @@ function renderWeek(weekPlan) {
   const listEl = document.getElementById("week-list");
   listEl.innerHTML = "";
   const tpl = document.getElementById("tpl-day-card");
+  const freeTpl = document.getElementById("tpl-free-day-card");
 
   weekPlan.forEach((entry, index) => {
+    if (entry.freeDay) {
+      const node = freeTpl.content.cloneNode(true);
+      node.querySelector(".day-name").textContent = entry.day;
+      node.querySelector(".undo-free-day").addEventListener("click", () => {
+        const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
+        state.weekPlan[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
+        saveState();
+        renderWeek(state.weekPlan);
+      });
+      listEl.appendChild(node);
+      return;
+    }
+
     const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     const node = tpl.content.cloneNode(true);
     node.querySelector(".day-name").textContent = entry.day;
+    node.querySelector(".free-day-toggle").addEventListener("click", () => {
+      state.weekPlan[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
+      saveState();
+      renderWeek(state.weekPlan);
+    });
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
@@ -657,7 +680,13 @@ function renderNextWeekPreview() {
   if (!state.nextWeekQueue.length) { box.classList.add("hidden"); return; }
 
   list.innerHTML = "";
-  state.nextWeekQueue.forEach((q, i) => {
+  // Sort Monday → Sunday for display, but remove by original index so the
+  // ✕ button still deletes the right entry regardless of display order.
+  const ordered = state.nextWeekQueue
+    .map((q, i) => ({ q, i }))
+    .sort((a, b) => DAYS.indexOf(a.q.day) - DAYS.indexOf(b.q.day));
+
+  ordered.forEach(({ q, i }) => {
     const recipe = getEffectiveRecipe(q);
     const row = document.createElement("div");
     row.className = "next-week-item";
@@ -848,9 +877,10 @@ function openDayPicker(dayIndex) {
     .filter(({ i }) => i !== dayIndex)
     .map(({ entry, i }) => {
       const r = entry.recipeId ? getEffectiveRecipe(entry) : null;
+      const label = entry.freeDay ? "🍽️ Free day" : (r ? `${r.emoji} ${r.name}` : "No meal");
       return `<button type="button" class="day-pick-option" data-day-index="${i}">
         <span class="day-pick-day">${entry.day}</span>
-        <span class="day-pick-meal">${r ? `${r.emoji} ${r.name}` : "No meal"}</span>
+        <span class="day-pick-meal">${label}</span>
       </button>`;
     }).join("");
 
@@ -876,13 +906,15 @@ function openDayPicker(dayIndex) {
   document.querySelectorAll(".day-pick-option[data-day-index]").forEach(btn => {
     btn.addEventListener("click", () => {
       const targetIndex = Number(btn.dataset.dayIndex);
-      // Swap the whole entry (recipe + any meat swap) so a swapped meal
-      // takes its substitution with it when moved to a new day.
-      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride };
+      // Swap the whole entry (recipe + any meat swap + free-day status) so
+      // a swapped meal takes its substitution with it to the new day.
+      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay };
       state.weekPlan[dayIndex].recipeId = state.weekPlan[targetIndex].recipeId;
       state.weekPlan[dayIndex].proteinOverride = state.weekPlan[targetIndex].proteinOverride;
+      state.weekPlan[dayIndex].freeDay = state.weekPlan[targetIndex].freeDay;
       state.weekPlan[targetIndex].recipeId = temp.recipeId;
       state.weekPlan[targetIndex].proteinOverride = temp.proteinOverride;
+      state.weekPlan[targetIndex].freeDay = temp.freeDay;
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -1125,6 +1157,21 @@ document.getElementById("btn-clear-text").addEventListener("click", () => {
   document.getElementById("suggestion-box").classList.add("hidden");
   document.querySelectorAll(".suggestion-pill.used").forEach(p => p.classList.remove("used"));
   activeSuggestionCategory = null;
+});
+
+document.getElementById("btn-reset-everything").addEventListener("click", () => {
+  const warning = "Reset everything and start over?\n\nThis permanently wipes:\n" +
+    "• Your family profile and everything typed on this screen\n" +
+    "• This week's plan and grocery list\n" +
+    "• Every Love it / It's OK / Remove It / Beyond you've set\n" +
+    "• Household size and the no-repeat setting (back to defaults)\n" +
+    "• Any recipes you added yourself, and the staples list (back to the defaults)\n\n" +
+    "This can't be undone.";
+  if (!confirm(warning)) return;
+
+  state = defaultState();
+  saveState();
+  location.reload();
 });
 
 // Rebuilds the whole textarea from every selected word across every

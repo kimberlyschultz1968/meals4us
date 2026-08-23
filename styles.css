@@ -129,7 +129,7 @@ button { font-family: inherit; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.screen-inner { flex: 1; padding: 22px 20px 24px; }
+.screen-inner { flex: 1; padding: 14px 20px 24px; }
 
 .back-link {
   display: inline-flex;
@@ -158,8 +158,8 @@ h1 {
 .subtitle {
   font-size: 16px;
   color: var(--ink-soft);
-  margin: 0 0 20px;
-  line-height: 1.5;
+  margin: 0 0 12px;
+  line-height: 1.4;
 }
 
 .screen-footer {
@@ -206,11 +206,11 @@ h1 {
   background: #F7F4EF;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px 16px 16px;
-  margin-bottom: 16px;
+  padding: 12px 14px 14px;
+  margin-bottom: 12px;
 }
 
-.household-row { display: flex; gap: 12px; margin-top: 8px; }
+.household-row { display: flex; gap: 12px; margin-top: 6px; }
 .household-field { flex: 1; }
 
 .household-field label {
@@ -280,7 +280,7 @@ h1 {
   font-size: 13.5px;
   font-weight: 600;
   color: var(--ink-soft);
-  margin: 18px 0 8px;
+  margin: 12px 0 6px;
 }
 
 .field-label span {
@@ -292,12 +292,31 @@ h1 {
   min-height: 90px;
 }
 
+.reset-everything-btn {
+  display: block;
+  width: 100%;
+  margin-top: 22px;
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.reset-everything-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
 .clear-text-btn {
   display: block;
-  margin: 8px 0 0 auto;
+  margin: 4px 0 0 auto;
   background: none;
   border: none;
-  padding: 4px 0;
+  padding: 2px 0;
   font-size: 13.5px;
   font-weight: 600;
   color: var(--ink-soft);
@@ -309,16 +328,16 @@ h1 {
 .chip-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 6px;
+  margin-top: 6px;
 }
 
 .suggestion-box {
-  margin-top: 14px;
+  margin-top: 10px;
   background: #F7F4EF;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 12px 14px;
+  padding: 10px 12px;
 }
 
 .suggestion-box.hidden { display: none; }
@@ -483,7 +502,7 @@ h1 {
 .empty-note.hidden { display: none; }
 
 /* Screen 3 — week plan */
-.week-list { display: flex; flex-direction: column; gap: 12px; }
+.week-list { display: flex; flex-direction: column; gap: 8px; }
 
 .next-week-box {
   margin-top: 22px;
@@ -612,31 +631,77 @@ h1 {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 10px 14px 12px;
   box-shadow: var(--shadow);
 }
 
+.day-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
 .day-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: .06em;
   color: var(--red);
-  margin-bottom: 10px;
 }
+
+.free-day-toggle {
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.free-day-toggle:hover { color: var(--red); }
+
+.free-day-card {
+  border-style: dashed;
+  background: #F7F4EF;
+  box-shadow: none;
+}
+
+.free-day-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0 2px;
+}
+
+.free-day-emoji {
+  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.free-day-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+.free-day-subtitle { font-size: 12.5px; color: var(--ink-soft); margin-top: 1px; }
 
 .meal-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .meal-emoji {
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1;
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--red-tint);
@@ -645,15 +710,15 @@ h1 {
   justify-content: center;
 }
 
-.meal-name { font-size: 17px; font-weight: 700; }
+.meal-name { font-size: 16px; font-weight: 700; }
 
 .meal-meta {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--ink-soft);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-.meal-actions { display: flex; gap: 8px; margin-top: 8px; }
+.meal-actions { display: flex; gap: 6px; margin-top: 6px; }
 .meal-actions:first-of-type { margin-top: 0; }
 
 .meal-btn {
@@ -661,8 +726,8 @@ h1 {
   border: 1px solid var(--line);
   background: var(--card);
   border-radius: 8px;
-  padding: 10px 4px;
-  font-size: 12.5px;
+  padding: 8px 4px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--ink-soft);
   cursor: pointer;
