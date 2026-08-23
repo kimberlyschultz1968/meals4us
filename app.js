@@ -809,6 +809,11 @@ function openAddRecipeForm() {
       <button type="button" class="add-word-btn" id="rf-add-ingredient">+ Add ingredient</button>
     </div>
 
+    <div class="recipe-form-field">
+      <label>How to make it (optional — one step per line)</label>
+      <textarea id="rf-instructions" class="family-textarea" style="min-height:100px" placeholder="Season the chicken and cook 6-7 min per side.&#10;Warm the tortillas.&#10;Assemble with toppings."></textarea>
+    </div>
+
     <div class="recipe-form-actions">
       <button type="button" class="btn btn-secondary" id="rf-cancel">Cancel</button>
       <button type="button" class="btn btn-primary" id="rf-save">Save Recipe</button>
@@ -845,13 +850,16 @@ function saveCustomRecipe() {
   const timeMinutes = parseInt(document.getElementById("rf-time").value, 10) || 30;
   const cuisine = document.getElementById("rf-cuisine").value;
   const protein = document.getElementById("rf-protein").value;
+  const instructions = document.getElementById("rf-instructions").value
+    .split("\n").map(s => s.trim()).filter(Boolean);
 
   state.customRecipes.push({
     id: `custom-${Date.now()}`,
     name, emoji, cuisine,
     proteins: [protein],
     tags, allergens, timeMinutes,
-    ingredients: ingredientRows
+    ingredients: ingredientRows,
+    instructions
   });
   saveState();
   closeModal();
@@ -859,6 +867,13 @@ function saveCustomRecipe() {
 }
 
 function openRecipeModal(recipe) {
+  const steps = recipe.instructions && recipe.instructions.length
+    ? `<div class="modal-instructions">
+        <h3>How to make it</h3>
+        <ol>${recipe.instructions.map(step => `<li>${step}</li>`).join("")}</ol>
+      </div>`
+    : `<p class="empty-note">No steps written for this one yet — just the ingredients.</p>`;
+
   openModal(`
     <div class="modal-body-emoji">${recipe.emoji}</div>
     <div class="modal-body-title">${recipe.name}</div>
@@ -867,6 +882,7 @@ function openRecipeModal(recipe) {
       <h3>Ingredients <span style="font-weight:400;text-transform:none;letter-spacing:normal;">— sized for ${state.household.adults} adult${state.household.adults === 1 ? "" : "s"}${state.household.kids ? ` + ${state.household.kids} kid${state.household.kids === 1 ? "" : "s"}` : ""}</span></h3>
       <ul>${recipe.ingredients.map(i => `<li>${formatQty(scaleQty(i.qty, i.unit))} ${i.unit === "count" ? "" : i.unit} ${i.name}`.trim() + "</li>").join("")}</ul>
     </div>
+    ${steps}
   `);
 }
 
@@ -1324,25 +1340,97 @@ document.getElementById("btn-continue-3").addEventListener("click", () => {
 
 document.getElementById("btn-add-recipe").addEventListener("click", openAddRecipeForm);
 
-document.getElementById("btn-add-item").addEventListener("click", () => {
-  const name = prompt("What do you want to add?\n\nThis gets remembered and added automatically to every future week's list too (things like coffee, bread, lunch meat) — remove it with the ✕ if you only needed it this once.");
-  if (!name || !name.trim()) return;
-  const stapleId = `custom-${Date.now()}`;
-  state.staples.push({ id: stapleId, name: name.trim().toLowerCase(), qty: "", unit: "", category: "Other" });
-  state.groceryList.push({
-    id: `staple-item-${stapleId}`,
-    stapleId,
-    name: name.trim().toLowerCase(),
-    qty: "",
-    unit: "",
-    category: "Other",
-    checked: false,
-    custom: true,
-    staple: true
+document.getElementById("btn-add-item").addEventListener("click", openAddGroceryItemForm);
+
+function titleCase(s) {
+  return s.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// Formatted for pasting into a shopping app's search or a notes app —
+// grouped by aisle/category, skips anything already checked off (already
+// have it), includes quantities where they're meaningful.
+function buildGroceryListText() {
+  const lines = ["🛒 Grocery List"];
+  GROCERY_CATEGORY_ORDER.forEach(category => {
+    const items = state.groceryList.filter(g => g.category === category && !g.checked);
+    if (!items.length) return;
+    lines.push("", category.toUpperCase());
+    items.forEach(item => {
+      const qty = formatQty(item.qty);
+      const amount = qty && item.unit !== "count" ? ` (${qty}${item.unit ? " " + item.unit : ""})` : (qty && Number(qty) > 1 ? ` (${qty})` : "");
+      lines.push(`- ${titleCase(item.name)}${amount}`);
+    });
   });
+  return lines.join("\n").trim();
+}
+
+document.getElementById("btn-copy-list").addEventListener("click", async () => {
+  const text = buildGroceryListText();
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied! Paste it into your shopping app.");
+  } catch (e) {
+    // Clipboard access can be blocked depending on the browser/context —
+    // fall back to showing it so she can select and copy by hand.
+    openModal(`
+      <div class="modal-body-title">Your Grocery List</div>
+      <div class="modal-body-meta">Couldn't copy automatically — tap in the box, select all, and copy.</div>
+      <textarea readonly onclick="this.select()" style="width:100%;min-height:240px;font-family:inherit;font-size:14px;padding:12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);">${text}</textarea>
+    `);
+  }
+});
+
+function openAddGroceryItemForm() {
+  openModal(`
+    <div class="modal-body-title">Add an item</div>
+    <div class="recipe-form-field">
+      <label>Item</label>
+      <input type="text" id="gi-name" placeholder="e.g. paper towels" />
+    </div>
+    <div class="recipe-form-field">
+      <label>Category</label>
+      <select id="gi-category">${CATEGORY_OPTIONS.map(c => `<option value="${c}">${c}</option>`).join("")}</select>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--ink);margin:14px 0 4px;">
+      <input type="checkbox" id="gi-weekly" style="width:19px;height:19px;accent-color:var(--red);" />
+      Add this every week (a staple like coffee or bread), not just this once
+    </label>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="gi-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="gi-save">Add</button>
+    </div>
+  `);
+  document.getElementById("gi-cancel").addEventListener("click", closeModal);
+  document.getElementById("gi-save").addEventListener("click", saveGroceryItem);
+  document.getElementById("gi-name").addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); saveGroceryItem(); }
+  });
+  document.getElementById("gi-name").focus();
+}
+
+function saveGroceryItem() {
+  const name = document.getElementById("gi-name").value.trim().toLowerCase();
+  if (!name) { alert("Type what you want to add first."); return; }
+  const category = document.getElementById("gi-category").value;
+  const weekly = document.getElementById("gi-weekly").checked;
+
+  if (weekly) {
+    const stapleId = `custom-${Date.now()}`;
+    state.staples.push({ id: stapleId, name, qty: "", unit: "", category });
+    state.groceryList.push({
+      id: `staple-item-${stapleId}`, stapleId, name, qty: "", unit: "", category,
+      checked: false, custom: true, staple: true
+    });
+  } else {
+    state.groceryList.push({
+      id: `custom-${Date.now()}`, name, qty: "", unit: "", category,
+      checked: false, custom: true, staple: false
+    });
+  }
   saveState();
   renderGrocery(state.groceryList);
-});
+  closeModal();
+}
 
 document.getElementById("btn-start-over").addEventListener("click", () => {
   const queuedNote = state.nextWeekQueue.length
