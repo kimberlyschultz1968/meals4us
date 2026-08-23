@@ -1650,7 +1650,7 @@ const RECIPES = [
 const KEYWORD_MAP = {
   cuisines: ["mexican", "italian", "american", "asian", "mediterranean", "indian"],
   proteins: ["chicken", "beef", "pork", "turkey", "fish", "shrimp", "vegetarian"],
-  vegetables: ["broccoli", "carrot", "potato", "zucchini", "spinach", "bell pepper", "corn"],
+  vegetables: ["broccoli", "carrot", "potato", "zucchini", "spinach", "pepper", "corn"],
   cookingStyle: {
     quick: ["quick", "easy", "fast", "simple", "30 minute", "weeknight"],
     airfryer: ["air fryer", "airfryer", "air-fryer"],

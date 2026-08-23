@@ -40,7 +40,7 @@ const DISH_SYNONYMS = {
 const CATEGORY_SUGGESTIONS = {
   meals: ["tacos", "burgers", "pasta", "pizza", "stir fry", "fajitas", "chili", "rice bowls"],
   love: ["chicken", "Mexican food", "pasta", "pizza", "tacos", "steak"],
-  dislike: ["fish", "mushrooms", "spicy food", "cilantro", "seafood", "onions"],
+  dislike: ["fish", "mushrooms", "spicy food", "cilantro", "seafood", "onions", "peppers"],
   allergies: ["peanuts", "shellfish", "dairy", "gluten", "eggs", "soy"],
   meats: ["chicken", "beef", "pork", "turkey", "shrimp"],
   veggies: ["broccoli", "carrots", "potatoes", "bell peppers", "zucchini", "corn"],
@@ -84,7 +84,16 @@ function mergeProfiles(...profiles) {
   const merged = emptyProfile();
   for (const key of Object.keys(merged)) {
     const all = profiles.flatMap(p => p[key] || []).map(w => w.toLowerCase());
-    merged[key] = [...new Set(all)];
+    // Substring-aware dedupe, not just exact match — a bubble word like
+    // "mushrooms" and the fuzzy re-parse of that same generated sentence
+    // ("mushroom") are the same thing and shouldn't show as two tags.
+    const deduped = [];
+    for (const word of all) {
+      if (!deduped.some(existing => existing.includes(word) || word.includes(existing))) {
+        deduped.push(word);
+      }
+    }
+    merged[key] = deduped;
   }
   return merged;
 }
@@ -121,6 +130,7 @@ let state = loadState() || {
   customRecipes: [],    // recipes she's added herself — same shape as the built-in library
   household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
   recentWeeksHistory: [], // up to 2 most recently completed weeks' recipe ids — keeps a 3-week no-repeat window
+  heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
   staples: [             // recurring items added to every week's grocery list automatically
     { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
     { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
@@ -139,6 +149,7 @@ if (!state.nextWeekQueue) state.nextWeekQueue = [];
 if (!state.customRecipes) state.customRecipes = [];
 if (!state.household) state.household = { adults: 2, kids: 2 };
 if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
+if (!state.heldBackRecipes) state.heldBackRecipes = [];
 
 // This week + the last 2 completed weeks = a 3-week no-repeat window.
 function pushWeekToHistory(weekPlan) {
@@ -148,8 +159,19 @@ function pushWeekToHistory(weekPlan) {
   if (state.recentWeeksHistory.length > 2) state.recentWeeksHistory.shift();
 }
 
+// Held-back ids count as excluded on top of the rolling week history —
+// this is what "Beyond" uses to keep a meal out for 2 more week-generations
+// regardless of what the 3-week window alone would already cover.
 function recentHistoryIds() {
-  return state.recentWeeksHistory.flat();
+  return [...state.recentWeeksHistory.flat(), ...state.heldBackRecipes.map(h => h.recipeId)];
+}
+
+// Called once per "Start a New Week" — counts down how much longer each
+// held-back meal stays out of the pool, dropping it once its time is up.
+function tickHeldBack() {
+  state.heldBackRecipes = state.heldBackRecipes
+    .map(h => ({ ...h, weeksRemaining: h.weeksRemaining - 1 }))
+    .filter(h => h.weeksRemaining > 0);
 }
 
 // Recipe ingredient amounts were written for a 2-adult, 2-kid household
@@ -410,18 +432,35 @@ function getEffectiveRecipe(entry) {
   };
 }
 
+// Whole-word match (with simple plural tolerance), not raw substring —
+// "egg" as a dislike/allergy shouldn't exclude every recipe with "eggplant"
+// in it, but "onions" disliked should still catch a "green onion"
+// ingredient even though the plurals don't match exactly.
+function wordMatch(text, word) {
+  const stem = word.replace(/s$/i, "");
+  const escaped = stem.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`\\b${escaped}s?\\b`, "i").test(text);
+}
+
 function recipeViolatesProfile(recipe, profile, neverSuggest = []) {
   if (neverSuggest.includes(recipe.id)) return true; // removed forever via "Remove It"
   // Hard filters: allergies and explicit dislikes always exclude a recipe.
+  // Checking the actual ingredient list (not just protein/cuisine/name) is
+  // what catches something like "bell pepper" or "onion" disliked as a
+  // side ingredient in a dish whose name and protein don't mention it at
+  // all — e.g. Sausage & Peppers wasn't excluded for a pepper dislike
+  // before this, since "pepper" never appeared in its protein or cuisine.
   for (const allergen of profile.allergies) {
     if (recipe.allergens.includes(allergen)) return true;
     if (recipe.proteins.includes(allergen)) return true;
+    if (recipe.ingredients.some(i => wordMatch(i.name, allergen) || wordMatch(allergen, i.name))) return true;
   }
   for (const dislike of profile.dislikes) {
     if (recipe.proteins.includes(dislike)) return true;
     if (recipe.cuisine === dislike) return true;
     if (DISH_SYNONYMS[dislike] && dishMatchesRecipe(dislike, recipe)) return true;
     if (recipe.name.toLowerCase().includes(dislike)) return true;
+    if (recipe.ingredients.some(i => wordMatch(i.name, dislike) || wordMatch(dislike, i.name))) return true;
   }
   return false;
 }
@@ -441,14 +480,29 @@ function scoreRecipe(recipe, profile, feedback) {
   return score;
 }
 
-function dishFamilyOf(recipe) {
-  for (const key of Object.keys(DISH_SYNONYMS)) {
-    if (dishMatchesRecipe(key, recipe)) return key;
-  }
-  return null;
+// A recipe can match more than one dish family at once (a "Rice Bowl" is
+// both "bowl" and "rice") — returning all of them, not just the first, is
+// what makes the cooldown below actually catch a rice-heavy week even when
+// the family *names* differ.
+function dishFamiliesOf(recipe) {
+  return Object.keys(DISH_SYNONYMS).filter(key => dishMatchesRecipe(key, recipe));
 }
 
-const MAX_PER_DISH_FAMILY = 2; // e.g. loving tacos shouldn't mean tacos 4 nights this week
+// A few base ingredients make a week feel repetitive even across different
+// dish-family tags (a rice bowl and a chicken-and-rice skillet aren't the
+// same "family," but both read as "rice again") — tracked the same way.
+const TRACKED_BASE_INGREDIENTS = ["rice"];
+
+function varietyTagsOf(recipe) {
+  const tags = dishFamiliesOf(recipe);
+  TRACKED_BASE_INGREDIENTS.forEach(name => {
+    if (recipe.ingredients.some(i => i.name === name)) tags.push(`ingredient:${name}`);
+  });
+  return tags;
+}
+
+const FAMILY_COOLDOWN_DAYS = 4; // a dish family/base ingredient shouldn't repeat within this many days
+const MAX_PER_CUISINE = 3; // out of 7 nights, so no single cuisine can dominate the week
 
 // presetByDay: { "Wednesday": { recipeId, proteinOverride } } — meals moved
 // forward from last week via "Change Day → Next Week". Those days keep the
@@ -465,19 +519,28 @@ function pickWeek(profile, feedback, excludeIds = [], neverSuggest = [], presetB
 
   const chosen = [];
   const usedProteins = [];
-  const dishFamilyCounts = {};
+  const varietyLastDay = {}; // tag ("taco", "ingredient:rice", ...) -> day index it was last used
+  const cuisineCounts = {};
   for (const { r } of scored) {
     if (chosen.length >= daysToFill) break;
     if (chosen.some(c => c.id === r.id)) continue;
+    const currentDayIndex = chosen.length;
     // light variety heuristics: avoid the same protein two days running,
-    // and cap how many times one dish type (tacos, pasta, pizza...) repeats
+    // keep the same dish type/base ingredient spaced out across the week,
+    // and cap one cuisine from quietly taking over the whole week — liking
+    // "Mexican" and "tacos" both gives every Mexican recipe a cuisine-match
+    // bonus on top of the dish-match one, so without a cap they can crowd
+    // out everything else even though each individual dish type is capped.
     const lastProtein = usedProteins[usedProteins.length - 1];
     if (lastProtein && r.proteins.includes(lastProtein) && scored.length > 10) continue;
-    const family = dishFamilyOf(r);
-    if (family && (dishFamilyCounts[family] || 0) >= MAX_PER_DISH_FAMILY && scored.length > 10) continue;
+    if ((cuisineCounts[r.cuisine] || 0) >= MAX_PER_CUISINE && scored.length > 10) continue;
+    const tags = varietyTagsOf(r);
+    const tooSoon = tags.some(tag => varietyLastDay[tag] !== undefined && (currentDayIndex - varietyLastDay[tag]) < FAMILY_COOLDOWN_DAYS);
+    if (tooSoon && scored.length > 10) continue;
     chosen.push(r);
     usedProteins.push(r.proteins[0]);
-    if (family) dishFamilyCounts[family] = (dishFamilyCounts[family] || 0) + 1;
+    cuisineCounts[r.cuisine] = (cuisineCounts[r.cuisine] || 0) + 1;
+    tags.forEach(tag => { varietyLastDay[tag] = currentDayIndex; });
   }
   // fill any remainder (small pools / heavy filtering) ignoring the variety rules
   if (chosen.length < daysToFill) {
@@ -799,6 +862,12 @@ function openDayPicker(dayIndex) {
     <div class="day-pick-list">${thisWeekOptions}</div>
     <p class="field-label" style="margin-top:18px">Or push it to next week instead:</p>
     <div class="day-pick-list">${nextWeekOptions}</div>
+    <p class="field-label" style="margin-top:18px">Or send it further out:</p>
+    <div class="day-pick-list">
+      <button type="button" class="day-pick-option" id="day-pick-beyond">
+        <span class="day-pick-meal">Beyond — back into the pool, held out for 2 more weeks</span>
+      </button>
+    </div>
   `);
 
   document.querySelectorAll(".day-pick-option[data-day-index]").forEach(btn => {
@@ -819,6 +888,12 @@ function openDayPicker(dayIndex) {
 
   document.querySelectorAll(".day-pick-option[data-next-week-day]").forEach(btn => {
     btn.addEventListener("click", () => {
+      const thisRecipeId = state.weekPlan[dayIndex].recipeId;
+      if (state.nextWeekQueue.some(q => q.recipeId === thisRecipeId)) {
+        alert(`"${getEffectiveRecipe(state.weekPlan[dayIndex]).name}" is already queued for next week — pick something else, or remove it from the "Coming next week" list first if you want to move it to a different day.`);
+        closeModal();
+        return;
+      }
       const requestedDay = btn.dataset.nextWeekDay;
       // If that day's already spoken for in the queue, use the first open one instead.
       const takenDays = state.nextWeekQueue.map(q => q.day);
@@ -838,6 +913,22 @@ function openDayPicker(dayIndex) {
       closeModal();
       alert(`Moved to ${day} of next week.`);
     });
+  });
+
+  document.getElementById("day-pick-beyond").addEventListener("click", () => {
+    const removedId = state.weekPlan[dayIndex].recipeId;
+    const removedName = getEffectiveRecipe(state.weekPlan[dayIndex]).name;
+
+    state.heldBackRecipes = state.heldBackRecipes.filter(h => h.recipeId !== removedId);
+    state.heldBackRecipes.push({ recipeId: removedId, weeksRemaining: 2 });
+
+    const replacementId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
+    state.weekPlan[dayIndex].recipeId = replacementId;
+    state.weekPlan[dayIndex].proteinOverride = null;
+    saveState();
+    renderWeek(state.weekPlan);
+    closeModal();
+    alert(`"${removedName}" is back in the pool — won't be suggested again for 2 more weeks after this one.`);
   });
 }
 
@@ -990,8 +1081,9 @@ document.getElementById("progress").addEventListener("click", e => {
   if (!li) return;
   const step = Number(li.dataset.step);
   if (step > maxReachedStep()) return; // not unlocked yet — nothing to show there
-  // re-render in case something changed since this screen was last shown
-  if (step === 2 && state.profile) renderLearned(state.profile);
+  // re-render in case something changed since this screen was last shown —
+  // step 2 rebuilds from Screen 1's current inputs, not just the old profile
+  if (step === 2 && state.profile) { rebuildProfileFromScreen1(); renderLearned(state.profile); }
   if (step === 3 && state.weekPlan) renderWeek(state.weekPlan);
   if (step === 4 && state.groceryList) renderGrocery(state.groceryList);
   showScreen(step);
@@ -1130,7 +1222,11 @@ function addCustomWord() {
   input.focus();
 }
 
-document.getElementById("btn-continue-1").addEventListener("click", () => {
+// Rebuilds state.profile from whatever's currently on Screen 1 — called any
+// time she lands on Screen 2, not just via Continue, so editing Screen 1 and
+// then jumping straight to the Profile tab still picks up the changes
+// instead of showing a stale profile.
+function rebuildProfileFromScreen1() {
   const tapped = document.getElementById("family-text").value.trim();
   const notes = document.getElementById("family-notes").value.trim();
   state.familyText = tapped;
@@ -1149,6 +1245,10 @@ document.getElementById("btn-continue-1").addEventListener("click", () => {
     notes ? parseFamilyText(notes) : emptyProfile()
   );
   saveState();
+}
+
+document.getElementById("btn-continue-1").addEventListener("click", () => {
+  rebuildProfileFromScreen1();
   renderLearned(state.profile);
   showScreen(2);
 });
@@ -1205,6 +1305,7 @@ document.getElementById("btn-start-over").addEventListener("click", () => {
   });
   pushWeekToHistory(state.weekPlan); // archive the week that's ending — keeps the 3-week no-repeat window honest
   state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest, presetByDay);
+  tickHeldBack(); // count down anything sent "Beyond" — this generation used it, one fewer to go
   state.nextWeekQueue = [];
   state.groceryList = null;
   saveState();
