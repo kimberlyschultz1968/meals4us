@@ -1008,3 +1008,109 @@ h1 {
 @media (min-width: 600px) {
   .app-shell { box-shadow: var(--shadow-lift); }
 }
+
+/* Account strip — small "signed in as" row in the header */
+.account-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: -4px 0 10px;
+  font-size: 12.5px;
+  color: rgba(245, 241, 236, 0.75);
+}
+
+.account-strip.hidden { display: none; }
+.account-strip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.account-strip button {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid rgba(245, 241, 236, 0.3);
+  border-radius: 8px;
+  color: rgba(245, 241, 236, 0.9);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.account-strip button:hover { border-color: rgba(245, 241, 236, 0.6); }
+
+/* Auth gate — full-screen sign in / create account overlay */
+.auth-gate {
+  position: fixed;
+  inset: 0;
+  background: var(--header-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 30;
+}
+
+.auth-gate.hidden { display: none; }
+
+.auth-card {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: var(--shadow-lift);
+}
+
+.auth-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.auth-card h1 { font-size: 22px; margin: 0 0 6px; }
+.auth-card .subtitle { margin: 0 0 20px; }
+
+.auth-input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 14px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card);
+  margin-bottom: 10px;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-tint);
+}
+
+.auth-error {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  margin: -2px 0 12px;
+  text-align: left;
+}
+
+.auth-error.hidden { display: none; }
+.auth-error.auth-success { color: #2E7D32; }
+
+.auth-link {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 0 0;
+  cursor: pointer;
+}
+
+.auth-link:hover { color: var(--red); }

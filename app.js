@@ -148,19 +148,6 @@ function defaultState() {
   };
 }
 
-let state = loadState() || defaultState();
-if (!state.selections) state.selections = {};
-if (!state.neverSuggest) state.neverSuggest = [];
-if (!state.customSuggestions) state.customSuggestions = {};
-if (!state.staples) state.staples = [];
-if (!state.nextWeekQueue) state.nextWeekQueue = [];
-if (!state.customRecipes) state.customRecipes = [];
-if (!state.recipeCustomizations) state.recipeCustomizations = {};
-if (!state.removalNotes) state.removalNotes = [];
-if (!state.household) state.household = { adults: 2, kids: 2 };
-if (!state.noRepeatWeeks) state.noRepeatWeeks = 3;
-if (!state.season) state.season = detectSeason();
-
 // Northern-hemisphere default — she can always override on Screen 1.
 function detectSeason() {
   const month = new Date().getMonth(); // 0 = Jan
@@ -169,8 +156,29 @@ function detectSeason() {
   if (month <= 7) return "summer";
   return "fall";
 }
-if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
-if (!state.heldBackRecipes) state.heldBackRecipes = [];
+
+// Fills in any field a saved blob might be missing (an older local save, or
+// a cloud doc written by an earlier version of the app) so the rest of the
+// app never has to guard against a half-shaped state object. Used both at
+// boot and whenever sync.js swaps in a freshly-downloaded cloud state.
+function hydrateStateDefaults(s) {
+  if (!s.selections) s.selections = {};
+  if (!s.neverSuggest) s.neverSuggest = [];
+  if (!s.customSuggestions) s.customSuggestions = {};
+  if (!s.staples) s.staples = [];
+  if (!s.nextWeekQueue) s.nextWeekQueue = [];
+  if (!s.customRecipes) s.customRecipes = [];
+  if (!s.recipeCustomizations) s.recipeCustomizations = {};
+  if (!s.removalNotes) s.removalNotes = [];
+  if (!s.household) s.household = { adults: 2, kids: 2 };
+  if (!s.noRepeatWeeks) s.noRepeatWeeks = 3;
+  if (!s.season) s.season = detectSeason();
+  if (!s.recentWeeksHistory) s.recentWeeksHistory = [];
+  if (!s.heldBackRecipes) s.heldBackRecipes = [];
+  return s;
+}
+
+let state = hydrateStateDefaults(loadState() || defaultState());
 
 // This week + the last 2 completed weeks = a 3-week no-repeat window.
 function pushWeekToHistory(weekPlan) {
@@ -231,6 +239,9 @@ function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch (e) { /* storage unavailable — app still works, just won't persist */ }
+  // sync.js defines this once she's signed in — every local save also queues
+  // a debounced push to her account so the other device picks it up live.
+  if (typeof queueCloudSave === "function") queueCloudSave();
 }
 
 function recipeById(id) {
@@ -1446,57 +1457,6 @@ document.getElementById("btn-reset-everything").addEventListener("click", () => 
   state = defaultState();
   saveState();
   location.reload();
-});
-
-// Data lives in this browser's localStorage only — there's no account, so
-// nothing syncs between her phone and PC automatically. Export/Import is
-// the manual bridge: copy the blob from one device, paste it into the
-// other, and everything (profile, week, staples, custom recipes, feedback
-// history) carries over in one go.
-document.getElementById("btn-export-data").addEventListener("click", async () => {
-  const text = JSON.stringify(state);
-  try {
-    await navigator.clipboard.writeText(text);
-    alert("Copied! On your other device, tap \"Import My Data\" and paste this in.");
-  } catch (e) {
-    openModal(`
-      <div class="modal-body-title">Your Data</div>
-      <div class="modal-body-meta">Couldn't copy automatically — tap in the box, select all, and copy. Paste it into "Import My Data" on your other device.</div>
-      <textarea readonly onclick="this.select()" style="width:100%;min-height:200px;font-family:inherit;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);word-break:break-all;">${text}</textarea>
-    `);
-  }
-});
-
-document.getElementById("btn-import-data").addEventListener("click", () => {
-  openModal(`
-    <div class="modal-body-title">Import My Data</div>
-    <div class="modal-body-meta">Paste what you copied from "Export My Data" on your other device. This replaces everything currently in this app on this device.</div>
-    <textarea id="import-data-input" class="family-textarea" style="min-height:160px;font-size:12px;" placeholder="Paste your exported data here..."></textarea>
-    <div class="recipe-form-actions">
-      <button type="button" class="btn btn-secondary" id="import-cancel">Cancel</button>
-      <button type="button" class="btn btn-primary" id="import-confirm">Import</button>
-    </div>
-  `);
-  document.getElementById("import-cancel").addEventListener("click", closeModal);
-  document.getElementById("import-confirm").addEventListener("click", () => {
-    const raw = document.getElementById("import-data-input").value.trim();
-    if (!raw) { alert("Paste your exported data first."); return; }
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch (e) {
-      alert("That doesn't look like valid exported data — make sure you copied the whole thing.");
-      return;
-    }
-    if (typeof parsed !== "object" || parsed === null || !("household" in parsed)) {
-      alert("That doesn't look like Meals4Us data — make sure you copied the whole thing from Export My Data.");
-      return;
-    }
-    if (!confirm("Import this data? It replaces everything currently in the app on this device.")) return;
-    state = { ...defaultState(), ...parsed };
-    saveState();
-    location.reload();
-  });
 });
 
 // Rebuilds the whole textarea from every selected word across every

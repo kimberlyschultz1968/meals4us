@@ -20,6 +20,10 @@
       <img src="icon.svg" alt="" class="brand-mark" />
       <span class="brand-name">Meals<span>4</span>Us</span>
     </div>
+    <div class="account-strip hidden" id="account-strip">
+      <span id="account-email"></span>
+      <button type="button" id="btn-sign-out">Sign out</button>
+    </div>
     <ol class="progress" id="progress" aria-label="Steps">
       <li data-step="1" class="active">Family</li>
       <li data-step="2">Profile</li>
@@ -27,6 +31,26 @@
       <li data-step="4">Grocery</li>
     </ol>
   </header>
+
+  <!-- Auth gate: shown until she's signed in, so her data can sync to her account
+       instead of staying stuck in one browser's storage. -->
+  <div class="auth-gate hidden" id="auth-gate">
+    <div class="auth-card">
+      <img src="icon.svg" alt="" class="auth-icon" />
+      <h1>Sign in to sync</h1>
+      <p class="subtitle">One account, every device — your family's plan follows you from phone to computer automatically.</p>
+
+      <input type="email" id="auth-email" class="auth-input" placeholder="Email address" autocomplete="email" />
+      <input type="password" id="auth-password" class="auth-input" placeholder="Password" autocomplete="current-password" />
+      <p class="auth-error hidden" id="auth-error"></p>
+
+      <button type="button" class="btn btn-primary btn-full" id="btn-sign-in">Sign In</button>
+      <button type="button" class="btn btn-secondary btn-full" id="btn-sign-up" style="margin-top:8px">Create Account</button>
+
+      <button type="button" class="auth-link" id="btn-forgot-password">Forgot password?</button>
+      <button type="button" class="auth-link" id="btn-skip-auth">Not now — just use this device</button>
+    </div>
+  </div>
 
   <main id="app">
 
@@ -96,11 +120,6 @@
         <p class="field-label">Anything else? <span>(totally optional — type freely, this is never touched by the buttons above)</span></p>
         <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
           placeholder="Anything the bubbles above didn't cover — allergies in your own words, a foster kid who won't eat anything green, whatever's on your mind..."></textarea>
-
-        <div class="screen-footer-split" style="margin-top:10px">
-          <button type="button" class="btn btn-secondary" id="btn-export-data">📤 Export My Data</button>
-          <button type="button" class="btn btn-secondary" id="btn-import-data">📥 Import My Data</button>
-        </div>
 
         <button type="button" class="reset-everything-btn" id="btn-reset-everything">⚠️ Reset everything and start over</button>
       </div>
@@ -257,7 +276,12 @@
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 <script src="recipes.js"></script>
 <script src="app.js"></script>
+<script src="sync.js"></script>
 </body>
 </html>
