@@ -39,13 +39,14 @@ resumes exactly where you left off. There's no backend and nothing to pay for.
 ## Running it locally
 
 ```
-python -m http.server 8738 --directory .
+python dev-server.py 8738
 ```
 
 Then open `http://localhost:8738`. (Already wired up as the `meals4us` entry in the
-repo-level `.claude/launch.json`.)
+repo-level `.claude/launch.json`.) Uses a custom no-cache server, not plain
+`python -m http.server` — see the comment at the top of `dev-server.py`.
 
 ## Status
 
-Local prototype only — not yet pushed to GitHub or published anywhere. Say the word
-when you want it live.
+**Live**: https://kimberlyschultz1968.github.io/meals4us/ — hosted on GitHub Pages,
+free, no account/server needed. Repo: https://github.com/kimberlyschultz1968/meals4us
