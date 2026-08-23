@@ -5,7 +5,7 @@
 // lean toward what this family actually likes. Everything lives in
 // localStorage — no account, no server, no cost.
 
-const STORAGE_KEY = "meals4us_state_v1";
+const STORAGE_KEY = "meals4us_state_v2"; // bumped to auto-discard old corrupted saves
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
 
@@ -26,17 +26,153 @@ const DISH_SYNONYMS = {
   fries: ["fries", "hot dogs"],
   soup: ["soup"],
   bowl: ["bowls", "bowl"],
-  rice: ["rice"]
+  rice: ["rice"],
+  sandwich: ["sandwich", "sub"],
+  wrap: ["wrap"],
+  curry: ["curry"],
+  casserole: ["casserole"],
+  salad: ["salad"]
 };
+
+// Example words shown when a Screen 1 prompt category is tapped, keyed by
+// each chip's data-key. Tapping a word inserts just that word into the
+// textarea — the category chip itself no longer inserts anything.
+const CATEGORY_SUGGESTIONS = {
+  meals: ["tacos", "burgers", "pasta", "pizza", "stir fry", "fajitas", "chili", "rice bowls"],
+  love: ["chicken", "Mexican food", "pasta", "pizza", "tacos", "steak"],
+  dislike: ["fish", "mushrooms", "spicy food", "cilantro", "seafood", "onions"],
+  allergies: ["peanuts", "shellfish", "dairy", "gluten", "eggs", "soy"],
+  meats: ["chicken", "beef", "pork", "turkey", "shrimp"],
+  veggies: ["broccoli", "carrots", "potatoes", "bell peppers", "zucchini", "corn"],
+  cuisines: ["Mexican", "Italian", "American", "Asian", "Mediterranean", "Indian"],
+  quick: ["quick meals", "air fryer", "slow cooker", "leftovers", "one-pot", "grilling"],
+  pantry: ["rice", "pasta", "olive oil", "eggs", "milk", "cheese"]
+};
+
+// Each category writes its own clearly-labeled sentence (never a shared
+// run-on paragraph), so a word picked under "Foods we don't like" always
+// reads as a dislike instead of getting lost among favorites.
+const CATEGORY_SENTENCE = {
+  meals: words => `Favorite meals: ${words.join(", ")}.`,
+  love: words => `Foods we love: ${words.join(", ")}.`,
+  dislike: words => `Foods we don't like: ${words.join(", ")}.`,
+  allergies: words => `Allergies: ${words.join(", ")}.`,
+  meats: words => `Favorite meats: ${words.join(", ")}.`,
+  veggies: words => `Favorite vegetables: ${words.join(", ")}.`,
+  cuisines: words => `Favorite cuisines: ${words.join(", ")}.`,
+  quick: words => `How we like to cook: ${words.join(", ")}.`,
+  pantry: words => `Foods we always keep at home: ${words.join(", ")}.`
+};
+const CATEGORY_ORDER = ["love", "meals", "meats", "veggies", "cuisines", "dislike", "allergies", "quick", "pantry"];
+
+// Maps a "How we like to cook" bubble's display word to the internal style
+// key recipes are tagged with (recipe.tags in recipes.js).
+const QUICK_STYLE_MAP = {
+  "quick meals": "quick",
+  "air fryer": "airfryer",
+  "slow cooker": "slowcooker",
+  "leftovers": "leftovers",
+  "one-pot": "onepot",
+  "grilling": "grill"
+};
+
+function emptyProfile() {
+  return { likes: [], dislikes: [], allergies: [], cookingStyle: [], keepAtHome: [] };
+}
+
+function mergeProfiles(...profiles) {
+  const merged = emptyProfile();
+  for (const key of Object.keys(merged)) {
+    const all = profiles.flatMap(p => p[key] || []).map(w => w.toLowerCase());
+    merged[key] = [...new Set(all)];
+  }
+  return merged;
+}
+
+// Anything picked via a bubble (built-in or custom) is known with certainty —
+// no need to guess it back out of a sentence. This is what actually fixes
+// "I added a food but it didn't show up on the profile page": a custom word
+// like "asparagus" isn't in the keyword parser's vocabulary, but it IS known
+// for certain to belong under whichever category bubble she tapped it in.
+function profileFromSelections(selections) {
+  const profile = emptyProfile();
+  ["love", "meals", "meats", "veggies", "cuisines"].forEach(key => {
+    (selections[key] || []).forEach(w => profile.likes.push(w.toLowerCase()));
+  });
+  (selections.dislike || []).forEach(w => profile.dislikes.push(w.toLowerCase()));
+  (selections.allergies || []).forEach(w => profile.allergies.push(w.toLowerCase()));
+  (selections.quick || []).forEach(w => {
+    profile.cookingStyle.push(QUICK_STYLE_MAP[w.toLowerCase()] || w.toLowerCase());
+  });
+  (selections.pantry || []).forEach(w => profile.keepAtHome.push(w.toLowerCase()));
+  return profile;
+}
 
 let state = loadState() || {
   familyText: "",
+  familyNotes: "",      // free-typed text — never touched by tapping a suggestion word
+  selections: {},      // { categoryKey: [word, word, ...] } — what's been tapped on Screen 1
+  customSuggestions: {}, // { categoryKey: [word, ...] } — words she's added herself, become reusable bubbles
   profile: null,
   weekPlan: null,      // [{ day, recipeId }]
   feedback: {},         // { recipeId: score }
-  groceryList: null,    // [{ id, name, qty, unit, category, checked, custom }]
+  neverSuggest: [],     // recipeIds removed forever via "Remove It"
+  nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
+  customRecipes: [],    // recipes she's added herself — same shape as the built-in library
+  household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
+  recentWeeksHistory: [], // up to 2 most recently completed weeks' recipe ids — keeps a 3-week no-repeat window
+  staples: [             // recurring items added to every week's grocery list automatically
+    { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
+    { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
+    { id: "bread", name: "bread", qty: "", unit: "", category: "Pantry" },
+    { id: "lunch-meat", name: "lunch meat", qty: "", unit: "", category: "Meat & Seafood" },
+    { id: "cheese-slices", name: "cheese", qty: "", unit: "", category: "Dairy & Eggs" }
+  ],
+  groceryList: null,    // [{ id, name, qty, unit, category, checked, custom, staple }]
   currentScreen: 1
 };
+if (!state.selections) state.selections = {};
+if (!state.neverSuggest) state.neverSuggest = [];
+if (!state.customSuggestions) state.customSuggestions = {};
+if (!state.staples) state.staples = [];
+if (!state.nextWeekQueue) state.nextWeekQueue = [];
+if (!state.customRecipes) state.customRecipes = [];
+if (!state.household) state.household = { adults: 2, kids: 2 };
+if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
+
+// This week + the last 2 completed weeks = a 3-week no-repeat window.
+function pushWeekToHistory(weekPlan) {
+  const ids = weekPlan.map(e => e.recipeId).filter(Boolean);
+  if (!ids.length) return;
+  state.recentWeeksHistory.push(ids);
+  if (state.recentWeeksHistory.length > 2) state.recentWeeksHistory.shift();
+}
+
+function recentHistoryIds() {
+  return state.recentWeeksHistory.flat();
+}
+
+// Recipe ingredient amounts were written for a 2-adult, 2-kid household
+// (kids counted at half an adult portion). Everything scales off that.
+const KID_PORTION_WEIGHT = 0.5;
+const BASELINE_PORTIONS = 2 + 2 * KID_PORTION_WEIGHT; // = 3
+const DISCRETE_UNITS = ["count", "whole", "clove"]; // bought/used as whole items, not measured
+
+function scaleFactor() {
+  const h = state.household;
+  const portions = (h.adults || 0) + (h.kids || 0) * KID_PORTION_WEIGHT;
+  return portions > 0 ? portions / BASELINE_PORTIONS : 1;
+}
+
+function scaleQty(qty, unit) {
+  const scaled = qty * scaleFactor();
+  if (DISCRETE_UNITS.includes(unit)) return Math.max(1, Math.ceil(scaled - 1e-9));
+  return Math.max(0.25, Math.round(scaled * 4) / 4);
+}
+
+// The built-in library plus anything she's added herself — every matching/
+// picking function reads from this so her recipes show up everywhere.
+function allRecipes() { return [...RECIPES, ...state.customRecipes]; }
 
 function loadState() {
   try {
@@ -54,19 +190,31 @@ function saveState() {
 }
 
 function recipeById(id) {
-  return RECIPES.find(r => r.id === id);
+  return allRecipes().find(r => r.id === id);
 }
 
 // ---------- Screen navigation ----------
+
+// The furthest screen she can jump to — each step unlocks once its data exists,
+// so tapping a tab can only reach screens that already have something to show.
+function maxReachedStep() {
+  let m = 1;
+  if (state.profile) m = 2;
+  if (state.weekPlan) m = 3;
+  if (state.groceryList) m = 4;
+  return m;
+}
 
 function showScreen(n) {
   document.querySelectorAll(".screen").forEach(el => {
     el.classList.toggle("hidden", el.dataset.screen !== String(n));
   });
+  const maxReached = maxReachedStep();
   document.querySelectorAll("#progress li").forEach(li => {
     const step = Number(li.dataset.step);
     li.classList.toggle("active", step === n);
     li.classList.toggle("done", step < n);
+    li.classList.toggle("locked", step > maxReached);
   });
   state.currentScreen = n;
   saveState();
@@ -112,6 +260,13 @@ function parseFamilyText(text) {
       }
     }
 
+    // vegetables
+    for (const veg of KEYWORD_MAP.vegetables) {
+      if (sentence.includes(veg)) {
+        (negated ? profile.dislikes : profile.likes).add(veg);
+      }
+    }
+
     // known allergen phrases
     for (const [allergen, phrases] of Object.entries(KEYWORD_MAP.allergens)) {
       for (const phrase of phrases) {
@@ -119,7 +274,10 @@ function parseFamilyText(text) {
       }
     }
     // "allergic to X" / "allergy to X" free-form capture
-    const allergyMatch = sentence.match(/aller(?:gic|gy)\s*(?:to|:)?\s*([a-z, ]+)/);
+    // Stops at the next clause ("...and we don't...", "but I hate...") so a
+    // run-on sentence like "allergic to X and Y and we can't stand Z" doesn't
+    // pull the next clause's words into the allergy list.
+    const allergyMatch = sentence.match(/aller(?:gic|gy)\s*(?:to|:)?\s*([a-z, ]+?)(?=\s+(?:and|but)\s+(?:we|i|the|my|her|his|they|our)\b|$)/);
     if (allergyMatch) {
       allergyMatch[1].split(/,| and /).map(s => s.trim()).filter(Boolean).forEach(item => {
         // Skip if this is just a plural/substring of an allergen already caught above.
@@ -204,7 +362,56 @@ function dishMatchesRecipe(dishWord, recipe) {
   return synonyms.some(s => haystack.includes(s));
 }
 
-function recipeViolatesProfile(recipe, profile) {
+// "Swap Meat" — keeps the same recipe (name, time, other ingredients),
+// just substitutes the protein ingredient. This is a per-meal override
+// layered on top of the base library recipe, not a totally different meal.
+const PROTEIN_SUBSTITUTES = {
+  chicken: { label: "Chicken", word: "Chicken", emoji: "🍗", ingredient: { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" } },
+  beef: { label: "Beef", word: "Beef", emoji: "🥩", ingredient: { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" } },
+  pork: { label: "Pork", word: "Pork", emoji: "🍖", ingredient: { name: "pork chops", qty: 4, unit: "count", category: "Meat & Seafood" } },
+  turkey: { label: "Turkey", word: "Turkey", emoji: "🦃", ingredient: { name: "ground turkey", qty: 1, unit: "lb", category: "Meat & Seafood" } },
+  fish: { label: "Fish", word: "Fish", emoji: "🐟", ingredient: { name: "tilapia", qty: 1.25, unit: "lb", category: "Meat & Seafood" } },
+  shrimp: { label: "Shrimp", word: "Shrimp", emoji: "🍤", ingredient: { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" } },
+  vegetarian: { label: "Vegetarian (black beans)", word: "Veggie", emoji: "🥦", ingredient: { name: "black beans", qty: 2, unit: "cup", category: "Pantry" } }
+};
+const PROTEIN_ALLERGEN = { fish: "fish", shrimp: "shellfish" };
+
+function renameForProtein(name, oldProteinKey, newWord) {
+  const oldWord = PROTEIN_SUBSTITUTES[oldProteinKey]?.word;
+  if (oldWord && name.includes(oldWord)) return name.replace(oldWord, newWord);
+  return `${newWord} ${name}`;
+}
+
+// Returns the recipe as it should actually be shown/shopped-for — the base
+// library recipe, or that recipe with its protein swapped if this meal has
+// an override applied via "Swap Meat".
+function getEffectiveRecipe(entry) {
+  const base = recipeById(entry.recipeId);
+  if (!base || !entry.proteinOverride) return base;
+  const sub = PROTEIN_SUBSTITUTES[entry.proteinOverride];
+  if (!sub) return base;
+
+  const keptIngredients = base.ingredients.filter(i => i.category !== "Meat & Seafood");
+  const ingredients = sub.ingredient.category === "Meat & Seafood"
+    ? [sub.ingredient, ...keptIngredients]
+    : [...keptIngredients, sub.ingredient];
+
+  const oldAllergen = PROTEIN_ALLERGEN[base.proteins[0]];
+  let allergens = oldAllergen ? base.allergens.filter(a => a !== oldAllergen) : base.allergens.slice();
+  if (PROTEIN_ALLERGEN[entry.proteinOverride]) allergens = [...new Set([...allergens, PROTEIN_ALLERGEN[entry.proteinOverride]])];
+
+  return {
+    ...base,
+    name: renameForProtein(base.name, base.proteins[0], sub.word),
+    proteins: [entry.proteinOverride],
+    emoji: sub.emoji,
+    ingredients,
+    allergens
+  };
+}
+
+function recipeViolatesProfile(recipe, profile, neverSuggest = []) {
+  if (neverSuggest.includes(recipe.id)) return true; // removed forever via "Remove It"
   // Hard filters: allergies and explicit dislikes always exclude a recipe.
   for (const allergen of profile.allergies) {
     if (recipe.allergens.includes(allergen)) return true;
@@ -243,9 +450,16 @@ function dishFamilyOf(recipe) {
 
 const MAX_PER_DISH_FAMILY = 2; // e.g. loving tacos shouldn't mean tacos 4 nights this week
 
-function pickWeek(profile, feedback, excludeIds = []) {
-  const eligible = RECIPES.filter(r => !recipeViolatesProfile(r, profile) && !excludeIds.includes(r.id));
-  const pool = eligible.length >= 7 ? eligible : RECIPES.filter(r => !recipeViolatesProfile(r, profile));
+// presetByDay: { "Wednesday": { recipeId, proteinOverride } } — meals moved
+// forward from last week via "Change Day → Next Week". Those days keep the
+// preset meal; the algorithm only fills whatever days are left.
+function pickWeek(profile, feedback, excludeIds = [], neverSuggest = [], presetByDay = {}) {
+  const presetIds = Object.values(presetByDay).map(p => p.recipeId).filter(Boolean);
+  const combinedExclude = [...excludeIds, ...presetIds];
+  const daysToFill = DAYS.filter(d => !presetByDay[d]).length;
+
+  const eligible = allRecipes().filter(r => !recipeViolatesProfile(r, profile, neverSuggest) && !combinedExclude.includes(r.id));
+  const pool = eligible.length >= daysToFill ? eligible : allRecipes().filter(r => !recipeViolatesProfile(r, profile, neverSuggest) && !presetIds.includes(r.id));
   const scored = pool.map(r => ({ r, score: scoreRecipe(r, profile, feedback) }))
     .sort((a, b) => b.score - a.score);
 
@@ -253,7 +467,7 @@ function pickWeek(profile, feedback, excludeIds = []) {
   const usedProteins = [];
   const dishFamilyCounts = {};
   for (const { r } of scored) {
-    if (chosen.length >= 7) break;
+    if (chosen.length >= daysToFill) break;
     if (chosen.some(c => c.id === r.id)) continue;
     // light variety heuristics: avoid the same protein two days running,
     // and cap how many times one dish type (tacos, pasta, pizza...) repeats
@@ -266,30 +480,50 @@ function pickWeek(profile, feedback, excludeIds = []) {
     if (family) dishFamilyCounts[family] = (dishFamilyCounts[family] || 0) + 1;
   }
   // fill any remainder (small pools / heavy filtering) ignoring the variety rules
-  if (chosen.length < 7) {
+  if (chosen.length < daysToFill) {
     for (const { r } of scored) {
-      if (chosen.length >= 7) break;
+      if (chosen.length >= daysToFill) break;
       if (!chosen.some(c => c.id === r.id)) chosen.push(r);
     }
   }
-  return DAYS.map((day, i) => ({ day, recipeId: chosen[i] ? chosen[i].id : null }));
+
+  let chosenIndex = 0;
+  return DAYS.map(day => {
+    if (presetByDay[day]) {
+      return { day, recipeId: presetByDay[day].recipeId, proteinOverride: presetByDay[day].proteinOverride || null };
+    }
+    const r = chosen[chosenIndex++];
+    return { day, recipeId: r ? r.id : null };
+  });
 }
 
-function pickReplacement(profile, feedback, weekPlan, dayIndex) {
-  const excludeIds = weekPlan.map(d => d.recipeId).filter(Boolean);
-  const eligible = RECIPES.filter(r => !recipeViolatesProfile(r, profile) && !excludeIds.includes(r.id));
-  const pool = eligible.length ? eligible : RECIPES.filter(r => !excludeIds.includes(r.id));
+function pickReplacement(profile, feedback, weekPlan, dayIndex, neverSuggest = [], historyIds = []) {
+  const thisWeekIds = weekPlan.map(d => d.recipeId).filter(Boolean);
+
+  function poolExcluding(excludeIds) {
+    return allRecipes().filter(r => !recipeViolatesProfile(r, profile, neverSuggest) && !excludeIds.includes(r.id));
+  }
+
+  // Try honoring the 3-week window first; relax it (then relax the profile
+  // itself as a last resort) rather than ever leaving a day with no meal.
+  let pool = poolExcluding([...thisWeekIds, ...historyIds]);
+  if (!pool.length) pool = poolExcluding(thisWeekIds);
+  if (!pool.length) pool = allRecipes().filter(r => !neverSuggest.includes(r.id) && !thisWeekIds.includes(r.id));
+
   const scored = pool.map(r => ({ r, score: scoreRecipe(r, profile, feedback) })).sort((a, b) => b.score - a.score);
   return scored.length ? scored[0].r.id : null;
 }
 
+// "Swap Meat" — keep the same kind of dish where possible, just change the
+// protein. Falls back to same-cuisine, then any eligible different-protein
+// recipe, so it (almost) always finds something instead of giving up.
 function renderWeek(weekPlan) {
   const listEl = document.getElementById("week-list");
   listEl.innerHTML = "";
   const tpl = document.getElementById("tpl-day-card");
 
   weekPlan.forEach((entry, index) => {
-    const recipe = entry.recipeId ? recipeById(entry.recipeId) : null;
+    const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     const node = tpl.content.cloneNode(true);
     node.querySelector(".day-name").textContent = entry.day;
 
@@ -301,9 +535,15 @@ function renderWeek(weekPlan) {
       node.querySelector(".meal-meta").textContent = metaBits.join(" • ");
 
       const loveBtn = node.querySelector(".love-btn");
-      const changeBtn = node.querySelector(".change-btn");
+      const okBtn = node.querySelector(".ok-btn");
       const viewBtn = node.querySelector(".view-btn");
-      if ((state.feedback[recipe.id] || 0) > 0) loveBtn.classList.add("loved");
+      const dayBtn = node.querySelector(".day-btn");
+      const swapBtn = node.querySelector(".swap-btn");
+      const removeBtn = node.querySelector(".remove-btn");
+
+      const score = state.feedback[recipe.id] || 0;
+      if (score >= 1) loveBtn.classList.add("loved");
+      else if (score > 0) okBtn.classList.add("marked-ok");
 
       loveBtn.addEventListener("click", () => {
         state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 1;
@@ -311,64 +551,350 @@ function renderWeek(weekPlan) {
         renderWeek(state.weekPlan);
       });
 
-      changeBtn.addEventListener("click", () => {
-        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) - 1;
-        const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index);
-        if (newId) state.weekPlan[index].recipeId = newId;
+      okBtn.addEventListener("click", () => {
+        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 0.25;
         saveState();
         renderWeek(state.weekPlan);
       });
 
       viewBtn.addEventListener("click", () => openRecipeModal(recipe));
+
+      dayBtn.addEventListener("click", () => openDayPicker(index));
+
+      swapBtn.addEventListener("click", () => openMeatPicker(index));
+
+      removeBtn.addEventListener("click", () => {
+        if (!confirm(`Remove "${recipe.name}" from your recipes forever? You'll never see it suggested again.`)) return;
+        state.neverSuggest.push(recipe.id);
+        delete state.feedback[recipe.id];
+        const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
+        state.weekPlan[index].recipeId = newId;
+        saveState();
+        renderWeek(state.weekPlan);
+      });
     } else {
       node.querySelector(".meal-emoji").textContent = "🍽️";
       node.querySelector(".meal-name").textContent = "No match found";
       node.querySelector(".meal-meta").textContent = "Try loosening a dislike in your profile";
-      node.querySelector(".meal-actions").remove();
+      node.querySelectorAll(".meal-actions").forEach(el => el.remove());
     }
 
     listEl.appendChild(node);
   });
+
+  renderNextWeekPreview();
+}
+
+function renderNextWeekPreview() {
+  const box = document.getElementById("next-week-box");
+  const list = document.getElementById("next-week-list");
+  if (!state.nextWeekQueue.length) { box.classList.add("hidden"); return; }
+
+  list.innerHTML = "";
+  state.nextWeekQueue.forEach((q, i) => {
+    const recipe = getEffectiveRecipe(q);
+    const row = document.createElement("div");
+    row.className = "next-week-item";
+    row.innerHTML = `
+      <span class="next-week-item-info">
+        <span class="next-week-item-day">${q.day}</span>
+        <span>${recipe ? `${recipe.emoji} ${recipe.name}` : "Meal"}</span>
+      </span>
+      <button type="button" class="grocery-remove" aria-label="Cancel">✕</button>
+    `;
+    row.querySelector(".grocery-remove").addEventListener("click", () => {
+      state.nextWeekQueue.splice(i, 1);
+      saveState();
+      renderNextWeekPreview();
+    });
+    list.appendChild(row);
+  });
+  box.classList.remove("hidden");
+}
+
+function openModal(html) {
+  document.getElementById("modal-body").innerHTML = html;
+  document.getElementById("recipe-modal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("recipe-modal").classList.add("hidden");
+}
+
+// ---------- Add Your Own Recipe ----------
+
+const UNIT_OPTIONS = ["count", "lb", "oz", "cup", "tbsp", "tsp", "clove", "whole", "bunch"];
+const CATEGORY_OPTIONS = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
+const TAG_OPTIONS = [
+  ["quick", "Quick"], ["airfryer", "Air fryer"], ["slowcooker", "Slow cooker"], ["onepot", "One pot"],
+  ["leftovers", "Leftovers"], ["kidFriendly", "Kid friendly"], ["spicy", "Spicy"], ["grill", "Grill"],
+  ["breakfastForDinner", "Breakfast for dinner"]
+];
+const ALLERGEN_OPTIONS = [
+  ["dairy", "Dairy"], ["gluten", "Gluten"], ["egg", "Egg"], ["fish", "Fish"],
+  ["shellfish", "Shellfish"], ["peanut", "Peanut"], ["soy", "Soy"]
+];
+
+function ingredientRowHTML() {
+  return `
+    <div class="ingredient-row">
+      <input type="text" class="ing-name" placeholder="ingredient" />
+      <input type="text" inputmode="decimal" class="ing-qty" placeholder="qty" />
+      <select class="ing-unit">${UNIT_OPTIONS.map(u => `<option value="${u}">${u}</option>`).join("")}</select>
+      <select class="ing-category">${CATEGORY_OPTIONS.map(c => `<option value="${c}">${c}</option>`).join("")}</select>
+      <button type="button" class="ingredient-remove" aria-label="Remove ingredient">✕</button>
+    </div>`;
+}
+
+function openAddRecipeForm() {
+  openModal(`
+    <div class="modal-body-title">Add Your Own Recipe</div>
+    <div class="modal-body-meta">Saved for good — shows up in future weeks and swaps alongside the built-in recipes.</div>
+
+    <div class="recipe-form-field">
+      <label>Recipe name</label>
+      <input type="text" id="rf-name" placeholder="e.g. Grandma's Meatloaf" />
+    </div>
+
+    <div class="recipe-form-row">
+      <div class="recipe-form-field">
+        <label>Emoji (optional)</label>
+        <input type="text" id="rf-emoji" placeholder="🍽️" maxlength="4" />
+      </div>
+      <div class="recipe-form-field">
+        <label>Time (minutes)</label>
+        <input type="number" id="rf-time" placeholder="30" min="1" />
+      </div>
+    </div>
+
+    <div class="recipe-form-row">
+      <div class="recipe-form-field">
+        <label>Cuisine</label>
+        <select id="rf-cuisine">
+          <option value="american">American</option>
+          <option value="mexican">Mexican</option>
+          <option value="italian">Italian</option>
+          <option value="asian">Asian</option>
+          <option value="mediterranean">Mediterranean</option>
+          <option value="indian">Indian</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="recipe-form-field">
+        <label>Main protein</label>
+        <select id="rf-protein">
+          <option value="chicken">Chicken</option>
+          <option value="beef">Beef</option>
+          <option value="pork">Pork</option>
+          <option value="turkey">Turkey</option>
+          <option value="fish">Fish</option>
+          <option value="shrimp">Shrimp</option>
+          <option value="vegetarian">Vegetarian</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="recipe-form-field">
+      <label>How it fits your week (optional)</label>
+      <div class="checkbox-grid" id="rf-tags">
+        ${TAG_OPTIONS.map(([v, l]) => `<label><input type="checkbox" value="${v}" /> ${l}</label>`).join("")}
+      </div>
+    </div>
+
+    <div class="recipe-form-field">
+      <label>Contains any of these? (so allergies get respected)</label>
+      <div class="checkbox-grid" id="rf-allergens">
+        ${ALLERGEN_OPTIONS.map(([v, l]) => `<label><input type="checkbox" value="${v}" /> ${l}</label>`).join("")}
+      </div>
+    </div>
+
+    <div class="recipe-form-field">
+      <label>Ingredients</label>
+      <div id="rf-ingredients">${[1, 2, 3].map(ingredientRowHTML).join("")}</div>
+      <button type="button" class="add-word-btn" id="rf-add-ingredient">+ Add ingredient</button>
+    </div>
+
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="rf-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="rf-save">Save Recipe</button>
+    </div>
+  `);
+
+  document.getElementById("rf-add-ingredient").addEventListener("click", () => {
+    document.getElementById("rf-ingredients").insertAdjacentHTML("beforeend", ingredientRowHTML());
+  });
+
+  document.getElementById("rf-ingredients").addEventListener("click", e => {
+    if (e.target.classList.contains("ingredient-remove")) e.target.closest(".ingredient-row").remove();
+  });
+
+  document.getElementById("rf-cancel").addEventListener("click", closeModal);
+  document.getElementById("rf-save").addEventListener("click", saveCustomRecipe);
+}
+
+function saveCustomRecipe() {
+  const name = document.getElementById("rf-name").value.trim();
+  const ingredientRows = [...document.querySelectorAll("#rf-ingredients .ingredient-row")].map(row => ({
+    name: row.querySelector(".ing-name").value.trim().toLowerCase(),
+    qty: parseFloat(row.querySelector(".ing-qty").value) || 1,
+    unit: row.querySelector(".ing-unit").value,
+    category: row.querySelector(".ing-category").value
+  })).filter(i => i.name);
+
+  if (!name) { alert("Give the recipe a name first."); return; }
+  if (!ingredientRows.length) { alert("Add at least one ingredient."); return; }
+
+  const tags = [...document.querySelectorAll("#rf-tags input:checked")].map(c => c.value);
+  const allergens = [...document.querySelectorAll("#rf-allergens input:checked")].map(c => c.value);
+  const emoji = document.getElementById("rf-emoji").value.trim() || "🍽️";
+  const timeMinutes = parseInt(document.getElementById("rf-time").value, 10) || 30;
+  const cuisine = document.getElementById("rf-cuisine").value;
+  const protein = document.getElementById("rf-protein").value;
+
+  state.customRecipes.push({
+    id: `custom-${Date.now()}`,
+    name, emoji, cuisine,
+    proteins: [protein],
+    tags, allergens, timeMinutes,
+    ingredients: ingredientRows
+  });
+  saveState();
+  closeModal();
+  alert(`"${name}" is saved! It'll show up in future weeks and swaps.`);
 }
 
 function openRecipeModal(recipe) {
-  const modal = document.getElementById("recipe-modal");
-  const body = document.getElementById("modal-body");
-  body.innerHTML = `
+  openModal(`
     <div class="modal-body-emoji">${recipe.emoji}</div>
     <div class="modal-body-title">${recipe.name}</div>
     <div class="modal-body-meta">${recipe.timeMinutes} min • ${capitalize(recipe.cuisine)}</div>
     <div class="modal-ingredients">
-      <h3>Ingredients</h3>
-      <ul>${recipe.ingredients.map(i => `<li>${formatQty(i.qty)} ${i.unit === "count" ? "" : i.unit} ${i.name}`.trim() + "</li>").join("")}</ul>
+      <h3>Ingredients <span style="font-weight:400;text-transform:none;letter-spacing:normal;">— sized for ${state.household.adults} adult${state.household.adults === 1 ? "" : "s"}${state.household.kids ? ` + ${state.household.kids} kid${state.household.kids === 1 ? "" : "s"}` : ""}</span></h3>
+      <ul>${recipe.ingredients.map(i => `<li>${formatQty(scaleQty(i.qty, i.unit))} ${i.unit === "count" ? "" : i.unit} ${i.name}`.trim() + "</li>").join("")}</ul>
     </div>
-  `;
-  modal.classList.remove("hidden");
+  `);
+}
+
+function openDayPicker(dayIndex) {
+  const current = state.weekPlan[dayIndex];
+  const thisWeekOptions = state.weekPlan
+    .map((entry, i) => ({ entry, i }))
+    .filter(({ i }) => i !== dayIndex)
+    .map(({ entry, i }) => {
+      const r = entry.recipeId ? getEffectiveRecipe(entry) : null;
+      return `<button type="button" class="day-pick-option" data-day-index="${i}">
+        <span class="day-pick-day">${entry.day}</span>
+        <span class="day-pick-meal">${r ? `${r.emoji} ${r.name}` : "No meal"}</span>
+      </button>`;
+    }).join("");
+
+  const nextWeekOptions = DAYS.map(day => `<button type="button" class="day-pick-option" data-next-week-day="${day}">
+      <span class="day-pick-day">${day}</span>
+      <span class="day-pick-meal">Next week</span>
+    </button>`).join("");
+
+  openModal(`
+    <div class="modal-body-title">Move "${getEffectiveRecipe(current).name}" to which day?</div>
+    <div class="modal-body-meta">It'll swap places with whatever's already there.</div>
+    <div class="day-pick-list">${thisWeekOptions}</div>
+    <p class="field-label" style="margin-top:18px">Or push it to next week instead:</p>
+    <div class="day-pick-list">${nextWeekOptions}</div>
+  `);
+
+  document.querySelectorAll(".day-pick-option[data-day-index]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetIndex = Number(btn.dataset.dayIndex);
+      // Swap the whole entry (recipe + any meat swap) so a swapped meal
+      // takes its substitution with it when moved to a new day.
+      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride };
+      state.weekPlan[dayIndex].recipeId = state.weekPlan[targetIndex].recipeId;
+      state.weekPlan[dayIndex].proteinOverride = state.weekPlan[targetIndex].proteinOverride;
+      state.weekPlan[targetIndex].recipeId = temp.recipeId;
+      state.weekPlan[targetIndex].proteinOverride = temp.proteinOverride;
+      saveState();
+      renderWeek(state.weekPlan);
+      closeModal();
+    });
+  });
+
+  document.querySelectorAll(".day-pick-option[data-next-week-day]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const requestedDay = btn.dataset.nextWeekDay;
+      // If that day's already spoken for in the queue, use the first open one instead.
+      const takenDays = state.nextWeekQueue.map(q => q.day);
+      const day = takenDays.includes(requestedDay) ? (DAYS.find(d => !takenDays.includes(d)) || requestedDay) : requestedDay;
+
+      state.nextWeekQueue.push({
+        recipeId: state.weekPlan[dayIndex].recipeId,
+        proteinOverride: state.weekPlan[dayIndex].proteinOverride || null,
+        day
+      });
+      // This day's slot needs something to eat this week — backfill it.
+      const replacementId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
+      state.weekPlan[dayIndex].recipeId = replacementId;
+      state.weekPlan[dayIndex].proteinOverride = null;
+      saveState();
+      renderWeek(state.weekPlan);
+      closeModal();
+      alert(`Moved to ${day} of next week.`);
+    });
+  });
+}
+
+function openMeatPicker(dayIndex) {
+  const entry = state.weekPlan[dayIndex];
+  const recipe = getEffectiveRecipe(entry);
+  const currentProtein = recipe.proteins[0];
+  const profile = state.profile;
+
+  const options = Object.entries(PROTEIN_SUBSTITUTES)
+    .filter(([key]) => key !== currentProtein)
+    .filter(([key]) => !profile.allergies.includes(key) && !profile.dislikes.includes(key))
+    .map(([key, sub]) => `<button type="button" class="day-pick-option" data-protein="${key}">
+        <span class="day-pick-meal">${sub.emoji} ${sub.label}</span>
+      </button>`).join("");
+
+  openModal(`
+    <div class="modal-body-title">Swap the meat in "${recipe.name}"</div>
+    <div class="modal-body-meta">Keeps everything else about this meal the same.</div>
+    <div class="day-pick-list">${options || "<p class='empty-note'>No other protein fits your family's profile.</p>"}</div>
+  `);
+
+  document.querySelectorAll(".day-pick-option[data-protein]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      entry.proteinOverride = btn.dataset.protein;
+      saveState();
+      renderWeek(state.weekPlan);
+      closeModal();
+    });
+  });
 }
 
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 function formatQty(qty) {
+  if (qty === "" || qty === null || qty === undefined) return "";
   if (Number.isInteger(qty)) return String(qty);
   return qty.toFixed(2).replace(/\.?0+$/, "");
 }
 
 // ---------- Screen 4: grocery list ----------
 
-function buildGroceryList(weekPlan, keepAtHome) {
+function buildGroceryList(weekPlan, keepAtHome, staples = []) {
   const combined = new Map(); // key: name|unit -> {name, qty, unit, category}
 
   weekPlan.forEach(entry => {
-    const recipe = entry.recipeId ? recipeById(entry.recipeId) : null;
+    const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     if (!recipe) return;
     recipe.ingredients.forEach(ing => {
       const haveAtHome = keepAtHome.some(k => ing.name.includes(k) || k.includes(ing.name));
       if (haveAtHome) return;
+      const scaledQty = scaleQty(ing.qty, ing.unit);
       const key = `${ing.name}|${ing.unit}`;
       if (combined.has(key)) {
-        combined.get(key).qty += ing.qty;
+        combined.get(key).qty += scaledQty;
       } else {
-        combined.set(key, { ...ing });
+        combined.set(key, { ...ing, qty: scaledQty });
       }
     });
   });
@@ -380,8 +906,28 @@ function buildGroceryList(weekPlan, keepAtHome) {
     unit: item.unit,
     category: GROCERY_CATEGORY_ORDER.includes(item.category) ? item.category : "Other",
     checked: false,
-    custom: false
+    custom: false,
+    staple: false
   }));
+
+  // Staples & lunch items — things like coffee, bread, lunch meat that don't
+  // change week to week. Added every time a new list is built, not derived
+  // from the meal plan, so they show up automatically without re-typing them.
+  staples.forEach(s => {
+    const haveAtHome = keepAtHome.some(k => s.name.includes(k) || k.includes(s.name));
+    if (haveAtHome) return;
+    list.push({
+      id: `staple-item-${s.id}`,
+      stapleId: s.id,
+      name: s.name,
+      qty: s.qty || "",
+      unit: s.unit || "",
+      category: GROCERY_CATEGORY_ORDER.includes(s.category) ? s.category : "Other",
+      checked: false,
+      custom: false,
+      staple: true
+    });
+  });
 
   list.sort((a, b) => a.name.localeCompare(b.name));
   return list;
@@ -407,7 +953,7 @@ function renderGrocery(list) {
       const check = itemNode.querySelector(".grocery-check");
       check.checked = item.checked;
       label.classList.toggle("checked", item.checked);
-      itemNode.querySelector(".grocery-item-name").textContent = item.name;
+      itemNode.querySelector(".grocery-item-name").textContent = item.name + (item.staple ? " 🔁" : "");
       itemNode.querySelector(".grocery-item-qty").textContent = `${formatQty(item.qty)} ${item.unit === "count" ? "" : item.unit}`.trim();
 
       check.addEventListener("change", () => {
@@ -418,6 +964,10 @@ function renderGrocery(list) {
 
       itemNode.querySelector(".grocery-remove").addEventListener("click", () => {
         state.groceryList = state.groceryList.filter(g => g.id !== item.id);
+        // A staple's ✕ means "stop buying this every week," not just "not this week."
+        if (item.staple && item.stapleId) {
+          state.staples = state.staples.filter(s => s.id !== item.stapleId);
+        }
         saveState();
         renderGrocery(state.groceryList);
       });
@@ -435,22 +985,169 @@ function renderGrocery(list) {
 
 // ---------- Event wiring ----------
 
+document.getElementById("progress").addEventListener("click", e => {
+  const li = e.target.closest("li");
+  if (!li) return;
+  const step = Number(li.dataset.step);
+  if (step > maxReachedStep()) return; // not unlocked yet — nothing to show there
+  // re-render in case something changed since this screen was last shown
+  if (step === 2 && state.profile) renderLearned(state.profile);
+  if (step === 3 && state.weekPlan) renderWeek(state.weekPlan);
+  if (step === 4 && state.groceryList) renderGrocery(state.groceryList);
+  showScreen(step);
+});
+
+document.querySelectorAll(".back-link").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const from = Number(btn.dataset.back);
+    const target = from - 1;
+    if (target === 2 && state.profile) renderLearned(state.profile);
+    if (target === 3 && state.weekPlan) renderWeek(state.weekPlan);
+    showScreen(target);
+  });
+});
+
+let activeSuggestionCategory = null;
+
 document.getElementById("chip-row").addEventListener("click", e => {
   const chip = e.target.closest(".chip");
   if (!chip) return;
-  const textarea = document.getElementById("family-text");
-  const hint = chip.dataset.hint;
-  textarea.value = textarea.value.trim().length
-    ? textarea.value.trim() + (textarea.value.trim().endsWith(".") ? " " : ". ") + hint
-    : hint;
-  textarea.focus();
-  textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+  activeSuggestionCategory = chip.dataset.key;
+  showSuggestions(chip.dataset.key, chip.textContent);
 });
 
+document.getElementById("add-word-btn").addEventListener("click", addCustomWord);
+document.getElementById("add-word-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); addCustomWord(); }
+});
+
+document.getElementById("btn-clear-text").addEventListener("click", () => {
+  state.selections = {};
+  state.familyText = ""; // was surviving Clear and coming back on reload — now actually cleared
+  saveState();
+  document.getElementById("family-text").value = "";
+  document.getElementById("family-text").focus();
+  document.getElementById("suggestion-box").classList.add("hidden");
+  document.querySelectorAll(".suggestion-pill.used").forEach(p => p.classList.remove("used"));
+  activeSuggestionCategory = null;
+});
+
+// Rebuilds the whole textarea from every selected word across every
+// category — one clearly-labeled line per category — so the text always
+// matches exactly what's toggled on, no matter which categories were tapped
+// in what order.
+function regenerateFamilyText() {
+  const lines = CATEGORY_ORDER
+    .filter(key => (state.selections[key] || []).length > 0)
+    .map(key => CATEGORY_SENTENCE[key](state.selections[key]));
+  document.getElementById("family-text").value = lines.join(" ");
+  saveState();
+}
+
+function showSuggestions(key, label) {
+  const baseWords = CATEGORY_SUGGESTIONS[key];
+  const box = document.getElementById("suggestion-box");
+  const row = document.getElementById("suggestion-row");
+  if (!baseWords) { box.classList.add("hidden"); return; }
+  if (!state.selections[key]) state.selections[key] = [];
+  if (!state.customSuggestions[key]) state.customSuggestions[key] = [];
+
+  document.getElementById("suggestion-label").textContent = `Tap words to add or remove them — "${label}":`;
+  row.innerHTML = "";
+
+  const isSelected = word => state.selections[key].some(w => w.toLowerCase() === word.toLowerCase());
+  const toggle = (word, pill) => {
+    if (isSelected(word)) {
+      state.selections[key] = state.selections[key].filter(w => w.toLowerCase() !== word.toLowerCase());
+      pill.classList.remove("used");
+    } else {
+      state.selections[key].push(word);
+      pill.classList.add("used");
+    }
+    regenerateFamilyText();
+  };
+
+  baseWords.forEach(word => {
+    const pill = document.createElement("button");
+    pill.type = "button";
+    pill.className = "suggestion-pill";
+    pill.textContent = word;
+    if (isSelected(word)) pill.classList.add("used");
+    pill.addEventListener("click", () => toggle(word, pill));
+    row.appendChild(pill);
+  });
+
+  // Words she's added herself — same toggle behavior, plus a ✕ to remove
+  // the bubble entirely (built-in example words can't be deleted, only hers).
+  state.customSuggestions[key].forEach(word => {
+    const wrap = document.createElement("span");
+    wrap.className = "suggestion-pill-wrap";
+
+    const pill = document.createElement("button");
+    pill.type = "button";
+    pill.className = "suggestion-pill";
+    pill.textContent = word;
+    if (isSelected(word)) pill.classList.add("used");
+    pill.addEventListener("click", () => toggle(word, pill));
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.className = "suggestion-pill-remove";
+    removeBtn.textContent = "✕";
+    removeBtn.addEventListener("click", () => {
+      state.customSuggestions[key] = state.customSuggestions[key].filter(w => w.toLowerCase() !== word.toLowerCase());
+      state.selections[key] = state.selections[key].filter(w => w.toLowerCase() !== word.toLowerCase());
+      regenerateFamilyText();
+      showSuggestions(key, label);
+    });
+
+    wrap.appendChild(pill);
+    wrap.appendChild(removeBtn);
+    row.appendChild(wrap);
+  });
+
+  box.classList.remove("hidden");
+}
+
+function addCustomWord() {
+  if (!activeSuggestionCategory) return;
+  const input = document.getElementById("add-word-input");
+  const word = input.value.trim();
+  if (!word) return;
+  const key = activeSuggestionCategory;
+  const allExisting = [...CATEGORY_SUGGESTIONS[key], ...(state.customSuggestions[key] || [])];
+  if (allExisting.some(w => w.toLowerCase() === word.toLowerCase())) {
+    input.value = "";
+    return; // already there as a bubble — nothing new to add
+  }
+  if (!state.customSuggestions[key]) state.customSuggestions[key] = [];
+  state.customSuggestions[key].push(word);
+  if (!state.selections[key]) state.selections[key] = [];
+  state.selections[key].push(word); // adding it also selects it right away
+  input.value = "";
+  regenerateFamilyText();
+  showSuggestions(key, document.querySelector(`.chip[data-key="${key}"]`).textContent);
+  input.focus();
+}
+
 document.getElementById("btn-continue-1").addEventListener("click", () => {
-  const text = document.getElementById("family-text").value.trim();
-  state.familyText = text;
-  state.profile = parseFamilyText(text);
+  const tapped = document.getElementById("family-text").value.trim();
+  const notes = document.getElementById("family-notes").value.trim();
+  state.familyText = tapped;
+  state.familyNotes = notes;
+  state.household = {
+    adults: Math.max(0, parseInt(document.getElementById("household-adults").value, 10) || 0),
+    kids: Math.max(0, parseInt(document.getElementById("household-kids").value, 10) || 0)
+  };
+  // Three sources, merged: the bubble taps (100% reliable, known category),
+  // plus a fuzzy keyword-parse of each text box as a fallback/extra catch —
+  // covers anything typed by hand in either box, including manual edits to
+  // the tap-built summary itself.
+  state.profile = mergeProfiles(
+    profileFromSelections(state.selections),
+    tapped ? parseFamilyText(tapped) : emptyProfile(),
+    notes ? parseFamilyText(notes) : emptyProfile()
+  );
   saveState();
   renderLearned(state.profile);
   showScreen(2);
@@ -461,38 +1158,54 @@ document.getElementById("btn-edit-2").addEventListener("click", () => {
 });
 
 document.getElementById("btn-confirm-2").addEventListener("click", () => {
-  state.weekPlan = pickWeek(state.profile, state.feedback);
+  state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
   saveState();
   renderWeek(state.weekPlan);
   showScreen(3);
 });
 
 document.getElementById("btn-continue-3").addEventListener("click", () => {
-  state.groceryList = buildGroceryList(state.weekPlan, state.profile.keepAtHome);
+  state.groceryList = buildGroceryList(state.weekPlan, state.profile.keepAtHome, state.staples);
   saveState();
   renderGrocery(state.groceryList);
   showScreen(4);
 });
 
+document.getElementById("btn-add-recipe").addEventListener("click", openAddRecipeForm);
+
 document.getElementById("btn-add-item").addEventListener("click", () => {
-  const name = prompt("What do you want to add?");
+  const name = prompt("What do you want to add?\n\nThis gets remembered and added automatically to every future week's list too (things like coffee, bread, lunch meat) — remove it with the ✕ if you only needed it this once.");
   if (!name || !name.trim()) return;
+  const stapleId = `custom-${Date.now()}`;
+  state.staples.push({ id: stapleId, name: name.trim().toLowerCase(), qty: "", unit: "", category: "Other" });
   state.groceryList.push({
-    id: `custom-${Date.now()}`,
+    id: `staple-item-${stapleId}`,
+    stapleId,
     name: name.trim().toLowerCase(),
-    qty: 1,
-    unit: "count",
+    qty: "",
+    unit: "",
     category: "Other",
     checked: false,
-    custom: true
+    custom: true,
+    staple: true
   });
   saveState();
   renderGrocery(state.groceryList);
 });
 
 document.getElementById("btn-start-over").addEventListener("click", () => {
-  if (!confirm("Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.")) return;
-  state.weekPlan = pickWeek(state.profile, state.feedback);
+  const queuedNote = state.nextWeekQueue.length
+    ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
+    : "";
+  if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
+
+  const presetByDay = {};
+  state.nextWeekQueue.forEach(q => {
+    presetByDay[q.day] = { recipeId: q.recipeId, proteinOverride: q.proteinOverride };
+  });
+  pushWeekToHistory(state.weekPlan); // archive the week that's ending — keeps the 3-week no-repeat window honest
+  state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest, presetByDay);
+  state.nextWeekQueue = [];
   state.groceryList = null;
   saveState();
   renderWeek(state.weekPlan);
@@ -509,7 +1222,12 @@ document.getElementById("recipe-modal").addEventListener("click", e => {
 // ---------- Boot ----------
 
 function boot() {
-  if (state.familyText) document.getElementById("family-text").value = state.familyText;
+  const hasSelections = Object.values(state.selections).some(list => list && list.length);
+  if (hasSelections) regenerateFamilyText();
+  else if (state.familyText) document.getElementById("family-text").value = state.familyText;
+  if (state.familyNotes) document.getElementById("family-notes").value = state.familyNotes;
+  document.getElementById("household-adults").value = state.household.adults;
+  document.getElementById("household-kids").value = state.household.kids;
 
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);

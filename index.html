@@ -5,11 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>Meals4Us — Weekly Family Meal Planner</title>
 <meta name="description" content="Tell us about your family's food and Meals4Us builds a weekly meal plan and grocery list for you." />
-<meta name="theme-color" content="#E4572E" />
+<meta name="theme-color" content="#3A0D10" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="icon.svg" />
 <link rel="stylesheet" href="styles.css" />
+<script>
+// Self-healing: remove any previously-installed service worker and cached
+// files so this always loads the current version, not a stuck old one.
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
+}
+if (window.caches) {
+  caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+}
+</script>
 </head>
 <body>
 
@@ -17,8 +27,8 @@
 
   <header class="app-header">
     <div class="brand">
-      <span class="brand-emoji">🍽️</span>
-      <span class="brand-name">Meals4Us</span>
+      <img src="icon.svg" alt="" class="brand-mark" />
+      <span class="brand-name">Meals<span>4</span>Us</span>
     </div>
     <ol class="progress" id="progress" aria-label="Steps">
       <li data-step="1" class="active">Family</li>
@@ -36,20 +46,50 @@
         <h1>Let's get to know your family.</h1>
         <p class="subtitle">Tell us what your family loves, what you don't like, and how you like to eat.</p>
 
-        <textarea id="family-text" class="family-textarea"
+        <div class="household-box">
+          <p class="field-label">How many are you feeding? <span>(this scales every recipe's ingredient amounts and the grocery list — kids count as about half a portion)</span></p>
+          <div class="household-row">
+            <div class="household-field">
+              <label for="household-adults">Adults</label>
+              <input type="number" id="household-adults" min="0" value="2" />
+            </div>
+            <div class="household-field">
+              <label for="household-kids">Kids</label>
+              <input type="number" id="household-kids" min="0" value="2" />
+            </div>
+          </div>
+        </div>
+
+        <textarea id="family-text" class="family-textarea" spellcheck="false"
           placeholder="Tell us about your family...&#10;&#10;Example: We love tacos, burgers and pasta. We don't eat fish. The kids don't like spicy food. We like easy meals and leftovers."></textarea>
 
-        <div class="chip-row" id="chip-row" aria-label="Tap to add a prompt">
-          <button type="button" class="chip" data-hint="Favorite meals: ">Favorite meals</button>
-          <button type="button" class="chip" data-hint="Foods we love: ">Foods we love</button>
-          <button type="button" class="chip" data-hint="Foods we don't like: ">Foods we don't like</button>
-          <button type="button" class="chip" data-hint="Allergies: ">Allergies</button>
-          <button type="button" class="chip" data-hint="Favorite meats: ">Favorite meats</button>
-          <button type="button" class="chip" data-hint="Favorite vegetables: ">Favorite vegetables</button>
-          <button type="button" class="chip" data-hint="Favorite cuisines: ">Favorite cuisines</button>
-          <button type="button" class="chip" data-hint="We like quick, easy meals: ">Quick/easy meals</button>
-          <button type="button" class="chip" data-hint="We always keep this at home: ">Foods we keep at home</button>
+        <button type="button" class="clear-text-btn" id="btn-clear-text">Clear text</button>
+
+        <p class="field-label">Need ideas? Tap a category, then tap words to add them:</p>
+        <div class="chip-row" id="chip-row" aria-label="Tap a category, then tap examples to add them">
+          <button type="button" class="chip" data-key="meals" data-hint="Favorite meals: ">Favorite meals</button>
+          <button type="button" class="chip" data-key="love" data-hint="Foods we love: ">Foods we love</button>
+          <button type="button" class="chip" data-key="dislike" data-hint="Foods we don't like: ">Foods we don't like</button>
+          <button type="button" class="chip" data-key="allergies" data-hint="Allergies: ">Allergies</button>
+          <button type="button" class="chip" data-key="meats" data-hint="Favorite meats: ">Favorite meats</button>
+          <button type="button" class="chip" data-key="veggies" data-hint="Favorite vegetables: ">Favorite vegetables</button>
+          <button type="button" class="chip" data-key="cuisines" data-hint="Favorite cuisines: ">Favorite cuisines</button>
+          <button type="button" class="chip" data-key="quick" data-hint="We like quick, easy meals: ">Quick/easy meals</button>
+          <button type="button" class="chip" data-key="pantry" data-hint="We always keep this at home: ">Foods we keep at home</button>
         </div>
+
+        <div class="suggestion-box hidden" id="suggestion-box">
+          <p class="suggestion-label" id="suggestion-label"></p>
+          <div class="suggestion-row" id="suggestion-row"></div>
+          <div class="add-word-row">
+            <input type="text" id="add-word-input" class="add-word-input" placeholder="Not listed? Type your own..." />
+            <button type="button" class="add-word-btn" id="add-word-btn">+ Add</button>
+          </div>
+        </div>
+
+        <p class="field-label">Anything else? <span>(totally optional — type freely, this is never touched by the buttons above)</span></p>
+        <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
+          placeholder="Anything the bubbles above didn't cover — allergies in your own words, a foster kid who won't eat anything green, whatever's on your mind..."></textarea>
       </div>
 
       <div class="screen-footer">
@@ -60,6 +100,7 @@
     <!-- SCREEN 2: What We Learned -->
     <section class="screen hidden" id="screen-2" data-screen="2">
       <div class="screen-inner">
+        <button type="button" class="back-link" data-back="2">← Back</button>
         <h1>Here's what we learned.</h1>
         <p class="subtitle">Did we get it right?</p>
 
@@ -90,10 +131,18 @@
     <!-- SCREEN 3: Let's Plan Your Week -->
     <section class="screen hidden" id="screen-3" data-screen="3">
       <div class="screen-inner">
+        <button type="button" class="back-link" data-back="3">← Back</button>
         <h1>Let's plan your week.</h1>
         <p class="subtitle">Here's what we've got so far — change anything that's not a fit.</p>
 
         <div class="week-list" id="week-list"></div>
+
+        <div class="next-week-box hidden" id="next-week-box">
+          <p class="field-label">📦 Coming next week</p>
+          <div class="next-week-list" id="next-week-list"></div>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-full add-recipe-btn" id="btn-add-recipe">+ Add Your Own Recipe</button>
       </div>
 
       <div class="screen-footer">
@@ -104,6 +153,7 @@
     <!-- SCREEN 4: Grocery List -->
     <section class="screen hidden" id="screen-4" data-screen="4">
       <div class="screen-inner">
+        <button type="button" class="back-link" data-back="4">← Back</button>
         <h1>🛒 Your Grocery List</h1>
         <p class="subtitle">Built from this week's meals. Check off what you already have.</p>
 
@@ -136,8 +186,13 @@
     </div>
     <div class="meal-actions">
       <button type="button" class="meal-btn love-btn">❤️ Love it</button>
-      <button type="button" class="meal-btn change-btn">🔄 Change it</button>
+      <button type="button" class="meal-btn ok-btn">😐 It's OK</button>
       <button type="button" class="meal-btn view-btn">👁 View</button>
+    </div>
+    <div class="meal-actions">
+      <button type="button" class="meal-btn day-btn">📅 Change Day</button>
+      <button type="button" class="meal-btn swap-btn">🔁 Swap Meat</button>
+      <button type="button" class="meal-btn remove-btn">🚫 Remove It</button>
     </div>
   </div>
 </template>
