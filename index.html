@@ -10,16 +10,6 @@
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="icon.svg" />
 <link rel="stylesheet" href="styles.css" />
-<script>
-// Self-healing: remove any previously-installed service worker and cached
-// files so this always loads the current version, not a stuck old one.
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister()));
-}
-if (window.caches) {
-  caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
-}
-</script>
 </head>
 <body>
 

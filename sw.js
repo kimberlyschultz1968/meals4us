@@ -1,7 +1,7 @@
 /* Meals4Us — service worker: offline support for the app shell.
    Network-first for everything so edits during active development always
    show up on reload; falls back to cache only when offline. */
-const CACHE = "meals4us-v2";
+const CACHE = "meals4us-v3";
 const ASSETS = [
   "./",
   "index.html",
