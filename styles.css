@@ -238,6 +238,23 @@ h1 {
   border-color: var(--red);
 }
 
+.household-field-select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card);
+}
+
+.household-field-select:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
 /* Screen 1 — family text */
 .family-textarea {
   width: 100%;

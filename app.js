@@ -129,7 +129,8 @@ let state = loadState() || {
   nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
   customRecipes: [],    // recipes she's added herself — same shape as the built-in library
   household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
-  recentWeeksHistory: [], // up to 2 most recently completed weeks' recipe ids — keeps a 3-week no-repeat window
+  noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
+  recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
   heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
   staples: [             // recurring items added to every week's grocery list automatically
     { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
@@ -148,6 +149,7 @@ if (!state.staples) state.staples = [];
 if (!state.nextWeekQueue) state.nextWeekQueue = [];
 if (!state.customRecipes) state.customRecipes = [];
 if (!state.household) state.household = { adults: 2, kids: 2 };
+if (!state.noRepeatWeeks) state.noRepeatWeeks = 3;
 if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
 if (!state.heldBackRecipes) state.heldBackRecipes = [];
 
@@ -156,7 +158,8 @@ function pushWeekToHistory(weekPlan) {
   const ids = weekPlan.map(e => e.recipeId).filter(Boolean);
   if (!ids.length) return;
   state.recentWeeksHistory.push(ids);
-  if (state.recentWeeksHistory.length > 2) state.recentWeeksHistory.shift();
+  const completedWeeksToKeep = Math.max(0, state.noRepeatWeeks - 1); // this week + N completed = noRepeatWeeks total
+  while (state.recentWeeksHistory.length > completedWeeksToKeep) state.recentWeeksHistory.shift();
 }
 
 // Held-back ids count as excluded on top of the rolling week history —
@@ -1235,6 +1238,7 @@ function rebuildProfileFromScreen1() {
     adults: Math.max(0, parseInt(document.getElementById("household-adults").value, 10) || 0),
     kids: Math.max(0, parseInt(document.getElementById("household-kids").value, 10) || 0)
   };
+  state.noRepeatWeeks = parseInt(document.getElementById("no-repeat-weeks").value, 10) || 3;
   // Three sources, merged: the bubble taps (100% reliable, known category),
   // plus a fuzzy keyword-parse of each text box as a fallback/extra catch —
   // covers anything typed by hand in either box, including manual edits to
@@ -1329,6 +1333,7 @@ function boot() {
   if (state.familyNotes) document.getElementById("family-notes").value = state.familyNotes;
   document.getElementById("household-adults").value = state.household.adults;
   document.getElementById("household-kids").value = state.household.kids;
+  document.getElementById("no-repeat-weeks").value = state.noRepeatWeeks;
 
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);

@@ -58,6 +58,14 @@ if (window.caches) {
               <input type="number" id="household-kids" min="0" value="2" />
             </div>
           </div>
+
+          <p class="field-label" style="margin:14px 0 0">Don't repeat a meal for <span>(how long before a dish can come back around)</span></p>
+          <select id="no-repeat-weeks" class="household-field-select">
+            <option value="2">2 weeks</option>
+            <option value="3" selected>3 weeks</option>
+            <option value="4">4 weeks</option>
+            <option value="6">6 weeks</option>
+          </select>
         </div>
 
         <textarea id="family-text" class="family-textarea" spellcheck="false"
