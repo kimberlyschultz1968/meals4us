@@ -22,6 +22,8 @@
     </div>
     <div class="account-strip hidden" id="account-strip">
       <span id="account-email"></span>
+      <span id="trial-badge" class="hidden"></span>
+      <button type="button" id="btn-manage-billing" class="hidden">Manage billing</button>
       <button type="button" id="btn-sign-out">Sign out</button>
     </div>
     <ol class="progress" id="progress" aria-label="Steps">
@@ -48,7 +50,20 @@
       <button type="button" class="btn btn-secondary btn-full" id="btn-sign-up" style="margin-top:8px">Create Account</button>
 
       <button type="button" class="auth-link" id="btn-forgot-password">Forgot password?</button>
-      <button type="button" class="auth-link" id="btn-skip-auth">Not now — just use this device</button>
+    </div>
+  </div>
+
+  <!-- Paywall gate: shown once the 7-day free trial (from account creation) ends,
+       until an active subscription is confirmed. -->
+  <div class="auth-gate hidden" id="paywall-gate">
+    <div class="auth-card">
+      <img src="icon.svg" alt="" class="auth-icon" />
+      <h1>Your free trial has ended</h1>
+      <p class="subtitle">Keep your family's meal plan, grocery list, and everything you've taught it going — $2.99/month, cancel anytime.</p>
+      <p class="auth-error hidden" id="paywall-error"></p>
+
+      <button type="button" class="btn btn-primary btn-full" id="btn-subscribe">Subscribe — $2.99/mo</button>
+      <button type="button" class="auth-link" id="btn-paywall-sign-out">Sign out</button>
     </div>
   </div>
 

@@ -1037,6 +1037,19 @@ h1 {
 
 .account-strip button:hover { border-color: rgba(245, 241, 236, 0.6); }
 
+#trial-badge {
+  flex-shrink: 0;
+  background: rgba(242, 196, 51, 0.18);
+  border: 1px solid rgba(242, 196, 51, 0.5);
+  color: #F2C433;
+  border-radius: 8px;
+  padding: 3px 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+#trial-badge.hidden { display: none; }
+#btn-manage-billing.hidden { display: none; }
+
 /* Auth gate — full-screen sign in / create account overlay */
 .auth-gate {
   position: fixed;

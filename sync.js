@@ -10,6 +10,11 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+const MEALS4US_API = "https://the-binder-api.onrender.com";
+const TRIAL_DAYS = 7;
+const OWNER_EMAIL = "kimberly.schultz1968@gmail.com"; // her own account — always free, same rule as her other apps
+let unsubscribeBilling = null;
+
 let currentUser = null;
 let unsubscribeSnapshot = null;
 let cloudSaveTimer = null;
@@ -95,6 +100,99 @@ function connectCloud(user) {
   });
 }
 
+// ---------- Billing: 7-day free trial, then $2.99/mo ----------
+// The trial clock is just the Firebase account's own creation date — no server call
+// needed to know whether she's still inside it. Once it's over, a signed-in listener
+// on /billing/{uid} (written by the shared backend after Stripe checkout) decides
+// whether the paywall stays up.
+
+function showPaywall() { document.getElementById("paywall-gate").classList.remove("hidden"); }
+function hidePaywall() { document.getElementById("paywall-gate").classList.add("hidden"); }
+function showPaywallMessage(msg) {
+  const el = document.getElementById("paywall-error");
+  el.textContent = msg;
+  el.classList.remove("hidden");
+}
+
+function trialDaysLeft(user) {
+  const created = new Date(user.metadata.creationTime).getTime();
+  const elapsed = (Date.now() - created) / 86400000;
+  return Math.max(0, Math.ceil(TRIAL_DAYS - elapsed));
+}
+
+function checkBilling(user) {
+  if (unsubscribeBilling) { unsubscribeBilling(); unsubscribeBilling = null; }
+  const badge = document.getElementById("trial-badge");
+  const manageBtn = document.getElementById("btn-manage-billing");
+
+  if (user.email === OWNER_EMAIL) {
+    badge.classList.add("hidden");
+    manageBtn.classList.add("hidden");
+    hidePaywall();
+    return;
+  }
+
+  unsubscribeBilling = db.collection("billing").doc(user.uid).onSnapshot(snap => {
+    const billing = snap.exists ? snap.data() : null;
+    const paid = !!(billing && billing.active);
+    manageBtn.classList.toggle("hidden", !paid);
+
+    if (paid) {
+      badge.classList.add("hidden");
+      hidePaywall();
+      return;
+    }
+
+    const daysLeft = trialDaysLeft(user);
+    if (daysLeft > 0) {
+      badge.textContent = daysLeft === 1 ? "Trial: last day" : `Trial: ${daysLeft} days left`;
+      badge.classList.remove("hidden");
+      hidePaywall();
+    } else {
+      badge.classList.add("hidden");
+      showPaywall();
+    }
+  }, err => {
+    console.error("Meals4Us: billing check failed", err);
+  });
+}
+
+document.getElementById("btn-subscribe").addEventListener("click", async () => {
+  const btn = document.getElementById("btn-subscribe");
+  btn.disabled = true;
+  try {
+    const token = await currentUser.getIdToken();
+    const res = await fetch(MEALS4US_API + "/meals4us/checkout", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await res.json();
+    if (data.url) { window.location.href = data.url; return; }
+    showPaywallMessage(data.error || "Couldn't start checkout — try again in a moment.");
+  } catch (e) {
+    showPaywallMessage("Couldn't reach the payment page — check your connection and try again.");
+  }
+  btn.disabled = false;
+});
+
+document.getElementById("btn-manage-billing").addEventListener("click", async () => {
+  try {
+    const token = await currentUser.getIdToken();
+    const res = await fetch(MEALS4US_API + "/meals4us/portal", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + token }
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  } catch (e) {
+    console.error("Meals4Us: opening billing portal failed", e);
+  }
+});
+
+document.getElementById("btn-paywall-sign-out").addEventListener("click", () => {
+  auth.signOut();
+});
+
 // ---------- Auth gate UI ----------
 
 function showAuthGate() { document.getElementById("auth-gate").classList.remove("hidden"); }
@@ -135,10 +233,13 @@ auth.onAuthStateChanged(user => {
     clearAuthMessage();
     hideAuthGate();
     connectCloud(user);
+    checkBilling(user);
   } else {
     strip.classList.add("hidden");
     if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
-    if (sessionStorage.getItem("meals4us_skip_auth") !== "1") showAuthGate();
+    if (unsubscribeBilling) { unsubscribeBilling(); unsubscribeBilling = null; }
+    hidePaywall();
+    showAuthGate();
   }
 });
 
@@ -165,11 +266,6 @@ document.getElementById("btn-forgot-password").addEventListener("click", () => {
   auth.sendPasswordResetEmail(email)
     .then(() => showAuthMessage("Check your email for a reset link.", true))
     .catch(err => showAuthMessage(friendlyAuthError(err)));
-});
-
-document.getElementById("btn-skip-auth").addEventListener("click", () => {
-  sessionStorage.setItem("meals4us_skip_auth", "1");
-  hideAuthGate();
 });
 
 document.getElementById("btn-sign-out").addEventListener("click", () => {
