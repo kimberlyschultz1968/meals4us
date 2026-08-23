@@ -206,27 +206,27 @@ h1 {
   background: #F7F4EF;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 12px 14px 14px;
-  margin-bottom: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
 }
 
-.household-row { display: flex; gap: 12px; margin-top: 6px; }
+.household-row { display: flex; gap: 10px; margin-top: 4px; }
 .household-field { flex: 1; }
 
 .household-field label {
   display: block;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--ink-soft);
-  margin-bottom: 6px;
+  margin-bottom: 3px;
 }
 
 .household-field input {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 16px;
+  padding: 7px 10px;
+  font-size: 15px;
   font-weight: 700;
   font-family: inherit;
   color: var(--ink);
@@ -242,8 +242,8 @@ h1 {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 15px;
+  padding: 7px 10px;
+  font-size: 14.5px;
   font-weight: 700;
   font-family: inherit;
   color: var(--ink);
