@@ -6,7 +6,7 @@
 // localStorage — no account, no server, no cost.
 
 const STORAGE_KEY = "meals4us_state_v2"; // bumped to auto-discard old corrupted saves
-const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
 
 // Generic dish words families use that don't literally appear in every

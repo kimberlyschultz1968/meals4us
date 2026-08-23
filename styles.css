@@ -42,7 +42,7 @@ button { font-family: inherit; }
 
 /* Header — the one place the icon's red/black gradient drama lives */
 .app-header {
-  padding: 28px 20px 20px;
+  padding: 16px 20px 12px;
   position: sticky;
   top: 0;
   background: var(--header-gradient);
@@ -54,7 +54,7 @@ button { font-family: inherit; }
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .brand-mark {
@@ -67,7 +67,7 @@ button { font-family: inherit; }
 
 .brand-name {
   font-size: 32px;
-  font-weight: 800;
+  font-weight: 600;
   color: #F5F1EC;
   letter-spacing: -0.005em;
 }
@@ -86,7 +86,7 @@ button { font-family: inherit; }
   flex: 1;
   text-align: center;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .03em;
   color: rgba(245, 241, 236, 0.4);
@@ -148,7 +148,7 @@ button { font-family: inherit; }
 
 h1 {
   font-size: 23px;
-  font-weight: 800;
+  font-weight: 600;
   margin: 0 0 6px;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -210,7 +210,7 @@ h1 {
   margin-bottom: 10px;
 }
 
-.household-row { display: flex; gap: 10px; margin-top: 4px; }
+.household-row { display: flex; gap: 8px; margin-top: 2px; }
 .household-field { flex: 1; }
 
 .household-field label {
@@ -225,8 +225,8 @@ h1 {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 15px;
+  padding: 5px 8px;
+  font-size: 14px;
   font-weight: 700;
   font-family: inherit;
   color: var(--ink);
@@ -258,7 +258,7 @@ h1 {
 /* Screen 1 — family text */
 .family-textarea {
   width: 100%;
-  min-height: 160px;
+  min-height: 220px;
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: var(--card);
@@ -463,7 +463,7 @@ h1 {
 
 .learned-card h2 {
   font-size: 13.5px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--ink);
@@ -502,7 +502,7 @@ h1 {
 .empty-note.hidden { display: none; }
 
 /* Screen 3 — week plan */
-.week-list { display: flex; flex-direction: column; gap: 8px; }
+.week-list { display: flex; flex-direction: column; gap: 6px; }
 
 .next-week-box {
   margin-top: 22px;
@@ -536,7 +536,7 @@ h1 {
 
 .next-week-item-day {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .05em;
   color: var(--red);
@@ -631,7 +631,7 @@ h1 {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 10px 14px 12px;
+  padding: 7px 12px 9px;
   box-shadow: var(--shadow);
 }
 
@@ -639,12 +639,12 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
 }
 
 .day-name {
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .06em;
   color: var(--red);
@@ -687,21 +687,21 @@ h1 {
   justify-content: center;
 }
 
-.free-day-title { font-size: 15px; font-weight: 700; color: var(--ink); }
+.free-day-title { font-size: 15px; font-weight: 600; color: var(--ink); }
 .free-day-subtitle { font-size: 12.5px; color: var(--ink-soft); margin-top: 1px; }
 
 .meal-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  gap: 8px;
+  margin-bottom: 5px;
 }
 
 .meal-emoji {
-  font-size: 17px;
+  font-size: 14px;
   line-height: 1;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--red-tint);
@@ -710,24 +710,24 @@ h1 {
   justify-content: center;
 }
 
-.meal-name { font-size: 16px; font-weight: 700; }
+.meal-name { font-size: 14.5px; font-weight: 600; }
 
 .meal-meta {
-  font-size: 13px;
+  font-size: 11.5px;
   color: var(--ink-soft);
-  margin-top: 1px;
+  margin-top: 0;
 }
 
-.meal-actions { display: flex; gap: 6px; margin-top: 6px; }
+.meal-actions { display: flex; gap: 5px; margin-top: 5px; }
 .meal-actions:first-of-type { margin-top: 0; }
 
 .meal-btn {
   flex: 1;
   border: 1px solid var(--line);
   background: var(--card);
-  border-radius: 8px;
-  padding: 8px 4px;
-  font-size: 12px;
+  border-radius: 7px;
+  padding: 6px 4px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ink-soft);
   cursor: pointer;
@@ -757,24 +757,24 @@ h1 {
 }
 
 /* Screen 4 — grocery list */
-.grocery-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 14px; }
+.grocery-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
 
 .grocery-category {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 14px 16px;
+  padding: 8px 12px;
   box-shadow: var(--shadow);
 }
 
 .grocery-category-title {
-  font-size: 13.5px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--ink);
-  margin: 0 0 8px;
-  padding-left: 9px;
+  margin: 0 0 4px;
+  padding-left: 8px;
   border-left: 3px solid var(--red);
 }
 
@@ -783,8 +783,8 @@ h1 {
 .grocery-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 0;
+  gap: 8px;
+  padding: 5px 0;
   border-bottom: 1px solid var(--line);
   cursor: pointer;
 }
@@ -792,21 +792,21 @@ h1 {
 .grocery-item:last-child { border-bottom: none; }
 
 .grocery-check {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
   accent-color: var(--red);
   flex-shrink: 0;
 }
 
 .grocery-item-name {
   flex: 1;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   text-transform: capitalize;
 }
 
 .grocery-item-qty {
-  font-size: 14.5px;
+  font-size: 12.5px;
   color: var(--ink-soft);
   white-space: nowrap;
 }
@@ -822,9 +822,9 @@ h1 {
   border: none;
   background: none;
   color: var(--ink-soft);
-  font-size: 16px;
+  font-size: 13px;
   cursor: pointer;
-  padding: 4px;
+  padding: 2px;
 }
 
 /* Modal (recipe view) */
@@ -883,7 +883,7 @@ h1 {
 
 .modal-body-title {
   font-size: 21px;
-  font-weight: 700;
+  font-weight: 600;
   margin: 12px 0 4px;
 }
 
@@ -917,7 +917,7 @@ h1 {
 
 .day-pick-day {
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--red);
@@ -933,7 +933,7 @@ h1 {
 
 .modal-ingredients h3 {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .06em;
   color: var(--ink-soft);
@@ -952,7 +952,7 @@ h1 {
 
 .modal-instructions h3 {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .06em;
   color: var(--ink-soft);
