@@ -129,6 +129,7 @@ function defaultState() {
     neverSuggest: [],     // recipeIds removed forever via "Remove It"
     nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
     customRecipes: [],    // recipes she's added herself — same shape as the built-in library
+    recipeCustomizations: {}, // { recipeId: { added: [ingredient,...], removed: [name,...] } } — permanent per-recipe tweaks (e.g. "always add corn to Air Fryer Chicken & Potatoes")
     household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
     noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
     recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
@@ -152,6 +153,7 @@ if (!state.customSuggestions) state.customSuggestions = {};
 if (!state.staples) state.staples = [];
 if (!state.nextWeekQueue) state.nextWeekQueue = [];
 if (!state.customRecipes) state.customRecipes = [];
+if (!state.recipeCustomizations) state.recipeCustomizations = {};
 if (!state.household) state.household = { adults: 2, kids: 2 };
 if (!state.noRepeatWeeks) state.noRepeatWeeks = 3;
 if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
@@ -219,7 +221,18 @@ function saveState() {
 }
 
 function recipeById(id) {
-  return allRecipes().find(r => r.id === id);
+  const base = allRecipes().find(r => r.id === id);
+  if (!base) return base;
+  const custom = state.recipeCustomizations[id];
+  if (!custom || (!custom.added?.length && !custom.removed?.length)) return base;
+
+  let ingredients = base.ingredients;
+  if (custom.removed?.length) ingredients = ingredients.filter(i => !custom.removed.includes(i.name));
+  if (custom.added?.length) {
+    const already = new Set(ingredients.map(i => i.name));
+    ingredients = [...ingredients, ...custom.added.filter(a => !already.has(a.name))];
+  }
+  return { ...base, ingredients };
 }
 
 // ---------- Screen navigation ----------
@@ -445,6 +458,7 @@ function mainVeggies() {
 
 function applyVeggieNormalization(recipe) {
   if (!recipe.name.startsWith("Veggie ") || !recipe.proteins.includes("vegetarian")) return recipe;
+  if (state.recipeCustomizations[recipe.id]) return recipe; // she's set this one manually — respect that over the automatic swap
   const kept = recipe.ingredients.filter(i => i.category !== "Produce" || VEGGIE_SWAP_KEEP.some(k => i.name.includes(k)));
   const veggies = mainVeggies().slice(0, 2).map(v => MAIN_VEGGIE_INGREDIENT[v]).filter(Boolean);
   if (!veggies.length) return recipe;
@@ -663,6 +677,7 @@ function renderWeek(weekPlan) {
       renderWeek(state.weekPlan);
     });
     node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker(index));
+    node.querySelector(".side-editor-btn").addEventListener("click", () => openSideEditor(index));
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
@@ -1104,6 +1119,95 @@ function openRecipePicker(dayIndex) {
   searchInput.focus();
 }
 
+// "Add/Swap a Side" — permanent per-recipe customization (via
+// state.recipeCustomizations), not tied to this one week. Quick-add
+// options are the main vegetables plus anything she's already added as a
+// grocery staple (so "Kraft Mac & Cheese" shows up as a one-tap option
+// once she's added it once), and a free-text field covers anything else.
+function openSideEditor(dayIndex) {
+  const entry = state.weekPlan[dayIndex];
+  if (!entry || !entry.recipeId) {
+    alert("Pick a recipe for this day first, then you can add or swap a side.");
+    return;
+  }
+  const recipeId = entry.recipeId;
+  if (!state.recipeCustomizations[recipeId]) state.recipeCustomizations[recipeId] = { added: [], removed: [] };
+  const custom = state.recipeCustomizations[recipeId];
+
+  function addIngredient(ing) {
+    if (!custom.added) custom.added = [];
+    custom.added.push(ing);
+    custom.removed = (custom.removed || []).filter(n => n !== ing.name);
+    saveState();
+    renderWeek(state.weekPlan);
+    render();
+  }
+
+  function render() {
+    const recipe = getEffectiveRecipe(entry);
+    const nonProtein = recipe.ingredients.filter(i => i.category !== "Meat & Seafood");
+    const existingNames = new Set(recipe.ingredients.map(i => i.name));
+
+    const currentRows = nonProtein.length
+      ? nonProtein.map(i => `<button type="button" class="day-pick-option" data-remove-item="${i.name}">
+          <span class="day-pick-meal" style="text-align:left;">${titleCase(i.name)}</span>
+          <span class="day-pick-day" style="text-transform:none;letter-spacing:0;">✕ remove</span>
+        </button>`).join("")
+      : `<p class="recipe-picker-empty">Nothing on the side yet.</p>`;
+
+    const veggieOptions = Object.values(MAIN_VEGGIE_INGREDIENT).filter(ing => !existingNames.has(ing.name));
+    const stapleOptions = state.staples
+      .map(s => ({ name: s.name, qty: 1, unit: "count", category: s.category || "Other" }))
+      .filter(ing => !existingNames.has(ing.name));
+    const quickAdds = [...veggieOptions, ...stapleOptions];
+    const addRows = quickAdds.map(ing => `<button type="button" class="day-pick-option" data-add-item="${escapeHtmlAttr(JSON.stringify(ing))}">
+        <span class="day-pick-meal" style="text-align:left;">+ ${titleCase(ing.name)}</span>
+      </button>`).join("");
+
+    openModal(`
+      <div class="modal-body-title">Add or swap a side for "${recipe.name}"</div>
+      <div class="modal-body-meta">Changes here stick for good — every future time this meal comes up, it'll include what you pick.</div>
+      <p class="field-label">Currently included</p>
+      <div class="day-pick-list">${currentRows}</div>
+      <p class="field-label" style="margin-top:16px">Quick add</p>
+      <div class="day-pick-list">${addRows || "<p class='recipe-picker-empty'>Nothing new to suggest — try typing one below.</p>"}</div>
+      <p class="field-label" style="margin-top:16px">Or add anything else</p>
+      <div class="add-word-row">
+        <input type="text" id="side-custom-input" class="add-word-input" placeholder="e.g. Kraft Mac & Cheese" />
+        <button type="button" class="add-word-btn" id="side-custom-add">+ Add</button>
+      </div>
+    `);
+
+    document.querySelectorAll("[data-remove-item]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const name = btn.dataset.removeItem;
+        custom.added = (custom.added || []).filter(a => a.name !== name);
+        if (!custom.removed) custom.removed = [];
+        if (!custom.removed.includes(name)) custom.removed.push(name);
+        saveState();
+        renderWeek(state.weekPlan);
+        render();
+      });
+    });
+
+    document.querySelectorAll("[data-add-item]").forEach(btn => {
+      btn.addEventListener("click", () => addIngredient(JSON.parse(btn.dataset.addItem)));
+    });
+
+    document.getElementById("side-custom-add").addEventListener("click", () => {
+      const input = document.getElementById("side-custom-input");
+      const name = input.value.trim().toLowerCase();
+      if (!name) return;
+      addIngredient({ name, qty: 1, unit: "count", category: "Other" });
+    });
+    document.getElementById("side-custom-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); document.getElementById("side-custom-add").click(); }
+    });
+  }
+
+  render();
+}
+
 function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
 
 function formatQty(qty) {
@@ -1436,6 +1540,13 @@ document.getElementById("btn-add-item").addEventListener("click", openAddGrocery
 
 function titleCase(s) {
   return s.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// For embedding arbitrary text (e.g. JSON) inside an HTML attribute value —
+// an unescaped "&" (as in "Kraft Mac & Cheese") corrupts the attribute
+// since the parser reads it as the start of an entity reference.
+function escapeHtmlAttr(s) {
+  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 // Formatted for pasting into a shopping app's search or a notes app —
