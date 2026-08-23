@@ -1448,6 +1448,57 @@ document.getElementById("btn-reset-everything").addEventListener("click", () => 
   location.reload();
 });
 
+// Data lives in this browser's localStorage only — there's no account, so
+// nothing syncs between her phone and PC automatically. Export/Import is
+// the manual bridge: copy the blob from one device, paste it into the
+// other, and everything (profile, week, staples, custom recipes, feedback
+// history) carries over in one go.
+document.getElementById("btn-export-data").addEventListener("click", async () => {
+  const text = JSON.stringify(state);
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied! On your other device, tap \"Import My Data\" and paste this in.");
+  } catch (e) {
+    openModal(`
+      <div class="modal-body-title">Your Data</div>
+      <div class="modal-body-meta">Couldn't copy automatically — tap in the box, select all, and copy. Paste it into "Import My Data" on your other device.</div>
+      <textarea readonly onclick="this.select()" style="width:100%;min-height:200px;font-family:inherit;font-size:12px;padding:12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);word-break:break-all;">${text}</textarea>
+    `);
+  }
+});
+
+document.getElementById("btn-import-data").addEventListener("click", () => {
+  openModal(`
+    <div class="modal-body-title">Import My Data</div>
+    <div class="modal-body-meta">Paste what you copied from "Export My Data" on your other device. This replaces everything currently in this app on this device.</div>
+    <textarea id="import-data-input" class="family-textarea" style="min-height:160px;font-size:12px;" placeholder="Paste your exported data here..."></textarea>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="import-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="import-confirm">Import</button>
+    </div>
+  `);
+  document.getElementById("import-cancel").addEventListener("click", closeModal);
+  document.getElementById("import-confirm").addEventListener("click", () => {
+    const raw = document.getElementById("import-data-input").value.trim();
+    if (!raw) { alert("Paste your exported data first."); return; }
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      alert("That doesn't look like valid exported data — make sure you copied the whole thing.");
+      return;
+    }
+    if (typeof parsed !== "object" || parsed === null || !("household" in parsed)) {
+      alert("That doesn't look like Meals4Us data — make sure you copied the whole thing from Export My Data.");
+      return;
+    }
+    if (!confirm("Import this data? It replaces everything currently in the app on this device.")) return;
+    state = { ...defaultState(), ...parsed };
+    saveState();
+    location.reload();
+  });
+});
+
 // Rebuilds the whole textarea from every selected word across every
 // category — one clearly-labeled line per category — so the text always
 // matches exactly what's toggled on, no matter which categories were tapped
