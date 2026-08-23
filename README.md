@@ -4,7 +4,7 @@ A mobile-friendly web app that turns a family's food description into a weekly
 meal plan and grocery list. Built from the spec in the ChatGPT conversation
 linked in the original request.
 
-## How it works (v1 — no AI, no account, no cost)
+## How it works (no AI — keyword matching, not a live model call)
 
 - **Screen 1 — Tell Us About Your Family**: free-text box + tap-to-insert prompt chips.
 - **Screen 2 — What We Learned**: `parseFamilyText()` in [app.js](app.js) keyword-matches the
@@ -21,8 +21,25 @@ linked in the original request.
   Produce / Meat & Seafood / Dairy & Eggs / Pantry / Frozen / Other. Fully editable
   (check off, add, remove).
 
-Everything persists in the browser's `localStorage` — refreshing or closing the tab
-resumes exactly where you left off. There's no backend and nothing to pay for.
+Everything also persists in the browser's `localStorage`, so the app still works
+fully offline/local if she skips signing in ("Not now" on the sign-in screen).
+
+## Accounts + sync
+
+Real accounts now exist via Firebase (project `meals4us-app`): email/password sign-in,
+each account's data in its own Firestore document at `/users/{uid}`, locked down by
+[firestore.rules](firestore.rules) so nobody can read or write anyone else's data.
+[sync.js](sync.js) is a plain classic script loaded after [app.js](app.js) (shares its
+global scope on purpose — no build step) that:
+
+- shows an auth gate ([index.html](index.html)'s `#auth-gate`) until she's signed in
+- on sign-in, pulls her cloud document and re-renders via `boot()` — or, if this is the
+  first time that account has synced, pushes whatever's already on this device up as
+  the seed
+- keeps a live `onSnapshot` listener open, so a change on one device shows up on any
+  other signed-in device within about a second, no manual export/import step
+- hooks into `app.js`'s existing `saveState()` (via a `queueCloudSave()` global it
+  checks for) so every local save also queues a debounced push to Firestore
 
 ## Expanding later
 
@@ -32,9 +49,8 @@ resumes exactly where you left off. There's no backend and nothing to pay for.
 - **Real AI**: the architecture is intentionally decoupled — `parseFamilyText()` and
   `pickWeek()`/`scoreRecipe()` could each be swapped for a live Claude call later
   (e.g. as a paid "Pro" tier) without touching the screens or data structures.
-- **Accounts / sync**: profile, week plan, and feedback are already separate objects in
-  `state` — moving them from `localStorage` to a real backend is a storage-layer swap,
-  not a redesign.
+- **Charging for it**: accounts now exist, which is the prerequisite for a paid tier —
+  Stripe isn't wired up yet.
 
 ## Running it locally
 
@@ -48,5 +64,10 @@ repo-level `.claude/launch.json`.) Uses a custom no-cache server, not plain
 
 ## Status
 
-**Live**: https://kimberlyschultz1968.github.io/meals4us/ — hosted on GitHub Pages,
-free, no account/server needed. Repo: https://github.com/kimberlyschultz1968/meals4us
+**Live**: https://meals4us-app.web.app — Firebase Hosting, project `meals4us-app`, this
+is the canonical URL going forward. `meals4us.com` (purchased 23 Aug 2026) is connected
+in Firebase but needs one DNS step at the registrar before it resolves — see the project
+memory for exact status. https://kimberlyschultz1968.github.io/meals4us/ (GitHub Pages)
+serves from the same repo, so it has the same code, but isn't the one to give out —
+plan is to point it at the Firebase copy or retire it once the domain is live. Repo:
+https://github.com/kimberlyschultz1968/meals4us
