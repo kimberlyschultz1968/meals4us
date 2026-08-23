@@ -133,6 +133,7 @@ function defaultState() {
     removalNotes: [],     // [{ recipeId, name, reason }] — why she removed something, for her own record
     household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
     noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
+    season: detectSeason(), // nudges scoring toward heartier/lighter meals — auto-detected, overridable on Screen 1
     recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
     heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
     staples: [             // recurring items added to every week's grocery list automatically
@@ -158,6 +159,16 @@ if (!state.recipeCustomizations) state.recipeCustomizations = {};
 if (!state.removalNotes) state.removalNotes = [];
 if (!state.household) state.household = { adults: 2, kids: 2 };
 if (!state.noRepeatWeeks) state.noRepeatWeeks = 3;
+if (!state.season) state.season = detectSeason();
+
+// Northern-hemisphere default — she can always override on Screen 1.
+function detectSeason() {
+  const month = new Date().getMonth(); // 0 = Jan
+  if (month === 11 || month <= 1) return "winter";
+  if (month <= 4) return "spring";
+  if (month <= 7) return "summer";
+  return "fall";
+}
 if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
 if (!state.heldBackRecipes) state.heldBackRecipes = [];
 
@@ -531,6 +542,25 @@ function recipeViolatesProfile(recipe, profile, neverSuggest = []) {
   return false;
 }
 
+// Soft seasonal nudge, not a hard filter — a soup in July can still show
+// up if nothing else fits, it just won't be reached for first.
+const COLD_WEATHER_FAMILIES = ["soup", "stew", "chili", "casserole", "curry"];
+const WARM_WEATHER_FAMILIES = ["salad"];
+
+function seasonAffinity(recipe, season) {
+  const families = dishFamiliesOf(recipe);
+  const isCold = families.some(f => COLD_WEATHER_FAMILIES.includes(f)) || recipe.tags.includes("slowcooker");
+  const isWarm = families.some(f => WARM_WEATHER_FAMILIES.includes(f)) || recipe.tags.includes("grill");
+  const wantsCold = season === "fall" || season === "winter";
+  const wantsWarm = season === "summer" || season === "spring";
+  let bonus = 0;
+  if (wantsCold && isCold) bonus += 1.5;
+  if (wantsCold && isWarm) bonus -= 1;
+  if (wantsWarm && isWarm) bonus += 1.5;
+  if (wantsWarm && isCold) bonus -= 1;
+  return bonus;
+}
+
 function scoreRecipe(recipe, profile, feedback) {
   let score = 0;
   for (const like of profile.likes) {
@@ -545,6 +575,7 @@ function scoreRecipe(recipe, profile, feedback) {
   // vegetarian dishes suggested overall — not banned outright (one might
   // still fit via cuisine/dish-family match), just deprioritized as filler.
   if (recipe.proteins.includes("vegetarian") && !profile.likes.includes("vegetarian")) score -= 1.5;
+  score += seasonAffinity(recipe, state.season);
   score += (feedback[recipe.id] || 0); // learned from Love it / Change it over time
   score += Math.random() * 0.5; // small jitter so the week isn't identical every time
   return score;
@@ -1529,6 +1560,7 @@ function rebuildProfileFromScreen1() {
     kids: Math.max(0, parseInt(document.getElementById("household-kids").value, 10) || 0)
   };
   state.noRepeatWeeks = parseInt(document.getElementById("no-repeat-weeks").value, 10) || 3;
+  state.season = document.getElementById("season").value;
   // Sources merged: the bubble taps (100% reliable, known category), a
   // fuzzy keyword-parse of each text box (covers anything typed by hand,
   // including manual edits to the tap-built summary), and every reason
@@ -1709,6 +1741,7 @@ function boot() {
   document.getElementById("household-adults").value = state.household.adults;
   document.getElementById("household-kids").value = state.household.kids;
   document.getElementById("no-repeat-weeks").value = state.noRepeatWeeks;
+  document.getElementById("season").value = state.season;
 
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);
