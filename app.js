@@ -130,6 +130,7 @@ function defaultState() {
     nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
     customRecipes: [],    // recipes she's added herself — same shape as the built-in library
     recipeCustomizations: {}, // { recipeId: { added: [ingredient,...], removed: [name,...] } } — permanent per-recipe tweaks (e.g. "always add corn to Air Fryer Chicken & Potatoes")
+    removalNotes: [],     // [{ recipeId, name, reason }] — why she removed something, for her own record
     household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
     noRepeatWeeks: 3,      // how many weeks (this one + completed ones) before a meal can repeat — her call, set on Screen 1
     recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
@@ -154,6 +155,7 @@ if (!state.staples) state.staples = [];
 if (!state.nextWeekQueue) state.nextWeekQueue = [];
 if (!state.customRecipes) state.customRecipes = [];
 if (!state.recipeCustomizations) state.recipeCustomizations = {};
+if (!state.removalNotes) state.removalNotes = [];
 if (!state.household) state.household = { adults: 2, kids: 2 };
 if (!state.noRepeatWeeks) state.noRepeatWeeks = 3;
 if (!state.recentWeeksHistory) state.recentWeeksHistory = [];
@@ -277,7 +279,7 @@ function parseFamilyText(text) {
     keepAtHome: new Set()
   };
 
-  const NEGATION = /\b(don't|dont|do not|doesn't|doesnt|does not|didn't|didnt|did not|won't|wont|will not|not a fan of|no |never|hate|dislike|allerg|can't have|cant have|cannot have|can not have|avoid)\b/;
+  const NEGATION = /\b(don't|dont|do not|doesn't|doesnt|does not|didn't|didnt|did not|won't|wont|will not|not a fan of|not big on|not into|not fond of|not keen on|no |never|hate|dislike|allerg|can't have|cant have|cannot have|can not have|avoid|don't care for|dont care for)\b/;
 
   function isNegated(sentence) {
     return NEGATION.test(sentence);
@@ -715,15 +717,7 @@ function renderWeek(weekPlan) {
 
       swapBtn.addEventListener("click", () => openMeatPicker(index));
 
-      removeBtn.addEventListener("click", () => {
-        if (!confirm(`Remove "${recipe.name}" from your recipes forever? You'll never see it suggested again.`)) return;
-        state.neverSuggest.push(recipe.id);
-        delete state.feedback[recipe.id];
-        const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
-        state.weekPlan[index].recipeId = newId;
-        saveState();
-        renderWeek(state.weekPlan);
-      });
+      removeBtn.addEventListener("click", () => openRemoveReasonModal(index, recipe));
     } else {
       node.querySelector(".meal-emoji").textContent = "🍽️";
       node.querySelector(".meal-name").textContent = "No match found";
@@ -1119,6 +1113,43 @@ function openRecipePicker(dayIndex) {
   searchInput.focus();
 }
 
+// Asking why, when she removes something forever, does two things: keeps
+// a record for her own reference, and actually learns from it — the
+// reason gets run through the same free-text parser as her Screen 1
+// notes, so "not big on soups" nudges the whole soup dish-family, not
+// just this one recipe. (No season-awareness yet — "especially in
+// summer" is noted verbatim but the app doesn't know what month it is.)
+function openRemoveReasonModal(dayIndex, recipe) {
+  openModal(`
+    <div class="modal-body-title">Remove "${recipe.name}" forever?</div>
+    <div class="modal-body-meta">You won't see it suggested again. Why? (optional — helps steer future suggestions toward what your family actually likes)</div>
+    <textarea id="remove-reason" class="family-textarea" style="min-height:80px" placeholder="e.g. not big on soups, especially in summer — they only like certain kinds"></textarea>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="remove-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="remove-confirm">Remove It</button>
+    </div>
+  `);
+  document.getElementById("remove-cancel").addEventListener("click", closeModal);
+  document.getElementById("remove-confirm").addEventListener("click", () => {
+    const reason = document.getElementById("remove-reason").value.trim();
+    finalizeRemoval(dayIndex, recipe, reason);
+    closeModal();
+  });
+}
+
+function finalizeRemoval(dayIndex, recipe, reason) {
+  state.neverSuggest.push(recipe.id);
+  delete state.feedback[recipe.id];
+  if (reason) {
+    state.removalNotes.push({ recipeId: recipe.id, name: recipe.name, reason });
+    state.profile = mergeProfiles(state.profile, parseFamilyText(reason));
+  }
+  const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
+  state.weekPlan[dayIndex].recipeId = newId;
+  saveState();
+  renderWeek(state.weekPlan);
+}
+
 // "Add/Swap a Side" — permanent per-recipe customization (via
 // state.recipeCustomizations), not tied to this one week. Quick-add
 // options are the main vegetables plus anything she's already added as a
@@ -1498,14 +1529,20 @@ function rebuildProfileFromScreen1() {
     kids: Math.max(0, parseInt(document.getElementById("household-kids").value, 10) || 0)
   };
   state.noRepeatWeeks = parseInt(document.getElementById("no-repeat-weeks").value, 10) || 3;
-  // Three sources, merged: the bubble taps (100% reliable, known category),
-  // plus a fuzzy keyword-parse of each text box as a fallback/extra catch —
-  // covers anything typed by hand in either box, including manual edits to
-  // the tap-built summary itself.
+  // Sources merged: the bubble taps (100% reliable, known category), a
+  // fuzzy keyword-parse of each text box (covers anything typed by hand,
+  // including manual edits to the tap-built summary), and every reason
+  // she's given for removing a meal — that last one matters because this
+  // function fully REBUILDS the profile from scratch each time (it also
+  // runs just from tapping the Profile tab); without re-folding removal
+  // reasons back in every time, a "not big on soups" she gave earlier
+  // would quietly vanish the next time this runs.
+  const removalReasons = state.removalNotes.map(n => n.reason).join(". ");
   state.profile = mergeProfiles(
     profileFromSelections(state.selections),
     tapped ? parseFamilyText(tapped) : emptyProfile(),
-    notes ? parseFamilyText(notes) : emptyProfile()
+    notes ? parseFamilyText(notes) : emptyProfile(),
+    removalReasons ? parseFamilyText(removalReasons) : emptyProfile()
   );
   saveState();
 }
