@@ -50,6 +50,18 @@
       <button type="button" class="btn btn-secondary btn-full" id="btn-sign-up" style="margin-top:8px">Create Account</button>
 
       <button type="button" class="auth-link" id="btn-forgot-password">Forgot password?</button>
+      <button type="button" class="auth-link" id="btn-show-lead-form">Not ready to sign up? Get updates instead</button>
+
+      <div class="lead-form hidden" id="lead-form">
+        <p class="field-label" style="margin-top:14px">We'll only email you about Meals4Us — no spam.</p>
+        <input type="email" id="lead-email" class="auth-input" placeholder="Email address" autocomplete="email" />
+        <label class="lead-consent">
+          <input type="checkbox" id="lead-consent" />
+          <span>It's OK to email me about Meals4Us</span>
+        </label>
+        <p class="auth-error hidden" id="lead-error"></p>
+        <button type="button" class="btn btn-secondary btn-full" id="btn-submit-lead">Keep Me Posted</button>
+      </div>
     </div>
   </div>
 

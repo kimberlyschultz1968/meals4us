@@ -1127,3 +1127,17 @@ h1 {
 }
 
 .auth-link:hover { color: var(--red); }
+
+.lead-form { text-align: left; }
+.lead-form.hidden { display: none; }
+
+.lead-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 2px 0 12px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.lead-consent input { margin-top: 2px; }

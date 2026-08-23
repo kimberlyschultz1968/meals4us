@@ -15,6 +15,14 @@ const TRIAL_DAYS = 7;
 const OWNER_EMAIL = "kimberly.schultz1968@gmail.com"; // her own account — always free, same rule as her other apps
 let unsubscribeBilling = null;
 
+// Which marketing link brought her here (?src=pinterest, ?src=gads, etc.) — captured
+// once on load and kept for the rest of this visit, same pattern as her other apps.
+const SIGNUP_SOURCE = (() => {
+  const fromUrl = new URLSearchParams(location.search).get("src");
+  if (fromUrl) { try { localStorage.setItem("meals4us_src", fromUrl); } catch (e) {} return fromUrl; }
+  try { return localStorage.getItem("meals4us_src") || ""; } catch (e) { return ""; }
+})();
+
 let currentUser = null;
 let unsubscribeSnapshot = null;
 let cloudSaveTimer = null;
@@ -257,7 +265,50 @@ document.getElementById("btn-sign-up").addEventListener("click", () => {
   if (!email || !password) { showAuthMessage("Enter an email and password."); return; }
   if (password.length < 6) { showAuthMessage("Password needs to be at least 6 characters."); return; }
   clearAuthMessage();
-  auth.createUserWithEmailAndPassword(email, password).catch(err => showAuthMessage(friendlyAuthError(err)));
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(cred => {
+      // One small companion doc, written once — records which marketing link brought
+      // her in, for the Command Center's by-source breakdown (Firebase Auth itself
+      // has no room for a custom field like this).
+      db.collection("signups").doc(cred.user.uid).set({ source: SIGNUP_SOURCE, email, createdAt: Date.now() })
+        .catch(err => console.error("Meals4Us: signup source save failed", err));
+    })
+    .catch(err => showAuthMessage(friendlyAuthError(err)));
+});
+
+// ---------- Lead capture: visitors who aren't ready to sign up yet ----------
+
+document.getElementById("btn-show-lead-form").addEventListener("click", () => {
+  document.getElementById("lead-form").classList.toggle("hidden");
+});
+
+document.getElementById("btn-submit-lead").addEventListener("click", async () => {
+  const email = document.getElementById("lead-email").value.trim();
+  const consent = document.getElementById("lead-consent").checked;
+  const errEl = document.getElementById("lead-error");
+  errEl.classList.add("hidden");
+  if (!email) { errEl.textContent = "Enter your email address."; errEl.classList.remove("hidden"); return; }
+  if (!consent) { errEl.textContent = "Please tick the box so we know it's OK to email you."; errEl.classList.remove("hidden"); return; }
+  const btn = document.getElementById("btn-submit-lead");
+  btn.disabled = true;
+  try {
+    const res = await fetch(MEALS4US_API + "/meals4us/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, consent, source: SIGNUP_SOURCE })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById("lead-form").innerHTML = `<p class="auth-error auth-success">Thanks — we'll keep you posted!</p>`;
+    } else {
+      errEl.textContent = data.error || "Something went wrong. Try again.";
+      errEl.classList.remove("hidden");
+    }
+  } catch (e) {
+    errEl.textContent = "Couldn't reach the server — check your connection.";
+    errEl.classList.remove("hidden");
+  }
+  btn.disabled = false;
 });
 
 document.getElementById("btn-forgot-password").addEventListener("click", () => {
