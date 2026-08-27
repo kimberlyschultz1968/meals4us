@@ -753,15 +753,21 @@ function renderWeek(weekPlan) {
       if (score >= 1) loveBtn.classList.add("loved");
       else if (score > 0) okBtn.classList.add("marked-ok");
 
+      // Marking feedback on Saturday's meal is how she wraps up the week —
+      // it rolls this week into history and brings the next one up, same as
+      // "Start Next Week," just without asking first since finishing out
+      // the week isn't a "start over" she needs to confirm each time.
       loveBtn.addEventListener("click", () => {
         state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 1;
         saveState();
+        if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
         renderWeek(state.weekPlan);
       });
 
       okBtn.addEventListener("click", () => {
         state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 0.25;
         saveState();
+        if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
         renderWeek(state.weekPlan);
       });
 
@@ -1861,19 +1867,13 @@ function saveGroceryItem() {
   closeModal();
 }
 
-// Shared by the button at the bottom of the grocery list and the quick-access
-// one in the header, so "start a new week" works the same no matter where
-// she triggers it from.
-function startNewWeek() {
-  if (!state.weekPlan) {
-    alert("Finish telling us about your family and building this week's plan first — then you can start new weeks from here any time.");
-    return;
-  }
-  const queuedNote = state.nextWeekQueue.length
-    ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
-    : "";
-  if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
-
+// The actual rotation: archive the week that's ending, promote whatever's
+// already sitting in Week 2 into the new Week 1 — her picks carry forward,
+// nothing gets thrown away — and build a fresh Week 2 behind it. Shared by
+// the "Start Next Week" button (after she confirms) and by marking
+// Saturday's meal Love It/OK (no confirm — finishing out the week is just
+// how the week ends, not a "start over" she needs to approve each time).
+function rotateToNextWeek(showNotice) {
   const presetByDay = {};
   // Whatever she already planned in Week 2 carries forward as the starting
   // point for the new week — those were deliberate choices, not just a
@@ -1901,6 +1901,22 @@ function startNewWeek() {
   renderWeek2(state.weekPlan2);
   document.getElementById("include-week2-groceries").checked = false;
   showScreen(3);
+  if (showNotice) alert("Saturday's done — this week's tucked away and next week is now up top, with a fresh Week 2 behind it.");
+}
+
+// Shared by the button at the bottom of the grocery list and the quick-access
+// one in the header, so "start a new week" works the same no matter where
+// she triggers it from.
+function startNewWeek() {
+  if (!state.weekPlan) {
+    alert("Finish telling us about your family and building this week's plan first — then you can start new weeks from here any time.");
+    return;
+  }
+  const queuedNote = state.nextWeekQueue.length
+    ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
+    : "";
+  if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
+  rotateToNextWeek();
 }
 document.getElementById("btn-start-over").addEventListener("click", startNewWeek);
 document.getElementById("btn-start-next-week").addEventListener("click", startNewWeek);

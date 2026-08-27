@@ -80,8 +80,22 @@ function queueCloudSave() {
   cloudSaveTimer = setTimeout(pushCloudState, 800);
 }
 
+// Flips true once connectCloud() has done its first read for this sign-in,
+// so we actually know what's on the server before ever writing to it. Without
+// this, a save triggered right at page load (boot() backfilling something,
+// for instance) could race ahead of that first read — lastKnownRev would
+// still be null, guardedPush's check would be skipped entirely, and this
+// device's local copy (which might be the OLDER one, e.g. a phone that
+// hasn't been opened in a while) would overwrite a newer save already
+// sitting on the server. That race is what made the week plan disappear.
+let initialCloudSyncDone = false;
+
 function pushCloudState() {
   if (!currentUser) return;
+  if (!initialCloudSyncDone) {
+    cloudSaveTimer = setTimeout(pushCloudState, 400);
+    return;
+  }
   const json = JSON.stringify(state);
   if (json === lastSyncedJSON) return;
   guardedPush(json).catch(err => {
@@ -159,6 +173,7 @@ function attachRealtimeListener(uid) {
 
 function connectCloud(user) {
   userDocRef(user.uid).get().then(snap => {
+    initialCloudSyncDone = true;
     if (snap.exists) {
       applyRemoteSnapshot(snap);
     } else {
@@ -169,6 +184,7 @@ function connectCloud(user) {
     attachRealtimeListener(user.uid);
   }).catch(err => {
     console.error("Meals4Us: cloud connect failed", err);
+    initialCloudSyncDone = true; // don't block local saves forever if the initial read failed
   });
 }
 
@@ -310,6 +326,12 @@ auth.onAuthStateChanged(user => {
     strip.classList.add("hidden");
     if (unsubscribeSnapshot) { unsubscribeSnapshot(); unsubscribeSnapshot = null; }
     if (unsubscribeBilling) { unsubscribeBilling(); unsubscribeBilling = null; }
+    // Reset the sync-version tracking so a later sign-in (possibly to a
+    // different account in the same tab) starts from a clean check instead
+    // of comparing against the previous account's version.
+    initialCloudSyncDone = false;
+    lastKnownRev = null;
+    lastSyncedJSON = null;
     hidePaywall();
     showAuthGate();
   }
