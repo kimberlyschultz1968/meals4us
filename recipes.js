@@ -2571,6 +2571,344 @@ const RECIPES = [
       "Cover and cook 6-8 minutes until the egg whites are set but yolks are still soft.",
       "Sprinkle with feta and serve straight from the pan."
     ]
+  },
+  {
+    id: "bbq-ribs", name: "BBQ Baby Back Ribs", emoji: "🍖", cuisine: "american",
+    proteins: ["pork"], tags: ["slowcooker"], allergens: [],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "pork baby back ribs", qty: 3, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Rub the ribs all over with brown sugar, garlic powder, and smoked paprika.",
+      "Place ribs in the slow cooker, standing them up around the edge if needed to fit.",
+      "Pour half the BBQ sauce over the ribs.",
+      "Cook on low for 7-8 hours, until the meat is falling-off-the-bone tender.",
+      "Brush with the remaining BBQ sauce and broil 3-4 minutes to caramelize before serving."
+    ]
+  },
+  {
+    id: "chicken-dumplings", name: "Chicken and Dumplings", emoji: "🍲", cuisine: "american",
+    proteins: ["chicken"], tags: ["onepot", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "celery", qty: 1, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "biscuit mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "milk", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook chicken breast in a large pot with the broth until done, about 15 minutes; remove and shred.",
+      "Add carrots, celery, and onion to the broth and simmer until tender, about 10 minutes.",
+      "Stir the shredded chicken back in.",
+      "Mix biscuit mix, milk, and melted butter into a soft dough; drop spoonfuls into the simmering pot.",
+      "Cover and simmer 12-15 minutes until the dumplings are cooked through."
+    ]
+  },
+  {
+    id: "cottage-pie", name: "Cottage Pie", emoji: "🥧", cuisine: "american",
+    proteins: ["beef"], tags: ["kidFriendly", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 50,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
+      { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "beef broth", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "tomato paste", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Boil the potatoes until fork-tender, then mash with butter and milk.",
+      "Brown ground beef with the onion in a skillet; drain excess fat.",
+      "Stir in tomato paste, beef broth, and peas and carrots; simmer 8-10 minutes until thickened.",
+      "Spread the beef mixture in a baking dish and top with the mashed potatoes.",
+      "Bake at 400F for 20 minutes, until the top is lightly golden."
+    ]
+  },
+  {
+    id: "classic-cheeseburgers", name: "Classic Cheeseburgers", emoji: "🧀", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "grill", "kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "burger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
+      { name: "tomato", qty: 1, unit: "whole", category: "Produce" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Form ground beef into 6 patties, season with salt and pepper.",
+      "Grill or pan-sear patties 3-4 minutes per side.",
+      "Top each patty with cheese during the last minute of cooking, until melted.",
+      "Toast the buns lightly.",
+      "Build burgers with lettuce, tomato, onion, and ketchup."
+    ]
+  },
+  {
+    id: "beef-tips-noodles", name: "Beef Tips & Noodles", emoji: "🥩", cuisine: "american",
+    proteins: ["beef"], tags: ["onepot", "leftovers"], allergens: ["gluten", "dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "beef stew meat", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "beef broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the beef stew meat in a large pot; remove and set aside.",
+      "Sauté onion and mushrooms in the same pot until soft.",
+      "Sprinkle in flour, then stir in beef broth; return the beef to the pot.",
+      "Cover and simmer 25-30 minutes until the beef is tender.",
+      "Stir in sour cream. Serve over cooked egg noodles, or over mashed potatoes instead if that's more the family's speed."
+    ]
+  },
+  {
+    id: "bbq-chicken-rollups", name: "BBQ Chicken Roll-Ups", emoji: "🌯", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "crescent roll dough", qty: 2, unit: "can", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook and shred the chicken breast (or use leftover cooked chicken).",
+      "Toss the shredded chicken with BBQ sauce.",
+      "Unroll the crescent dough into triangles; place a spoonful of chicken and a sprinkle of cheese on the wide end of each.",
+      "Roll up and place seam-side down on a baking sheet.",
+      "Bake at 375F for 12-15 minutes until golden brown."
+    ]
+  },
+  {
+    id: "bbq-chicken-thighs", name: "BBQ Chicken Thighs", emoji: "🍗", cuisine: "american",
+    proteins: ["chicken"], tags: ["grill", "quick", "kidFriendly"], allergens: [],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken thighs", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "onion powder", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season chicken thighs with garlic powder and onion powder.",
+      "Grill (or bake at 400F) for about 20 minutes, turning once, until cooked through.",
+      "Brush generously with BBQ sauce during the last 5 minutes of cooking.",
+      "Let rest a few minutes before serving with extra sauce on the side."
+    ]
+  },
+  {
+    id: "turkey-meatloaf", name: "Turkey Meatloaf", emoji: "🦃", cuisine: "american",
+    proteins: ["turkey"], tags: ["kidFriendly", "leftovers"], allergens: ["egg", "gluten"],
+    timeMinutes: 55,
+    ingredients: [
+      { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Mix ground turkey, breadcrumbs, egg, minced onion, and half the ketchup with the worcestershire sauce.",
+      "Shape into a loaf in a baking dish.",
+      "Spread the remaining ketchup over the top.",
+      "Bake at 350F for 45 minutes, until cooked through (165F internal).",
+      "Let rest 5 minutes before slicing."
+    ]
+  },
+  {
+    id: "baked-potato-soup", name: "Loaded Baked Potato Soup", emoji: "🥔", cuisine: "american",
+    proteins: ["pork"], tags: ["onepot"], allergens: ["dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "potatoes", qty: 2.5, unit: "lb", category: "Produce" },
+      { name: "bacon", qty: 6, unit: "oz", category: "Meat & Seafood" },
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "green onions", qty: 2, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cook bacon until crisp; crumble and set aside.",
+      "Boil the potatoes in chicken broth until very tender, about 15 minutes.",
+      "Mash about half the potatoes right in the pot for a thick, chunky texture.",
+      "Stir in milk and half the cheese until melted and creamy.",
+      "Serve topped with the remaining cheese, bacon, sour cream, and green onions."
+    ]
+  },
+  {
+    id: "broccoli-cheddar-soup", name: "Broccoli Cheddar Soup", emoji: "🥦", cuisine: "american",
+    proteins: ["vegetarian"], tags: ["vegetarian", "onepot", "quick"], allergens: ["dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "broccoli", qty: 4, unit: "cup", category: "Produce" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "vegetable broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Sauté onion and carrots in butter until softened.",
+      "Add broccoli and vegetable broth; simmer 10 minutes until the broccoli is tender.",
+      "Whisk flour into the milk, then stir into the pot to thicken.",
+      "Reduce heat and stir in cheddar cheese until melted.",
+      "Blend partially with an immersion blender for a chunky-smooth texture, if you like."
+    ]
+  },
+  {
+    id: "fried-catfish", name: "Southern Fried Catfish", emoji: "🐟", cuisine: "american",
+    proteins: ["fish"], tags: ["quick"], allergens: ["fish", "gluten", "egg"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "catfish fillets", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "cornmeal", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "cajun seasoning", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
+      { name: "vegetable oil", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Whisk eggs in a shallow bowl.",
+      "Mix cornmeal, flour, and cajun seasoning in another shallow bowl.",
+      "Dip catfish fillets in egg, then coat in the cornmeal mixture.",
+      "Fry in hot oil, about 4 minutes per side, until golden and crisp.",
+      "Drain on paper towels before serving."
+    ]
+  },
+  {
+    id: "chicken-waffles", name: "Chicken & Waffles", emoji: "🧇", cuisine: "american",
+    proteins: ["chicken"], tags: ["breakfastForDinner", "kidFriendly"], allergens: ["gluten", "egg", "dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken tenders", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "buttermilk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "flour", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "waffle mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "vegetable oil", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "maple syrup", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Soak chicken tenders in buttermilk for at least 15 minutes.",
+      "Dredge the chicken in flour and fry in hot oil, about 4 minutes per side, until golden and cooked through.",
+      "Make waffles according to the waffle mix directions.",
+      "Serve the fried chicken on top of the waffles with maple syrup."
+    ]
+  },
+  {
+    id: "honey-mustard-pork-chops", name: "Honey Mustard Pork Chops", emoji: "🐖", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "honey", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
+      { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Whisk together honey, dijon mustard, minced garlic, and olive oil.",
+      "Season pork chops with salt and pepper, then sear in a hot skillet, 3-4 minutes per side.",
+      "Pour the honey mustard mixture over the chops and reduce heat.",
+      "Simmer 3-4 minutes, spooning the sauce over the chops, until cooked through (145F)."
+    ]
+  },
+  {
+    id: "ranch-chicken-bake", name: "Ranch Chicken Bake", emoji: "🐔", cuisine: "american",
+    proteins: ["chicken"], tags: ["kidFriendly", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "ranch seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "bacon bits", qty: 0.25, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Place chicken breast in a baking dish and sprinkle with ranch seasoning.",
+      "Spread sour cream evenly over the chicken.",
+      "Top with cheddar cheese and bacon bits.",
+      "Bake at 375F for 30-35 minutes, until the chicken is cooked through (165F) and the cheese is bubbly."
+    ]
+  },
+  {
+    id: "corn-chowder", name: "Corn Chowder", emoji: "🌽", cuisine: "american",
+    proteins: ["vegetarian"], tags: ["vegetarian", "onepot", "quick"], allergens: ["dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "corn", qty: 4, unit: "cup", category: "Produce" },
+      { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "vegetable broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Sauté onion in butter until soft.",
+      "Add potatoes and vegetable broth; simmer 12-15 minutes until the potatoes are tender.",
+      "Stir in corn and milk; simmer 5 more minutes.",
+      "Mash a few scoops right in the pot for a thicker texture, if you like."
+    ]
+  },
+  {
+    id: "smothered-pork-chops", name: "Smothered Pork Chops", emoji: "🍖", cuisine: "american",
+    proteins: ["pork"], tags: ["onepot"], allergens: ["dairy", "gluten"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
+      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Season pork chops with salt and pepper; sear in a skillet, 3-4 minutes per side, then set aside.",
+      "Sauté onion and mushrooms in the same skillet until soft.",
+      "Sprinkle in flour, then whisk in chicken broth and milk to make a gravy.",
+      "Return the pork chops to the skillet, cover, and simmer 12-15 minutes until tender."
+    ]
+  },
+  {
+    id: "salisbury-steak", name: "Salisbury Steak", emoji: "🥩", cuisine: "american",
+    proteins: ["beef"], tags: ["onepot", "kidFriendly"], allergens: ["gluten", "egg"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
+      { name: "beef broth", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Mix ground beef, breadcrumbs, egg, and a little minced onion; shape into oval patties.",
+      "Brown the patties in a skillet, then set aside.",
+      "Sauté the remaining onion and mushrooms in the same skillet.",
+      "Sprinkle in flour, then whisk in beef broth to make a gravy.",
+      "Return the patties to the skillet, cover, and simmer 12-15 minutes until cooked through."
+    ]
   }
 ];
 
