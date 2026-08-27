@@ -125,6 +125,8 @@ function defaultState() {
     customSuggestions: {}, // { categoryKey: [word, ...] } — words she's added herself, become reusable bubbles
     profile: null,
     weekPlan: null,      // [{ day, recipeId }]
+    weekPlan2: null,      // [{ day, recipeId }] — Week 2, a look-ahead plan shown alongside the current week
+    includeWeek2Groceries: false, // opt-in: whether "Create Grocery List" folds Week 2's ingredients in too
     feedback: {},         // { recipeId: score }
     neverSuggest: [],     // recipeIds removed forever via "Remove It"
     nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
@@ -175,6 +177,8 @@ function hydrateStateDefaults(s) {
   if (!s.season) s.season = detectSeason();
   if (!s.recentWeeksHistory) s.recentWeeksHistory = [];
   if (!s.heldBackRecipes) s.heldBackRecipes = [];
+  if (s.weekPlan2 === undefined) s.weekPlan2 = null;
+  if (typeof s.includeWeek2Groceries !== "boolean") s.includeWeek2Groceries = false;
   return s;
 }
 
@@ -672,6 +676,14 @@ function pickWeek(profile, feedback, excludeIds = [], neverSuggest = [], presetB
   });
 }
 
+// Builds Week 2 — a second, full week shown alongside the current one so she
+// can plan a step ahead. Excludes whatever's in Week 1 (so the two weeks
+// don't repeat each other) on top of her normal no-repeat history.
+function generateWeek2() {
+  const week1Ids = (state.weekPlan || []).map(d => d.recipeId).filter(Boolean);
+  state.weekPlan2 = pickWeek(state.profile, state.feedback, [...recentHistoryIds(), ...week1Ids], state.neverSuggest, {});
+}
+
 function pickReplacement(profile, feedback, weekPlan, dayIndex, neverSuggest = [], historyIds = []) {
   const thisWeekIds = weekPlan.map(d => d.recipeId).filter(Boolean);
 
@@ -804,6 +816,128 @@ function renderNextWeekPreview() {
     list.appendChild(row);
   });
   box.classList.remove("hidden");
+}
+
+// Week 2 — a simplified version of renderWeek(). She can swap the recipe,
+// mark a day free, and give feedback, same as Week 1. It skips Change Day
+// (nowhere further out to push to), Swap Meat, Remove It, and the side
+// editor — those are Week-1-only for now, kept simple since this is meant
+// to get roughly right before it becomes the real week, not fully tuned.
+function renderWeek2(weekPlan2) {
+  const listEl = document.getElementById("week-list-2");
+  if (!weekPlan2) { listEl.innerHTML = ""; return; }
+  listEl.innerHTML = "";
+  const tpl = document.getElementById("tpl-day-card");
+  const freeTpl = document.getElementById("tpl-free-day-card");
+  const week2HistoryIds = [...recentHistoryIds(), ...state.weekPlan.map(d => d.recipeId).filter(Boolean)];
+
+  weekPlan2.forEach((entry, index) => {
+    if (entry.freeDay) {
+      const node = freeTpl.content.cloneNode(true);
+      node.querySelector(".day-name").textContent = entry.day;
+      node.querySelector(".undo-free-day").addEventListener("click", () => {
+        const newId = pickReplacement(state.profile, state.feedback, state.weekPlan2, index, state.neverSuggest, week2HistoryIds);
+        state.weekPlan2[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
+        saveState();
+        renderWeek2(state.weekPlan2);
+      });
+      listEl.appendChild(node);
+      return;
+    }
+
+    const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
+    const node = tpl.content.cloneNode(true);
+    node.querySelector(".day-name").textContent = entry.day;
+    node.querySelector(".free-day-toggle").addEventListener("click", () => {
+      state.weekPlan2[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
+      saveState();
+      renderWeek2(state.weekPlan2);
+    });
+    node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker2(index));
+    const actionRows = node.querySelectorAll(".meal-actions");
+    if (actionRows[1]) actionRows[1].remove(); // Change Day / Swap Meat / Remove It — Week-1-only
+    const sideBtn = node.querySelector(".side-editor-btn");
+    if (sideBtn) sideBtn.remove();
+
+    if (recipe) {
+      node.querySelector(".meal-emoji").textContent = recipe.emoji;
+      node.querySelector(".meal-name").textContent = recipe.name;
+      const metaBits = [`${recipe.timeMinutes} min`];
+      if ((state.feedback[recipe.id] || 0) >= 2) metaBits.push("Family favorite");
+      node.querySelector(".meal-meta").textContent = metaBits.join(" • ");
+
+      const loveBtn = node.querySelector(".love-btn");
+      const okBtn = node.querySelector(".ok-btn");
+      const viewBtn = node.querySelector(".view-btn");
+
+      const score = state.feedback[recipe.id] || 0;
+      if (score >= 1) loveBtn.classList.add("loved");
+      else if (score > 0) okBtn.classList.add("marked-ok");
+
+      loveBtn.addEventListener("click", () => {
+        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 1;
+        saveState();
+        renderWeek2(state.weekPlan2);
+      });
+      okBtn.addEventListener("click", () => {
+        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 0.25;
+        saveState();
+        renderWeek2(state.weekPlan2);
+      });
+      viewBtn.addEventListener("click", () => openRecipeModal(recipe));
+    } else {
+      node.querySelector(".meal-emoji").textContent = "🍽️";
+      node.querySelector(".meal-name").textContent = "No match found";
+      node.querySelector(".meal-meta").textContent = "Try loosening a dislike in your profile";
+      node.querySelectorAll(".meal-actions").forEach(el => el.remove());
+    }
+
+    listEl.appendChild(node);
+  });
+}
+
+// "Pick a Recipe for This Day" for Week 2 — same search-the-library modal as
+// Week 1's, just writes to weekPlan2 instead.
+function openRecipePicker2(dayIndex) {
+  const entry = state.weekPlan2[dayIndex];
+  const all = [...allRecipes()].sort((a, b) => a.name.localeCompare(b.name));
+
+  function renderResults(query) {
+    const q = query.trim().toLowerCase();
+    const matches = q ? all.filter(r => r.name.toLowerCase().includes(q)) : all;
+    const list = document.getElementById("rp-results");
+    if (!matches.length) {
+      list.innerHTML = `<p class="recipe-picker-empty">No recipes match "${query}".</p>`;
+      return;
+    }
+    list.innerHTML = matches.map(r => {
+      const flagged = recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "";
+      return `<button type="button" class="day-pick-option" data-recipe-id="${r.id}">
+        <span class="day-pick-meal" style="text-align:left;">${r.emoji} ${r.name}${flagged}</span>
+        <span class="day-pick-day" style="text-transform:none;letter-spacing:0;">${r.timeMinutes} min</span>
+      </button>`;
+    }).join("");
+    list.querySelectorAll("[data-recipe-id]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        state.weekPlan2[dayIndex] = { day: entry.day, recipeId: btn.dataset.recipeId, proteinOverride: null, freeDay: false };
+        saveState();
+        renderWeek2(state.weekPlan2);
+        closeModal();
+      });
+    });
+  }
+
+  openModal(`
+    <div class="modal-body-title">Pick a recipe for ${entry.day} — Week 2</div>
+    <div class="modal-body-meta">⚠️ means it conflicts with an allergy or dislike in your profile — still pickable, just flagged.</div>
+    <input type="text" id="rp-search" class="recipe-picker-search" placeholder="Search by name..." />
+    <div class="recipe-picker-list" id="rp-results"></div>
+  `);
+
+  renderResults("");
+  const searchInput = document.getElementById("rp-search");
+  searchInput.addEventListener("input", () => renderResults(searchInput.value));
+  searchInput.focus();
 }
 
 function openModal(html) {
@@ -1602,13 +1736,25 @@ document.getElementById("btn-edit-2").addEventListener("click", () => {
 
 document.getElementById("btn-confirm-2").addEventListener("click", () => {
   state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
+  generateWeek2();
   saveState();
   renderWeek(state.weekPlan);
+  renderWeek2(state.weekPlan2);
   showScreen(3);
 });
 
+document.getElementById("include-week2-groceries").addEventListener("change", e => {
+  state.includeWeek2Groceries = e.target.checked;
+  saveState();
+});
+
 document.getElementById("btn-continue-3").addEventListener("click", () => {
-  state.groceryList = buildGroceryList(state.weekPlan, state.profile.keepAtHome, state.staples);
+  // Week 2 only goes into the list if she's checked the box — otherwise
+  // she'd be shopping for meals she hasn't even settled on yet.
+  const plans = state.includeWeek2Groceries && state.weekPlan2
+    ? [...state.weekPlan, ...state.weekPlan2]
+    : state.weekPlan;
+  state.groceryList = buildGroceryList(plans, state.profile.keepAtHome, state.staples);
   saveState();
   renderGrocery(state.groceryList);
   showScreen(4);
@@ -1729,6 +1875,17 @@ function startNewWeek() {
   if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
 
   const presetByDay = {};
+  // Whatever she already planned in Week 2 carries forward as the starting
+  // point for the new week — those were deliberate choices, not just a
+  // preview to throw away. Free days don't carry forward as presets; the
+  // new week just gets a normal pick for that day.
+  if (state.weekPlan2) {
+    state.weekPlan2.forEach(entry => {
+      if (entry.recipeId && !entry.freeDay) presetByDay[entry.day] = { recipeId: entry.recipeId, proteinOverride: entry.proteinOverride || null };
+    });
+  }
+  // Anything explicitly pushed forward via "Change Day → Next Week" wins
+  // over whatever Week 2 had planned for that same day.
   state.nextWeekQueue.forEach(q => {
     presetByDay[q.day] = { recipeId: q.recipeId, proteinOverride: q.proteinOverride };
   });
@@ -1737,8 +1894,12 @@ function startNewWeek() {
   tickHeldBack(); // count down anything sent "Beyond" — this generation used it, one fewer to go
   state.nextWeekQueue = [];
   state.groceryList = null;
+  state.includeWeek2Groceries = false; // reset — she opts in fresh for each new grocery list
+  generateWeek2(); // a fresh Week 2, now that the old one just became Week 1
   saveState();
   renderWeek(state.weekPlan);
+  renderWeek2(state.weekPlan2);
+  document.getElementById("include-week2-groceries").checked = false;
   showScreen(3);
 }
 document.getElementById("btn-start-over").addEventListener("click", startNewWeek);
@@ -1765,6 +1926,11 @@ function boot() {
 
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);
+  // Backfill Week 2 for anyone who already had a week plan before this
+  // feature existed — including her own account right now.
+  if (state.weekPlan && !state.weekPlan2) { generateWeek2(); saveState(); }
+  if (state.weekPlan2) renderWeek2(state.weekPlan2);
+  document.getElementById("include-week2-groceries").checked = !!state.includeWeek2Groceries;
   if (state.groceryList) renderGrocery(state.groceryList);
 
   // Resume wherever they left off, but only if the data needed for that

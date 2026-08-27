@@ -543,6 +543,32 @@ h1 {
   flex-shrink: 0;
 }
 
+/* Week 2 — planning-ahead section, shown below Week 1 on Screen 3 */
+.week2-header {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--line);
+}
+.week2-header h2 { font-size: 17px; margin: 0 0 4px; color: var(--ink); }
+.week2-header .subtitle { margin: 0 0 14px; }
+
+.week2-grocery-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 16px 0 4px;
+  cursor: pointer;
+}
+.week2-grocery-toggle input[type="checkbox"] {
+  width: 19px;
+  height: 19px;
+  accent-color: var(--red);
+  flex-shrink: 0;
+}
+
 .add-recipe-btn { margin-top: 20px; }
 
 /* Add Your Own Recipe form (rendered inside the shared modal) */
