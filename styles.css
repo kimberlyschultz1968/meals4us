@@ -1050,10 +1050,16 @@ h1 {
 #trial-badge.hidden { display: none; }
 #btn-manage-billing.hidden { display: none; }
 
-.header-actions {
+/* Lock It In / Start Next Week — sit just below the week's day cards */
+.week-actions {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.week-actions .btn { flex: 1; }
+
+@media (max-width: 380px) {
+  .week-actions { flex-direction: column; }
 }
 
 /* Auth gate — full-screen sign in / create account overlay */

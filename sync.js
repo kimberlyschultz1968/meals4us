@@ -37,15 +37,40 @@ function userDocRef(uid) {
 // (state.recentWeeksHistory is exactly that — an array of completed weeks,
 // each one an array of recipe ids). Encoding just that one field as a JSON
 // string at the cloud boundary keeps app.js's in-memory shape untouched.
+// _rev is our own version marker (see guardedPush below) — a timestamp
+// stamped on every write so any tab can tell whether the copy it's holding
+// is still the newest one before it overwrites the server.
 function toCloudDoc(s) {
-  return { ...s, recentWeeksHistory: JSON.stringify(s.recentWeeksHistory || []) };
+  return { ...s, recentWeeksHistory: JSON.stringify(s.recentWeeksHistory || []), _rev: Date.now() };
 }
 function fromCloudDoc(doc) {
   const s = { ...doc };
+  delete s._rev;
   if (typeof s.recentWeeksHistory === "string") {
     try { s.recentWeeksHistory = JSON.parse(s.recentWeeksHistory); } catch (e) { s.recentWeeksHistory = []; }
   }
   return s;
+}
+
+// The _rev of the version we last confirmed matches the server — either
+// because we just read it, or because we just wrote it and Firestore
+// confirmed. null until the first successful read/write this session.
+let lastKnownRev = null;
+
+// Applies a snapshot from Firestore (a real change from another device) to
+// this tab: updates our version marker, updates state, re-renders.
+function applyRemoteSnapshot(snap) {
+  const data = snap.data();
+  lastKnownRev = data._rev || null;
+  const incoming = fromCloudDoc(data);
+  lastSyncedJSON = JSON.stringify(incoming);
+  applyingRemoteState = true;
+  try {
+    state = hydrateStateDefaults(incoming);
+    boot(); // re-renders every screen from the new state, same function used at startup
+  } finally {
+    applyingRemoteState = false;
+  }
 }
 
 // Called from app.js's saveState() every time anything changes locally.
@@ -59,16 +84,40 @@ function pushCloudState() {
   if (!currentUser) return;
   const json = JSON.stringify(state);
   if (json === lastSyncedJSON) return;
-  lastSyncedJSON = json;
-  userDocRef(currentUser.uid).set(toCloudDoc(state)).catch(err => {
+  guardedPush(json).catch(err => {
     console.error("Meals4Us: cloud save failed", err);
   });
+}
+
+// Checks the server hasn't moved on since this tab last saw it, before
+// writing. Without this, a tab that's been sitting open a while (backgrounded
+// phone tab, old computer tab) can push its outdated copy of the week plan
+// right over a newer save from another device, with no warning — that's
+// what was making the week plan "keep changing." If the server has a newer
+// _rev than what this tab last confirmed, we take that newer version
+// instead of clobbering it.
+async function guardedPush(matchingLocalJSON) {
+  if (lastKnownRev !== null) {
+    const fresh = await userDocRef(currentUser.uid).get();
+    const serverRev = fresh.exists ? fresh.data()._rev : null;
+    if (serverRev && serverRev !== lastKnownRev) {
+      applyRemoteSnapshot(fresh);
+      return false; // deferred to the newer version instead of writing
+    }
+  }
+  const cloudDoc = toCloudDoc(state);
+  await userDocRef(currentUser.uid).set(cloudDoc);
+  lastKnownRev = cloudDoc._rev;
+  lastSyncedJSON = matchingLocalJSON;
+  return true;
 }
 
 // "Lock It In" — a save she can see and trust, unlike the silent background
 // sync. Skips the "nothing changed" shortcut on purpose (she wants the
 // confirmation even if it's a no-op) and actually waits for Firestore to
 // confirm the write before saying it's done, instead of firing and hoping.
+// Same staleness guard as the background save — if another device saved
+// something newer, this says so instead of silently overwriting it.
 function lockItIn() {
   const btn = document.getElementById("btn-lock-in");
   if (!currentUser) {
@@ -80,10 +129,9 @@ function lockItIn() {
   btn.disabled = true;
   btn.textContent = "Saving…";
   const json = JSON.stringify(state);
-  userDocRef(currentUser.uid).set(toCloudDoc(state))
-    .then(() => {
-      lastSyncedJSON = json;
-      btn.textContent = "✓ Locked in!";
+  guardedPush(json)
+    .then(wrote => {
+      btn.textContent = wrote ? "✓ Locked in!" : "↻ Updated from your other device";
     })
     .catch(err => {
       console.error("Meals4Us: Lock It In failed", err);
@@ -91,7 +139,7 @@ function lockItIn() {
     })
     .finally(() => {
       btn.disabled = false;
-      setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 2500);
+      setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 3500);
     });
 }
 document.getElementById("btn-lock-in").addEventListener("click", lockItIn);
@@ -101,17 +149,9 @@ function attachRealtimeListener(uid) {
   unsubscribeSnapshot = userDocRef(uid).onSnapshot(snap => {
     if (!snap.exists) return;
     if (snap.metadata.hasPendingWrites) return; // this is the echo of our own write, not a change from elsewhere
-    const incoming = fromCloudDoc(snap.data());
-    const json = JSON.stringify(incoming);
-    if (json === lastSyncedJSON) return; // already up to date
-    lastSyncedJSON = json;
-    applyingRemoteState = true;
-    try {
-      state = hydrateStateDefaults(incoming);
-      boot(); // re-renders every screen from the new state, same function used at startup
-    } finally {
-      applyingRemoteState = false;
-    }
+    const data = snap.data();
+    if (data._rev && data._rev === lastKnownRev) return; // already up to date
+    applyRemoteSnapshot(snap);
   }, err => {
     console.error("Meals4Us: sync listener failed", err);
   });
@@ -120,14 +160,7 @@ function attachRealtimeListener(uid) {
 function connectCloud(user) {
   userDocRef(user.uid).get().then(snap => {
     if (snap.exists) {
-      applyingRemoteState = true;
-      try {
-        state = hydrateStateDefaults(fromCloudDoc(snap.data()));
-        lastSyncedJSON = JSON.stringify(state);
-        boot();
-      } finally {
-        applyingRemoteState = false;
-      }
+      applyRemoteSnapshot(snap);
     } else {
       // First time this account has synced — seed her account with whatever
       // is already on this device instead of starting her over empty.

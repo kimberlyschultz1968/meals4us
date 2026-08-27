@@ -39,10 +39,6 @@
     <div class="account-strip hidden" id="account-strip">
       <span id="account-email"></span>
       <span id="trial-badge" class="hidden"></span>
-      <div class="header-actions">
-        <button type="button" id="btn-lock-in" title="Save everything right now and confirm it's on the server">🔒 Lock It In</button>
-        <button type="button" id="btn-start-next-week">📅 Start Next Week</button>
-      </div>
       <button type="button" id="btn-manage-billing" class="hidden">Manage billing</button>
       <button type="button" id="btn-sign-out">Sign out</button>
     </div>
@@ -215,6 +211,11 @@
         <p class="subtitle">Here's what we've got so far — change anything that's not a fit.</p>
 
         <div class="week-list" id="week-list"></div>
+
+        <div class="week-actions">
+          <button type="button" class="btn btn-secondary" id="btn-lock-in" title="Save everything right now and confirm it's on the server">🔒 Lock It In</button>
+          <button type="button" class="btn btn-secondary" id="btn-start-next-week">📅 Start Next Week</button>
+        </div>
 
         <div class="next-week-box hidden" id="next-week-box">
           <p class="field-label">📦 Coming next week</p>
