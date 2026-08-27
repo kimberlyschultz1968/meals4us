@@ -1715,7 +1715,14 @@ function saveGroceryItem() {
   closeModal();
 }
 
-document.getElementById("btn-start-over").addEventListener("click", () => {
+// Shared by the button at the bottom of the grocery list and the quick-access
+// one in the header, so "start a new week" works the same no matter where
+// she triggers it from.
+function startNewWeek() {
+  if (!state.weekPlan) {
+    alert("Finish telling us about your family and building this week's plan first — then you can start new weeks from here any time.");
+    return;
+  }
   const queuedNote = state.nextWeekQueue.length
     ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
     : "";
@@ -1733,7 +1740,9 @@ document.getElementById("btn-start-over").addEventListener("click", () => {
   saveState();
   renderWeek(state.weekPlan);
   showScreen(3);
-});
+}
+document.getElementById("btn-start-over").addEventListener("click", startNewWeek);
+document.getElementById("btn-start-next-week").addEventListener("click", startNewWeek);
 
 document.getElementById("modal-close").addEventListener("click", () => {
   document.getElementById("recipe-modal").classList.add("hidden");

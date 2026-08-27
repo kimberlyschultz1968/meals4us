@@ -1050,6 +1050,12 @@ h1 {
 #trial-badge.hidden { display: none; }
 #btn-manage-billing.hidden { display: none; }
 
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 /* Auth gate — full-screen sign in / create account overlay */
 .auth-gate {
   position: fixed;

@@ -65,6 +65,37 @@ function pushCloudState() {
   });
 }
 
+// "Lock It In" — a save she can see and trust, unlike the silent background
+// sync. Skips the "nothing changed" shortcut on purpose (she wants the
+// confirmation even if it's a no-op) and actually waits for Firestore to
+// confirm the write before saying it's done, instead of firing and hoping.
+function lockItIn() {
+  const btn = document.getElementById("btn-lock-in");
+  if (!currentUser) {
+    btn.textContent = "⚠️ Not signed in";
+    setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 2500);
+    return;
+  }
+  clearTimeout(cloudSaveTimer);
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+  const json = JSON.stringify(state);
+  userDocRef(currentUser.uid).set(toCloudDoc(state))
+    .then(() => {
+      lastSyncedJSON = json;
+      btn.textContent = "✓ Locked in!";
+    })
+    .catch(err => {
+      console.error("Meals4Us: Lock It In failed", err);
+      btn.textContent = "⚠️ Couldn't save — tap to retry";
+    })
+    .finally(() => {
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 2500);
+    });
+}
+document.getElementById("btn-lock-in").addEventListener("click", lockItIn);
+
 function attachRealtimeListener(uid) {
   if (unsubscribeSnapshot) unsubscribeSnapshot();
   unsubscribeSnapshot = userDocRef(uid).onSnapshot(snap => {

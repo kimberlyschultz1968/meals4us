@@ -6,6 +6,22 @@
 <title>Meals4Us — Weekly Family Meal Planner</title>
 <meta name="description" content="Tell us about your family's food and Meals4Us builds a weekly meal plan and grocery list for you." />
 <meta name="theme-color" content="#3A0D10" />
+<!-- Social preview tags — without these, Facebook/etc fell back to the app icon,
+     which draws its plate emoji as inline SVG <text>. Browsers render that fine,
+     but Facebook's own image-scraping pipeline doesn't have a color-emoji font,
+     so it rendered the emoji's raw Unicode codepoint ("1F37D") as text instead of
+     the emoji itself. A plain PNG made for this purpose sidesteps that entirely. -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://meals4us.com/" />
+<meta property="og:title" content="Meals4Us — Weekly Family Meal Planner" />
+<meta property="og:description" content="Tell us about your family's food and Meals4Us builds a weekly meal plan and grocery list for you." />
+<meta property="og:image" content="https://meals4us.com/social-card.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Meals4Us — Weekly Family Meal Planner" />
+<meta name="twitter:description" content="Tell us about your family's food and Meals4Us builds a weekly meal plan and grocery list for you." />
+<meta name="twitter:image" content="https://meals4us.com/social-card.png" />
 <link rel="manifest" href="manifest.webmanifest" />
 <link rel="icon" href="icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="icon.svg" />
@@ -23,6 +39,10 @@
     <div class="account-strip hidden" id="account-strip">
       <span id="account-email"></span>
       <span id="trial-badge" class="hidden"></span>
+      <div class="header-actions">
+        <button type="button" id="btn-lock-in" title="Save everything right now and confirm it's on the server">🔒 Lock It In</button>
+        <button type="button" id="btn-start-next-week">📅 Start Next Week</button>
+      </div>
       <button type="button" id="btn-manage-billing" class="hidden">Manage billing</button>
       <button type="button" id="btn-sign-out">Sign out</button>
     </div>
