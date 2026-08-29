@@ -2909,6 +2909,233 @@ const RECIPES = [
       "Sprinkle in flour, then whisk in beef broth to make a gravy.",
       "Return the patties to the skillet, cover, and simmer 12-15 minutes until cooked through."
     ]
+  },
+  {
+    id: "ham-cheese-sliders", name: "Ham & Cheese Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "deli ham", qty: 12, unit: "oz", category: "Meat & Seafood" },
+      { name: "swiss cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
+      { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "poppy seeds", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Slice the pack of slider buns in half as one sheet (don't separate them) and set the bottom half in a baking dish.",
+      "Layer on the ham and swiss cheese, then set the top half of the buns back on.",
+      "Melt the butter and whisk in the dijon mustard and poppy seeds; brush over the tops.",
+      "Bake at 350F for 15 minutes, until the cheese is melted and the tops are golden.",
+      "Slice into individual sliders to serve."
+    ]
+  },
+  {
+    id: "cheeseburger-sliders", name: "Cheeseburger Sliders", emoji: "🍔", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "mustard", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season the ground beef and shape into 12 mini patties.",
+      "Cook in a skillet over medium-high heat, 2-3 minutes per side.",
+      "Top each patty with cheese during the last minute, until melted.",
+      "Set each patty on a slider bun with diced onion, ketchup, and mustard."
+    ]
+  },
+  {
+    id: "pulled-pork-sliders", name: "Pulled Pork Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "leftovers"], allergens: ["gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "cooked pulled pork", qty: 3, unit: "cup", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "coleslaw mix", qty: 2, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Warm the pulled pork (leftover, rotisserie, or store-bought) in a skillet with the BBQ sauce, about 5 minutes.",
+      "Pile onto slider buns.",
+      "Top with coleslaw mix for crunch before setting the top bun on."
+    ]
+  },
+  {
+    id: "turkey-cheese-sliders", name: "Turkey & Cheese Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["turkey"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "deli turkey", qty: 12, unit: "oz", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "provolone cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "lettuce", qty: 1, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Layer turkey, provolone, and lettuce on the bottom half of the slider buns; spread mayo on the tops.",
+      "Set the tops on and serve cold, or warm in a 350F oven for 8-10 minutes until the cheese melts."
+    ]
+  },
+  {
+    id: "chili-dogs", name: "Chili Dogs", emoji: "🌭", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
+      { name: "hot dog buns", qty: 8, unit: "count", category: "Pantry" },
+      { name: "canned chili", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Grill or boil the hot dogs until heated through.",
+      "Warm the chili in a saucepan.",
+      "Set each hot dog in a bun and spoon chili over the top.",
+      "Top with shredded cheddar and diced onion."
+    ]
+  },
+  {
+    id: "buffalo-chicken-sliders", name: "Buffalo Chicken Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "hot sauce", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook and shred the chicken (rotisserie chicken works great here for speed).",
+      "Toss the shredded chicken with hot sauce.",
+      "Pile onto slider buns and top with cheddar and a drizzle of ranch."
+    ]
+  },
+  {
+    id: "philly-cheesesteak-sliders", name: "Philly Cheesesteak Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["beef"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "thin sliced steak", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "provolone cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Sauté sliced peppers and onion in a skillet until soft; set aside.",
+      "Cook the thin sliced steak in the same skillet, 3-4 minutes, chopping it up as it cooks.",
+      "Return the peppers and onion to the pan and top everything with provolone until melted.",
+      "Pile onto slider buns to serve."
+    ]
+  },
+  {
+    id: "bbq-meatball-sliders", name: "BBQ Meatball Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy", "egg"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "frozen meatballs", qty: 1.5, unit: "lb", category: "Frozen" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 0.75, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Heat the frozen meatballs with the BBQ sauce in a skillet until warmed through, about 10 minutes.",
+      "Halve the meatballs and pile onto slider buns.",
+      "Top with shredded cheddar and broil 1-2 minutes until melted, if you like."
+    ]
+  },
+  {
+    id: "grilled-ham-cheese", name: "Grilled Ham & Cheese", emoji: "🥪", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "deli ham", qty: 8, unit: "oz", category: "Meat & Seafood" },
+      { name: "swiss cheese slices", qty: 8, unit: "count", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Butter one side of each slice of bread.",
+      "Layer ham and swiss cheese between two slices, butter-side out.",
+      "Grill in a skillet over medium heat, 3-4 minutes per side, until golden and the cheese is melted."
+    ]
+  },
+  {
+    id: "turkey-bacon-ranch-wraps", name: "Turkey Bacon Ranch Wraps", emoji: "🌯", cuisine: "american",
+    proteins: ["turkey"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "deli turkey", qty: 12, unit: "oz", category: "Meat & Seafood" },
+      { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
+      { name: "flour tortillas", qty: 4, unit: "count", category: "Pantry" },
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
+      { name: "tomato", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the bacon until crisp.",
+      "Lay out the tortillas and spread each with ranch dressing.",
+      "Layer turkey, bacon, lettuce, and diced tomato on each.",
+      "Roll up tightly and slice in half to serve."
+    ]
+  },
+  {
+    id: "chicken-bacon-ranch-sliders", name: "Chicken Bacon Ranch Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook and shred the chicken (rotisserie chicken works great here); cook the bacon until crisp and crumble.",
+      "Toss the shredded chicken with the ranch dressing.",
+      "Layer onto slider buns with bacon and cheddar.",
+      "Bake at 350F for 8-10 minutes until the cheese melts."
+    ]
+  },
+  {
+    id: "blt-sliders", name: "BLT Sliders", emoji: "🥪", cuisine: "american",
+    proteins: ["pork"], tags: ["quick"], allergens: ["gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
+      { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
+      { name: "mayo", qty: 3, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Cook the bacon until crisp.",
+      "Spread mayo on the slider buns.",
+      "Layer bacon, lettuce, and sliced tomato onto each."
+    ]
+  },
+  {
+    id: "sheet-pan-sausage-potatoes", name: "Sheet Pan Sausage & Potatoes", emoji: "🌭", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "onepot"], allergens: [],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "sausage links", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Cut the potatoes into bite-size chunks and slice the sausage and bell pepper.",
+      "Toss everything with olive oil and garlic powder on a sheet pan.",
+      "Roast at 400F for 25 minutes, stirring halfway, until the potatoes are tender and the sausage is browned."
+    ]
   }
 ];
 

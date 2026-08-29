@@ -521,7 +521,13 @@ function getEffectiveRecipe(entry) {
     }
   }
 
-  return applyVeggieNormalization(recipe);
+  recipe = applyVeggieNormalization(recipe);
+  // A per-day rename ("Hot Dogs & Fries" -> "Chili Dogs") — cosmetic only,
+  // the actual recipe/ingredients underneath are untouched. Lives on the
+  // day entry itself (like proteinOverride), not on the recipe globally, so
+  // renaming it once doesn't rename every future week that uses this dish.
+  if (entry.customName) recipe = { ...recipe, name: entry.customName };
+  return recipe;
 }
 
 // Whole-word match (with simple plural tolerance), not raw substring —
@@ -590,6 +596,10 @@ function scoreRecipe(recipe, profile, feedback) {
   // vegetarian dishes suggested overall — not banned outright (one might
   // still fit via cuisine/dish-family match), just deprioritized as filler.
   if (recipe.proteins.includes("vegetarian") && !profile.likes.includes("vegetarian")) score -= 1.5;
+  // She asked for fewer rice dishes in the mix — soft deprioritization, not
+  // a ban, so a rice dish she's actually liked can still come up via its
+  // feedback score, it just won't get suggested as filler as often.
+  if (recipe.ingredients.some(i => i.name === "rice") && (feedback[recipe.id] || 0) <= 0) score -= 2;
   score += seasonAffinity(recipe, state.season);
   score += (feedback[recipe.id] || 0); // learned from Love it / Change it over time
   score += Math.random() * 0.5; // small jitter so the week isn't identical every time
@@ -669,7 +679,7 @@ function pickWeek(profile, feedback, excludeIds = [], neverSuggest = [], presetB
   let chosenIndex = 0;
   return DAYS.map(day => {
     if (presetByDay[day]) {
-      return { day, recipeId: presetByDay[day].recipeId, proteinOverride: presetByDay[day].proteinOverride || null };
+      return { day, recipeId: presetByDay[day].recipeId, proteinOverride: presetByDay[day].proteinOverride || null, customName: presetByDay[day].customName || null };
     }
     const r = chosen[chosenIndex++];
     return { day, recipeId: r ? r.id : null };
@@ -738,6 +748,7 @@ function renderWeek(weekPlan) {
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
       node.querySelector(".meal-name").textContent = recipe.name;
+      node.querySelector(".rename-btn").addEventListener("click", () => openRenameModal(index, false));
       const metaBits = [`${recipe.timeMinutes} min`];
       if ((state.feedback[recipe.id] || 0) >= 2) metaBits.push("Family favorite");
       node.querySelector(".meal-meta").textContent = metaBits.join(" • ");
@@ -782,6 +793,7 @@ function renderWeek(weekPlan) {
       node.querySelector(".meal-emoji").textContent = "🍽️";
       node.querySelector(".meal-name").textContent = "No match found";
       node.querySelector(".meal-meta").textContent = "Try loosening a dislike in your profile";
+      node.querySelector(".rename-btn")?.remove();
       node.querySelectorAll(".meal-actions").forEach(el => el.remove());
     }
 
@@ -868,6 +880,7 @@ function renderWeek2(weekPlan2) {
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
       node.querySelector(".meal-name").textContent = recipe.name;
+      node.querySelector(".rename-btn").addEventListener("click", () => openRenameModal(index, true));
       const metaBits = [`${recipe.timeMinutes} min`];
       if ((state.feedback[recipe.id] || 0) >= 2) metaBits.push("Family favorite");
       node.querySelector(".meal-meta").textContent = metaBits.join(" • ");
@@ -895,11 +908,57 @@ function renderWeek2(weekPlan2) {
       node.querySelector(".meal-emoji").textContent = "🍽️";
       node.querySelector(".meal-name").textContent = "No match found";
       node.querySelector(".meal-meta").textContent = "Try loosening a dislike in your profile";
+      node.querySelector(".rename-btn")?.remove();
       node.querySelectorAll(".meal-actions").forEach(el => el.remove());
     }
 
     listEl.appendChild(node);
   });
+}
+
+// Renames one day's meal ("Hot Dogs & Fries" -> "Chili Dogs") without
+// touching the underlying recipe or its ingredients — purely cosmetic,
+// scoped to this one day entry so it doesn't rename the dish everywhere
+// it's ever picked.
+function openRenameModal(dayIndex, isWeek2) {
+  const planArr = isWeek2 ? state.weekPlan2 : state.weekPlan;
+  const entry = planArr[dayIndex];
+  const recipe = getEffectiveRecipe(entry);
+  if (!recipe) return;
+
+  openModal(`
+    <div class="modal-body-title">Rename this meal</div>
+    <div class="modal-body-meta">Just for ${entry.day} — the recipe and grocery list stay the same, only the name shown changes.</div>
+    <div class="recipe-form-field">
+      <label>Name</label>
+      <input type="text" id="rename-input" />
+    </div>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="rename-reset">Use Original Name</button>
+      <button type="button" class="btn btn-primary" id="rename-save">Save</button>
+    </div>
+  `);
+  const input = document.getElementById("rename-input");
+  input.value = recipe.name;
+
+  function rerender() { isWeek2 ? renderWeek2(state.weekPlan2) : renderWeek(state.weekPlan); }
+
+  document.getElementById("rename-reset").addEventListener("click", () => {
+    delete planArr[dayIndex].customName;
+    saveState();
+    rerender();
+    closeModal();
+  });
+  document.getElementById("rename-save").addEventListener("click", () => {
+    const val = input.value.trim();
+    if (!val) { alert("Type a name first, or tap Use Original Name to clear it."); return; }
+    planArr[dayIndex].customName = val;
+    saveState();
+    rerender();
+    closeModal();
+  });
+  input.focus();
+  input.select();
 }
 
 // "Pick a Recipe for This Day" for Week 2 — same search-the-library modal as
@@ -1161,15 +1220,18 @@ function openDayPicker(dayIndex) {
   document.querySelectorAll(".day-pick-option[data-day-index]").forEach(btn => {
     btn.addEventListener("click", () => {
       const targetIndex = Number(btn.dataset.dayIndex);
-      // Swap the whole entry (recipe + any meat swap + free-day status) so
-      // a swapped meal takes its substitution with it to the new day.
-      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay };
+      // Swap the whole entry (recipe + any meat swap + free-day status +
+      // rename) so a swapped meal takes its substitution and custom name
+      // with it to the new day.
+      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay, customName: state.weekPlan[dayIndex].customName };
       state.weekPlan[dayIndex].recipeId = state.weekPlan[targetIndex].recipeId;
       state.weekPlan[dayIndex].proteinOverride = state.weekPlan[targetIndex].proteinOverride;
       state.weekPlan[dayIndex].freeDay = state.weekPlan[targetIndex].freeDay;
+      state.weekPlan[dayIndex].customName = state.weekPlan[targetIndex].customName;
       state.weekPlan[targetIndex].recipeId = temp.recipeId;
       state.weekPlan[targetIndex].proteinOverride = temp.proteinOverride;
       state.weekPlan[targetIndex].freeDay = temp.freeDay;
+      state.weekPlan[targetIndex].customName = temp.customName;
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -1192,12 +1254,16 @@ function openDayPicker(dayIndex) {
       state.nextWeekQueue.push({
         recipeId: state.weekPlan[dayIndex].recipeId,
         proteinOverride: state.weekPlan[dayIndex].proteinOverride || null,
+        customName: state.weekPlan[dayIndex].customName || null,
         day
       });
       // This day's slot needs something to eat this week — backfill it.
+      // It's getting a different dish, so any rename from the meal that
+      // just left doesn't belong on it anymore.
       const replacementId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
       state.weekPlan[dayIndex].recipeId = replacementId;
       state.weekPlan[dayIndex].proteinOverride = null;
+      delete state.weekPlan[dayIndex].customName;
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -1215,6 +1281,7 @@ function openDayPicker(dayIndex) {
     const replacementId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
     state.weekPlan[dayIndex].recipeId = replacementId;
     state.weekPlan[dayIndex].proteinOverride = null;
+    delete state.weekPlan[dayIndex].customName;
     saveState();
     renderWeek(state.weekPlan);
     closeModal();
@@ -1328,6 +1395,7 @@ function finalizeRemoval(dayIndex, recipe, reason) {
   }
   const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
   state.weekPlan[dayIndex].recipeId = newId;
+  delete state.weekPlan[dayIndex].customName; // the renamed dish is gone for good — its name shouldn't stick to whatever replaces it
   saveState();
   renderWeek(state.weekPlan);
 }
@@ -1881,13 +1949,13 @@ function rotateToNextWeek(showNotice) {
   // new week just gets a normal pick for that day.
   if (state.weekPlan2) {
     state.weekPlan2.forEach(entry => {
-      if (entry.recipeId && !entry.freeDay) presetByDay[entry.day] = { recipeId: entry.recipeId, proteinOverride: entry.proteinOverride || null };
+      if (entry.recipeId && !entry.freeDay) presetByDay[entry.day] = { recipeId: entry.recipeId, proteinOverride: entry.proteinOverride || null, customName: entry.customName || null };
     });
   }
   // Anything explicitly pushed forward via "Change Day → Next Week" wins
   // over whatever Week 2 had planned for that same day.
   state.nextWeekQueue.forEach(q => {
-    presetByDay[q.day] = { recipeId: q.recipeId, proteinOverride: q.proteinOverride };
+    presetByDay[q.day] = { recipeId: q.recipeId, proteinOverride: q.proteinOverride, customName: q.customName || null };
   });
   pushWeekToHistory(state.weekPlan); // archive the week that's ending — keeps the 3-week no-repeat window honest
   state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest, presetByDay);
