@@ -40,8 +40,18 @@ function userDocRef(uid) {
 // _rev is our own version marker (see guardedPush below) — a timestamp
 // stamped on every write so any tab can tell whether the copy it's holding
 // is still the newest one before it overwrites the server.
+//
+// The JSON round-trip isn't just for recentWeeksHistory — it also strips
+// any `undefined` value anywhere in the tree (JSON.stringify drops those
+// keys automatically). Firestore's .set() throws outright on an explicit
+// undefined anywhere in the object, even nested several levels deep — that
+// exact thing happened via a day-swap leaving `customName: undefined` on a
+// day entry, and silently broke every save (including Lock It In) until
+// fixed. Doing the whole object this way means any *future* spot that
+// accidentally does the same thing can't break saving again.
 function toCloudDoc(s) {
-  return { ...s, recentWeeksHistory: JSON.stringify(s.recentWeeksHistory || []), _rev: Date.now() };
+  const clean = JSON.parse(JSON.stringify(s));
+  return { ...clean, recentWeeksHistory: JSON.stringify(s.recentWeeksHistory || []), _rev: Date.now() };
 }
 function fromCloudDoc(doc) {
   const s = { ...doc };

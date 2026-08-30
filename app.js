@@ -965,7 +965,7 @@ function openRenameModal(dayIndex, isWeek2) {
 // Week 1's, just writes to weekPlan2 instead.
 function openRecipePicker2(dayIndex) {
   const entry = state.weekPlan2[dayIndex];
-  const all = [...allRecipes()].sort((a, b) => a.name.localeCompare(b.name));
+  const all = [...allRecipes()].filter(r => !state.neverSuggest.includes(r.id)).sort((a, b) => a.name.localeCompare(b.name));
 
   function renderResults(query) {
     const q = query.trim().toLowerCase();
@@ -1223,11 +1223,11 @@ function openDayPicker(dayIndex) {
       // Swap the whole entry (recipe + any meat swap + free-day status +
       // rename) so a swapped meal takes its substitution and custom name
       // with it to the new day.
-      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay, customName: state.weekPlan[dayIndex].customName };
+      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay, customName: state.weekPlan[dayIndex].customName || null };
       state.weekPlan[dayIndex].recipeId = state.weekPlan[targetIndex].recipeId;
       state.weekPlan[dayIndex].proteinOverride = state.weekPlan[targetIndex].proteinOverride;
       state.weekPlan[dayIndex].freeDay = state.weekPlan[targetIndex].freeDay;
-      state.weekPlan[dayIndex].customName = state.weekPlan[targetIndex].customName;
+      state.weekPlan[dayIndex].customName = state.weekPlan[targetIndex].customName || null;
       state.weekPlan[targetIndex].recipeId = temp.recipeId;
       state.weekPlan[targetIndex].proteinOverride = temp.proteinOverride;
       state.weekPlan[targetIndex].freeDay = temp.freeDay;
@@ -1322,7 +1322,7 @@ function openMeatPicker(dayIndex) {
 // her own) and drop one straight onto a day, search by name only.
 function openRecipePicker(dayIndex) {
   const entry = state.weekPlan[dayIndex];
-  const all = [...allRecipes()].sort((a, b) => a.name.localeCompare(b.name));
+  const all = [...allRecipes()].filter(r => !state.neverSuggest.includes(r.id)).sort((a, b) => a.name.localeCompare(b.name));
 
   function renderResults(query) {
     const q = query.trim().toLowerCase();
@@ -1361,6 +1361,220 @@ function openRecipePicker(dayIndex) {
   searchInput.addEventListener("input", () => renderResults(searchInput.value));
   searchInput.focus();
 }
+
+// ---------- Meal Ideas library ----------
+// The browse-first cousin of the day pickers: every dinner idea (built-in +
+// her own) with style/cuisine filters, droppable onto any day of either
+// week. The 🗑 on each row is her "I never want to see this" switch —
+// built-ins go to state.neverSuggest (undoable from Hidden ideas), her own
+// recipes are deleted outright. Anything already on a day gets quietly
+// replaced so the plan never points at a deleted idea.
+const IDEA_FILTERS = [
+  ["all", "All"], ["quick", "⏱ Quick"], ["kidFriendly", "🧒 Kid-friendly"],
+  ["vegetarian", "🥦 Vegetarian"], ["onepot", "🍲 One-pot"], ["airfryer", "🍳 Air fryer"],
+  ["slowcooker", "⏲ Slow cooker"], ["grill", "🔥 Grill"], ["leftovers", "🥡 Leftovers"],
+  ["breakfastForDinner", "🥞 Breakfast-for-dinner"], ["mine", "⭐ My own"]
+];
+const IDEA_CUISINES = [
+  ["", "All cuisines"], ["american", "American"], ["mexican", "Mexican"], ["italian", "Italian"],
+  ["asian", "Asian"], ["mediterranean", "Mediterranean"], ["indian", "Indian"]
+];
+const ideaView = { tag: "all", cuisine: "", q: "" };
+
+function visibleIdeas() {
+  const customIds = new Set(state.customRecipes.map(r => r.id));
+  return allRecipes()
+    .filter(r => !state.neverSuggest.includes(r.id))
+    .filter(r => ideaView.tag === "all" ? true
+      : ideaView.tag === "mine" ? customIds.has(r.id)
+      : (r.tags || []).includes(ideaView.tag))
+    .filter(r => !ideaView.cuisine || r.cuisine === ideaView.cuisine)
+    .filter(r => !ideaView.q || r.name.toLowerCase().includes(ideaView.q))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function ideaTagLabels(r) {
+  const map = Object.fromEntries(TAG_OPTIONS);
+  return (r.tags || []).map(t => map[t]).filter(Boolean).slice(0, 2).join(" · ");
+}
+
+function openMealIdeas() {
+  openModal(`
+    <div class="modal-body-title">📖 Meal Ideas</div>
+    <div class="modal-body-meta">Tap a meal to put it on a day. 👁 shows the recipe, 🗑 deletes ideas you never want to see. ⚠️ = conflicts with your profile.</div>
+    <div class="idea-filters" id="idea-filters"></div>
+    <div class="idea-toolbar">
+      <input type="text" id="idea-search" class="recipe-picker-search" placeholder="Search meals..." />
+      <select id="idea-cuisine" class="idea-cuisine">${IDEA_CUISINES.map(([v, t]) => `<option value="${v}"${v === ideaView.cuisine ? " selected" : ""}>${t}</option>`).join("")}</select>
+    </div>
+    <div class="recipe-picker-list idea-list" id="idea-results"></div>
+    <button type="button" class="idea-hidden-link" id="idea-hidden-link"></button>
+  `);
+  const search = document.getElementById("idea-search");
+  search.value = ideaView.q;
+  search.addEventListener("input", () => { ideaView.q = search.value.trim().toLowerCase(); renderIdeaResults(); });
+  document.getElementById("idea-cuisine").addEventListener("change", e => { ideaView.cuisine = e.target.value; renderIdeaResults(); });
+  document.getElementById("idea-hidden-link").addEventListener("click", openHiddenIdeas);
+  renderIdeaFilters();
+  renderIdeaResults();
+}
+
+function renderIdeaFilters() {
+  const row = document.getElementById("idea-filters");
+  row.innerHTML = IDEA_FILTERS.map(([key, label]) =>
+    `<button type="button" class="chip${key === ideaView.tag ? " on" : ""}" data-idea-tag="${key}">${label}</button>`).join("");
+  row.querySelectorAll("[data-idea-tag]").forEach(btn => btn.addEventListener("click", () => {
+    ideaView.tag = btn.dataset.ideaTag;
+    renderIdeaFilters();
+    renderIdeaResults();
+  }));
+}
+
+function renderIdeaResults() {
+  const list = document.getElementById("idea-results");
+  const matches = visibleIdeas();
+  const hiddenLink = document.getElementById("idea-hidden-link");
+  hiddenLink.textContent = state.neverSuggest.length
+    ? `Hidden ideas (${state.neverSuggest.length}) — see them or bring them back` : "";
+  if (!matches.length) {
+    list.innerHTML = `<p class="recipe-picker-empty">Nothing matches — try a different filter or search.</p>`;
+    return;
+  }
+  list.innerHTML = matches.map(r => {
+    const flagged = recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "";
+    const meta = [capitalize(r.cuisine), `${r.timeMinutes} min`, ideaTagLabels(r)].filter(Boolean).join(" · ");
+    return `<div class="idea-row">
+      <button type="button" class="idea-main" data-pick="${r.id}">
+        <span class="idea-name">${r.emoji} ${r.name}${flagged}</span>
+        <span class="idea-meta">${meta}</span>
+      </button>
+      <button type="button" class="idea-act" data-view="${r.id}" title="See the recipe" aria-label="See the recipe">👁</button>
+      <button type="button" class="idea-act" data-del="${r.id}" title="Delete this idea" aria-label="Delete this idea">🗑</button>
+    </div>`;
+  }).join("");
+  list.querySelectorAll("[data-pick]").forEach(b => b.addEventListener("click", () => openIdeaDayPicker(b.dataset.pick)));
+  list.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => openIdeaRecipeView(b.dataset.view)));
+  list.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => deleteIdea(b.dataset.del)));
+}
+
+function openIdeaRecipeView(id) {
+  const recipe = recipeById(id);
+  if (!recipe) return;
+  openRecipeModal(recipe);
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "btn btn-secondary btn-full";
+  back.style.marginTop = "14px";
+  back.textContent = "← Back to Meal Ideas";
+  back.addEventListener("click", openMealIdeas);
+  document.getElementById("modal-body").appendChild(back);
+}
+
+function openIdeaDayPicker(recipeId) {
+  const recipe = recipeById(recipeId);
+  if (!recipe) return;
+  const slotLabel = (entry) => {
+    if (entry.freeDay) return "Free day";
+    const r = entry.recipeId ? getEffectiveRecipe(entry) : null;
+    return r ? `${r.emoji} ${r.name}` : "Nothing yet";
+  };
+  const dayButtons = (plan, weekKey, title) => plan ? `
+    <p class="field-label" style="margin:14px 0 0">${title}</p>
+    <div class="day-pick-list" style="margin-top:8px">
+      ${plan.map((entry, i) => `<button type="button" class="day-pick-option" data-slot="${weekKey}:${i}">
+        <span class="day-pick-meal" style="text-align:left;">${slotLabel(entry)}</span>
+        <span class="day-pick-day">${entry.day}</span>
+      </button>`).join("")}
+    </div>` : "";
+  openModal(`
+    <div class="modal-body-title">Put "${recipe.name}" on which day?</div>
+    <div class="modal-body-meta">It replaces whatever's on the day you pick.</div>
+    ${dayButtons(state.weekPlan, "w1", "This week")}
+    ${dayButtons(state.weekPlan2, "w2", "Week 2")}
+    <button type="button" class="btn btn-secondary btn-full" id="idea-day-back" style="margin-top:14px">← Back to Meal Ideas</button>
+  `);
+  document.getElementById("idea-day-back").addEventListener("click", openMealIdeas);
+  document.querySelectorAll("[data-slot]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const [wk, iStr] = btn.dataset.slot.split(":");
+      const i = Number(iStr);
+      const plan = wk === "w2" ? state.weekPlan2 : state.weekPlan;
+      plan[i] = { day: plan[i].day, recipeId, proteinOverride: null, freeDay: false };
+      saveState();
+      if (wk === "w2") renderWeek2(state.weekPlan2); else renderWeek(state.weekPlan);
+      closeModal();
+    });
+  });
+}
+
+function deleteIdea(recipeId) {
+  const recipe = recipeById(recipeId);
+  if (!recipe) return;
+  const isCustom = state.customRecipes.some(r => r.id === recipeId);
+  if (isCustom) {
+    if (!confirm(`Delete your recipe "${recipe.name}" for good? This can't be undone.`)) return;
+    state.customRecipes = state.customRecipes.filter(r => r.id !== recipeId);
+  } else {
+    if (!confirm(`Delete "${recipe.name}" from your meal ideas? It won't be shown or suggested anymore — you can bring it back anytime from Hidden ideas.`)) return;
+    state.neverSuggest.push(recipeId);
+  }
+  delete state.feedback[recipeId];
+  replaceDeletedIdeaOnPlan(recipeId);
+  saveState();
+  renderIdeaResults();
+}
+
+// If a deleted idea is sitting on a day, quietly swap in a fresh pick so
+// the plan never points at a recipe that no longer exists or is hidden.
+function replaceDeletedIdeaOnPlan(recipeId) {
+  let w1 = false, w2 = false;
+  (state.weekPlan || []).forEach((entry, i) => {
+    if (entry.recipeId === recipeId) {
+      entry.recipeId = pickReplacement(state.profile, state.feedback, state.weekPlan, i, state.neverSuggest, recentHistoryIds());
+      delete entry.customName;
+      w1 = true;
+    }
+  });
+  (state.weekPlan2 || []).forEach((entry, i) => {
+    if (entry.recipeId === recipeId) {
+      entry.recipeId = pickReplacement(state.profile, state.feedback, state.weekPlan2, i, state.neverSuggest, recentHistoryIds());
+      delete entry.customName;
+      w2 = true;
+    }
+  });
+  const qBefore = state.nextWeekQueue.length;
+  state.nextWeekQueue = state.nextWeekQueue.filter(q => q.recipeId !== recipeId);
+  if (w1) renderWeek(state.weekPlan);
+  if (w2) renderWeek2(state.weekPlan2);
+  if (qBefore !== state.nextWeekQueue.length) renderNextWeekPreview();
+}
+
+function openHiddenIdeas() {
+  const hidden = state.neverSuggest.map(id => recipeById(id)).filter(Boolean);
+  openModal(`
+    <div class="modal-body-title">Hidden ideas</div>
+    <div class="modal-body-meta">Everything you've deleted from Meal Ideas or removed with "Remove It." Bring one back and it can show up again.</div>
+    <div class="recipe-picker-list idea-list">
+      ${hidden.length ? hidden.map(r => `
+        <div class="idea-row">
+          <span class="idea-main" style="cursor:default">
+            <span class="idea-name">${r.emoji} ${r.name}</span>
+            <span class="idea-meta">${capitalize(r.cuisine)} · ${r.timeMinutes} min</span>
+          </span>
+          <button type="button" class="idea-act" data-restore="${r.id}" title="Bring it back" aria-label="Bring it back">↩</button>
+        </div>`).join("") : `<p class="recipe-picker-empty">Nothing hidden right now.</p>`}
+    </div>
+    <button type="button" class="btn btn-secondary btn-full" id="hidden-back" style="margin-top:14px">← Back to Meal Ideas</button>
+  `);
+  document.getElementById("hidden-back").addEventListener("click", openMealIdeas);
+  document.querySelectorAll("[data-restore]").forEach(btn => btn.addEventListener("click", () => {
+    state.neverSuggest = state.neverSuggest.filter(id => id !== btn.dataset.restore);
+    saveState();
+    openHiddenIdeas();
+  }));
+}
+
+document.getElementById("btn-meal-ideas").addEventListener("click", openMealIdeas);
 
 // Asking why, when she removes something forever, does two things: keeps
 // a record for her own reference, and actually learns from it — the
