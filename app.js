@@ -171,6 +171,14 @@ function hydrateStateDefaults(s) {
   if (!s.nextWeekQueue) s.nextWeekQueue = [];
   if (!s.customRecipes) s.customRecipes = [];
   if (!s.recipeCustomizations) s.recipeCustomizations = {};
+  // One-time carryover: day-renames made before renames lived on the recipe
+  // itself (so her existing renamed meals appear in Meal Ideas too).
+  [...(s.weekPlan || []), ...(s.weekPlan2 || [])].forEach(e => {
+    if (e && e.recipeId && e.customName) {
+      if (!s.recipeCustomizations[e.recipeId]) s.recipeCustomizations[e.recipeId] = { added: [], removed: [] };
+      if (!s.recipeCustomizations[e.recipeId].customName) s.recipeCustomizations[e.recipeId].customName = e.customName;
+    }
+  });
   if (!s.removalNotes) s.removalNotes = [];
   if (!s.household) s.household = { adults: 2, kids: 2 };
   if (!s.noRepeatWeeks) s.noRepeatWeeks = 3;
@@ -228,7 +236,16 @@ function scaleQty(qty, unit) {
 
 // The built-in library plus anything she's added herself — every matching/
 // picking function reads from this so her recipes show up everywhere.
-function allRecipes() { return [...RECIPES, ...state.customRecipes]; }
+function allRecipes() {
+  // A renamed meal is "her" version of it — the name saved in
+  // recipeCustomizations[id].customName shows everywhere the recipe appears
+  // (week plan, Meal Ideas, pickers), not just the one day she renamed.
+  const cust = (state && state.recipeCustomizations) || {};
+  return [...RECIPES, ...state.customRecipes].map(r => {
+    const c = cust[r.id];
+    return c && c.customName ? { ...r, name: c.customName } : r;
+  });
+}
 
 function loadState() {
   try {
@@ -928,7 +945,7 @@ function openRenameModal(dayIndex, isWeek2) {
 
   openModal(`
     <div class="modal-body-title">Rename this meal</div>
-    <div class="modal-body-meta">Just for ${entry.day} — the recipe and grocery list stay the same, only the name shown changes.</div>
+    <div class="modal-body-meta">Your name sticks to this meal everywhere — this week, Meal Ideas, and future weeks. The recipe and grocery list stay the same.</div>
     <div class="recipe-form-field">
       <label>Name</label>
       <input type="text" id="rename-input" />
@@ -945,6 +962,8 @@ function openRenameModal(dayIndex, isWeek2) {
 
   document.getElementById("rename-reset").addEventListener("click", () => {
     delete planArr[dayIndex].customName;
+    const rid = planArr[dayIndex].recipeId;
+    if (rid && state.recipeCustomizations[rid]) delete state.recipeCustomizations[rid].customName;
     saveState();
     rerender();
     closeModal();
@@ -953,6 +972,13 @@ function openRenameModal(dayIndex, isWeek2) {
     const val = input.value.trim();
     if (!val) { alert("Type a name first, or tap Use Original Name to clear it."); return; }
     planArr[dayIndex].customName = val;
+    // The rename sticks to the recipe itself too, so Meal Ideas and future
+    // weeks show her name for it — not just this one day.
+    const rid = planArr[dayIndex].recipeId;
+    if (rid) {
+      if (!state.recipeCustomizations[rid]) state.recipeCustomizations[rid] = { added: [], removed: [] };
+      state.recipeCustomizations[rid].customName = val;
+    }
     saveState();
     rerender();
     closeModal();
