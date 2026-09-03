@@ -325,15 +325,42 @@ h1 {
 
 .clear-text-btn:hover { color: var(--red); }
 
+/* Screen 1 — the categories are full-width banners that open up in place */
 .chip-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  flex-direction: column;
+  gap: 8px;
   margin-top: 6px;
 }
 
+#chip-row .chip {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+#chip-row .chip .chip-emoji { margin-right: 10px; font-size: 17px; }
+
+#chip-row .chip::after {
+  content: "▸";
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-size: 15px;
+  transition: transform .15s;
+}
+
+#chip-row .chip.open { border-color: var(--red); color: var(--red); }
+#chip-row .chip.open::after { transform: rotate(90deg); color: var(--red); }
+
 .suggestion-box {
-  margin-top: 10px;
+  margin: -2px 0 2px;
   background: #F7F4EF;
   border: 1px solid var(--line);
   border-radius: var(--radius);

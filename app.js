@@ -1998,9 +1998,29 @@ let activeSuggestionCategory = null;
 
 document.getElementById("chip-row").addEventListener("click", e => {
   const chip = e.target.closest(".chip");
-  if (!chip) return;
+  if (!chip || chip.id === "notes-banner" || !chip.dataset.key) return;
+  const box = document.getElementById("suggestion-box");
+  if (chip.dataset.key === activeSuggestionCategory && !box.classList.contains("hidden")) {
+    // Tapping the open banner again closes it.
+    box.classList.add("hidden");
+    chip.classList.remove("open");
+    activeSuggestionCategory = null;
+    return;
+  }
+  document.querySelectorAll("#chip-row .chip.open").forEach(c => { if (c.id !== "notes-banner") c.classList.remove("open"); });
+  chip.classList.add("open");
   activeSuggestionCategory = chip.dataset.key;
-  showSuggestions(chip.dataset.key, chip.textContent);
+  chip.insertAdjacentElement("afterend", box); // the word panel opens right under its own banner
+  showSuggestions(chip.dataset.key, chip.dataset.label || chip.textContent);
+});
+
+document.getElementById("notes-banner").addEventListener("click", () => {
+  const banner = document.getElementById("notes-banner");
+  const body = document.getElementById("notes-body");
+  const opening = body.classList.contains("hidden");
+  body.classList.toggle("hidden", !opening);
+  banner.classList.toggle("open", opening);
+  if (opening) document.getElementById("family-notes").focus();
 });
 
 document.getElementById("add-word-btn").addEventListener("click", addCustomWord);
@@ -2015,6 +2035,7 @@ document.getElementById("btn-clear-text").addEventListener("click", () => {
   document.getElementById("family-text").value = "";
   document.getElementById("family-text").focus();
   document.getElementById("suggestion-box").classList.add("hidden");
+  document.querySelectorAll("#chip-row .chip.open").forEach(c => { if (c.id !== "notes-banner") c.classList.remove("open"); });
   document.querySelectorAll(".suggestion-pill.used").forEach(p => p.classList.remove("used"));
   activeSuggestionCategory = null;
 });
@@ -2128,7 +2149,8 @@ function addCustomWord() {
   state.selections[key].push(word); // adding it also selects it right away
   input.value = "";
   regenerateFamilyText();
-  showSuggestions(key, document.querySelector(`.chip[data-key="${key}"]`).textContent);
+  const keyChip = document.querySelector(`.chip[data-key="${key}"]`);
+  showSuggestions(key, keyChip.dataset.label || keyChip.textContent);
   input.focus();
 }
 
@@ -2369,7 +2391,12 @@ function boot() {
   const hasSelections = Object.values(state.selections).some(list => list && list.length);
   if (hasSelections) regenerateFamilyText();
   else if (state.familyText) document.getElementById("family-text").value = state.familyText;
-  if (state.familyNotes) document.getElementById("family-notes").value = state.familyNotes;
+  if (state.familyNotes) {
+    document.getElementById("family-notes").value = state.familyNotes;
+    // She wrote notes — open that banner so they're visible, not hidden away.
+    document.getElementById("notes-body").classList.remove("hidden");
+    document.getElementById("notes-banner").classList.add("open");
+  }
   document.getElementById("household-adults").value = state.household.adults;
   document.getElementById("household-kids").value = state.household.kids;
   document.getElementById("no-repeat-weeks").value = state.noRepeatWeeks;

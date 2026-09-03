@@ -142,31 +142,34 @@
 
         <button type="button" class="clear-text-btn" id="btn-clear-text">Clear text</button>
 
-        <p class="field-label">Need ideas? Tap a category, then tap words to add them:</p>
-        <div class="chip-row" id="chip-row" aria-label="Tap a category, then tap examples to add them">
-          <button type="button" class="chip" data-key="meals" data-hint="Favorite meals: ">Favorite meals</button>
-          <button type="button" class="chip" data-key="love" data-hint="Foods we love: ">Foods we love</button>
-          <button type="button" class="chip" data-key="dislike" data-hint="Foods we don't like: ">Foods we don't like</button>
-          <button type="button" class="chip" data-key="allergies" data-hint="Allergies: ">Allergies</button>
-          <button type="button" class="chip" data-key="meats" data-hint="Favorite meats: ">Favorite meats</button>
-          <button type="button" class="chip" data-key="veggies" data-hint="Favorite vegetables: ">Favorite vegetables</button>
-          <button type="button" class="chip" data-key="cuisines" data-hint="Favorite cuisines: ">Favorite cuisines</button>
-          <button type="button" class="chip" data-key="quick" data-hint="We like quick, easy meals: ">Quick/easy meals</button>
-          <button type="button" class="chip" data-key="pantry" data-hint="We always keep this at home: ">Foods we keep at home</button>
-        </div>
+        <p class="field-label">Need ideas? Tap a section to open it, then tap what fits:</p>
+        <div class="chip-row" id="chip-row" aria-label="Tap a section to open it, then tap words to add them">
+          <button type="button" class="chip" data-key="love" data-label="Foods we love"><span class="chip-emoji">❤️</span>Foods we love</button>
+          <button type="button" class="chip" data-key="meals" data-label="Favorite meals"><span class="chip-emoji">🍽️</span>Favorite meals</button>
+          <button type="button" class="chip" data-key="dislike" data-label="Foods we don't like"><span class="chip-emoji">🚫</span>Foods we don't like</button>
+          <button type="button" class="chip" data-key="allergies" data-label="Allergies"><span class="chip-emoji">⚠️</span>Allergies</button>
+          <button type="button" class="chip" data-key="meats" data-label="Favorite meats"><span class="chip-emoji">🥩</span>Favorite meats</button>
+          <button type="button" class="chip" data-key="veggies" data-label="Favorite vegetables"><span class="chip-emoji">🥦</span>Favorite vegetables</button>
+          <button type="button" class="chip" data-key="cuisines" data-label="Favorite cuisines"><span class="chip-emoji">🌮</span>Favorite cuisines</button>
+          <button type="button" class="chip" data-key="quick" data-label="Quick/easy meals"><span class="chip-emoji">⚡</span>Quick/easy meals</button>
+          <button type="button" class="chip" data-key="pantry" data-label="Foods we keep at home"><span class="chip-emoji">🏡</span>Foods we keep at home</button>
 
-        <div class="suggestion-box hidden" id="suggestion-box">
-          <p class="suggestion-label" id="suggestion-label"></p>
-          <div class="suggestion-row" id="suggestion-row"></div>
-          <div class="add-word-row">
-            <input type="text" id="add-word-input" class="add-word-input" placeholder="Not listed? Type your own..." />
-            <button type="button" class="add-word-btn" id="add-word-btn">+ Add</button>
+          <div class="suggestion-box hidden" id="suggestion-box">
+            <p class="suggestion-label" id="suggestion-label"></p>
+            <div class="suggestion-row" id="suggestion-row"></div>
+            <div class="add-word-row">
+              <input type="text" id="add-word-input" class="add-word-input" placeholder="Not listed? Type your own..." />
+              <button type="button" class="add-word-btn" id="add-word-btn">+ Add</button>
+            </div>
+          </div>
+
+          <button type="button" class="chip" id="notes-banner"><span class="chip-emoji">📝</span>Anything else?</button>
+          <div class="suggestion-box hidden" id="notes-body">
+            <p class="suggestion-label">Totally optional — type freely, whatever's on your mind:</p>
+            <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
+              placeholder="Anything the sections above didn't cover..."></textarea>
           </div>
         </div>
-
-        <p class="field-label">Anything else? <span>(totally optional — type freely, this is never touched by the buttons above)</span></p>
-        <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
-          placeholder="Anything the bubbles above didn't cover — whatever's on your mind..."></textarea>
 
         <button type="button" class="reset-everything-btn" id="btn-reset-everything">⚠️ Reset everything and start over</button>
       </div>
