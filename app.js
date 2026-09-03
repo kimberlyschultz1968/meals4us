@@ -132,6 +132,8 @@ function defaultState() {
     nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
     customRecipes: [],    // recipes she's added herself — same shape as the built-in library
     sauces: [],           // her own sauces: { id, name, ingredients: [...], instructions: [...] } — attachable to any meal
+    sauceFeedback: {},    // { sauceId: "love" | "like" } — sorts favorites to the top of every sauce list
+    sauceHidden: [],      // library sauce ids she's removed ("not our thing")
     recipeCustomizations: {}, // { recipeId: { added: [ingredient,...], removed: [name,...] } } — permanent per-recipe tweaks (e.g. "always add corn to Air Fryer Chicken & Potatoes")
     removalNotes: [],     // [{ recipeId, name, reason }] — why she removed something, for her own record
     household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
@@ -172,6 +174,8 @@ function hydrateStateDefaults(s) {
   if (!s.nextWeekQueue) s.nextWeekQueue = [];
   if (!s.customRecipes) s.customRecipes = [];
   if (!s.sauces) s.sauces = [];
+  if (!s.sauceFeedback) s.sauceFeedback = {};
+  if (!s.sauceHidden) s.sauceHidden = [];
   if (!s.recipeCustomizations) s.recipeCustomizations = {};
   // One-time carryover: day-renames made before renames lived on the recipe
   // itself (so her existing renamed meals appear in Meal Ideas too).
@@ -273,6 +277,16 @@ function saveState() {
 
 function allSauces() { return [...state.sauces, ...SAUCE_LIBRARY]; }
 function sauceById(id) { return allSauces().find(s => s.id === id); }
+
+// Sauces offered when adding to a meal: hers first, then ❤️ Love, 👍 Like,
+// then the rest of the library — minus any she's removed.
+function pickableSauces() {
+  const rank = s => state.sauces.some(x => x.id === s.id) ? 0
+    : state.sauceFeedback[s.id] === "love" ? 1
+    : state.sauceFeedback[s.id] === "like" ? 2 : 3;
+  return allSauces().filter(s => !state.sauceHidden.includes(s.id))
+    .sort((a, b) => rank(a) - rank(b) || a.name.localeCompare(b.name));
+}
 
 function recipeById(id) {
   const base = allRecipes().find(r => r.id === id);
@@ -780,6 +794,7 @@ function renderWeek(weekPlan) {
     });
     node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker(index));
     node.querySelector(".side-editor-btn").addEventListener("click", () => openSideEditor(index));
+    node.querySelector(".sauce-editor-btn").addEventListener("click", () => openSauceEditor(index));
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
@@ -912,6 +927,8 @@ function renderWeek2(weekPlan2) {
     if (actionRows[1]) actionRows[1].remove(); // Change Day / Swap Meat / Remove It — Week-1-only
     const sideBtn = node.querySelector(".side-editor-btn");
     if (sideBtn) sideBtn.remove();
+    const sauceBtn = node.querySelector(".sauce-editor-btn");
+    if (sauceBtn) sauceBtn.remove();
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
@@ -1269,7 +1286,7 @@ function openRecipeModal(recipe) {
           </li>`).join("")}</ul>`
         : `<p class="empty-note" style="margin:0 0 6px">No sauce on this meal yet.</p>`;
       const attachedIds = new Set(attached.map(s => s.id));
-      const pickable = allSauces().filter(s => !attachedIds.has(s.id));
+      const pickable = pickableSauces().filter(s => !attachedIds.has(s.id));
       const pickerRows = pickingSauce
         ? (pickable.length
           ? `<div class="suggestion-row" style="margin-top:6px">${pickable.map(s => `<button type="button" class="suggestion-pill" data-attach-sauce="${s.id}" title="${escapeHtmlAttr(s.ingredients.map(i => i.name).join(", "))}">${s.name}</button>`).join("")}</div>`
@@ -1382,30 +1399,39 @@ function openRecipeModal(recipe) {
 // list exactly like the meal's own.
 
 function openMySauces() {
-  const mineRows = state.sauces.length ? state.sauces.map(s => `
+  const act = (id, icon, title, attr) => `<button type="button" class="idea-act" data-${attr}="${id}" title="${title}" aria-label="${title}">${icon}</button>`;
+  const row = (s, buttons) => `
     <div class="idea-row">
       <div class="idea-main" style="cursor:default">
         <span class="idea-name">🥣 ${s.name}</span>
         <span class="idea-meta">${s.ingredients.map(i => i.name).join(", ")}</span>
       </div>
-      <button type="button" class="idea-act" data-edit-sauce="${s.id}" title="Edit this sauce" aria-label="Edit ${escapeHtmlAttr(s.name)}">✏️</button>
-      <button type="button" class="idea-act" data-del-sauce="${s.id}" title="Delete this sauce" aria-label="Delete ${escapeHtmlAttr(s.name)}">🗑</button>
-    </div>`).join("") : `<p class="recipe-picker-empty">No sauces of your own yet — make your first one!</p>`;
-  const libRows = SAUCE_LIBRARY.map(s => `
-    <div class="idea-row">
-      <div class="idea-main" style="cursor:default">
-        <span class="idea-name">🥣 ${s.name}</span>
-        <span class="idea-meta">${s.ingredients.map(i => i.name).join(", ")}</span>
-      </div>
-    </div>`).join("");
+      ${buttons}
+    </div>`;
+  const fb = state.sauceFeedback;
+  const mineRows = state.sauces.length
+    ? state.sauces.map(s => row(s, act(s.id, "✏️", "Edit this sauce", "edit-sauce") + act(s.id, "🗑", "Delete this sauce", "del-sauce"))).join("")
+    : `<p class="recipe-picker-empty">No sauces of your own yet — make your first one!</p>`;
+  const lovedRows = SAUCE_LIBRARY.filter(s => fb[s.id] === "love")
+    .map(s => row(s, act(s.id, "✕", "Take it out of Love", "unfb-sauce"))).join("");
+  const likedRows = SAUCE_LIBRARY.filter(s => fb[s.id] === "like")
+    .map(s => row(s, act(s.id, "✕", "Take it out of Like", "unfb-sauce"))).join("");
+  const rest = SAUCE_LIBRARY.filter(s => !fb[s.id] && !state.sauceHidden.includes(s.id));
+  const libRows = rest.map(s => row(s,
+    act(s.id, "❤️", "Love it — moves it to your Love list", "love-sauce") +
+    act(s.id, "👍", "Like it — moves it to your Like list", "like-sauce") +
+    act(s.id, "🗑", "Remove it — not our thing", "hide-sauce"))).join("");
   openModal(`
     <div class="modal-body-title">🥣 My Sauces</div>
-    <div class="modal-body-meta">Add any of these to a meal from its 👁 View window — the sauce's ingredients go on the grocery list automatically.</div>
+    <div class="modal-body-meta">Add any of these to a meal with the 🥣 Sauce button on a day or in its 👁 View window — the ingredients go on the grocery list automatically.</div>
     <button type="button" class="btn btn-primary btn-full" id="btn-new-sauce" style="margin-bottom:12px">+ New Sauce</button>
     <p class="field-label" style="margin-top:0">Your own</p>
     <div class="recipe-picker-list">${mineRows}</div>
-    <button type="button" class="chip" id="lib-sauces-banner" style="display:flex;align-items:center;width:100%;text-align:left;padding:10px 12px;font-weight:700;border-radius:10px;margin-top:10px;">Ready-made ideas (${SAUCE_LIBRARY.length})<span id="lib-sauces-chevron" style="margin-left:auto">▸</span></button>
-    <div class="recipe-picker-list hidden" id="lib-sauces-list" style="margin-top:6px">${libRows}</div>
+    ${lovedRows ? `<p class="field-label">❤️ Love</p><div class="recipe-picker-list">${lovedRows}</div>` : ""}
+    ${likedRows ? `<p class="field-label">👍 Like</p><div class="recipe-picker-list">${likedRows}</div>` : ""}
+    <button type="button" class="chip" id="lib-sauces-banner" style="display:flex;align-items:center;width:100%;text-align:left;padding:10px 12px;font-weight:700;border-radius:10px;margin-top:10px;">Ready-made ideas (${rest.length})<span id="lib-sauces-chevron" style="margin-left:auto">▸</span></button>
+    <div class="recipe-picker-list hidden" id="lib-sauces-list" style="margin-top:6px">${libRows || "<p class='recipe-picker-empty'>They're all in your Love/Like lists (or removed).</p>"}</div>
+    ${state.sauceHidden.length ? `<button type="button" class="idea-hidden-link" id="sauce-hidden-link" style="display:block;margin-top:8px">Removed sauces (${state.sauceHidden.length}) — bring them back</button>` : ""}
   `);
   document.getElementById("lib-sauces-banner").addEventListener("click", () => {
     const list = document.getElementById("lib-sauces-list");
@@ -1413,6 +1439,20 @@ function openMySauces() {
     list.classList.toggle("hidden", !opening);
     document.getElementById("lib-sauces-chevron").textContent = opening ? "▾" : "▸";
   });
+  document.querySelectorAll("[data-love-sauce]").forEach(b => b.addEventListener("click", () => {
+    state.sauceFeedback[b.dataset.loveSauce] = "love"; saveState(); openMySauces();
+  }));
+  document.querySelectorAll("[data-like-sauce]").forEach(b => b.addEventListener("click", () => {
+    state.sauceFeedback[b.dataset.likeSauce] = "like"; saveState(); openMySauces();
+  }));
+  document.querySelectorAll("[data-unfb-sauce]").forEach(b => b.addEventListener("click", () => {
+    delete state.sauceFeedback[b.dataset.unfbSauce]; saveState(); openMySauces();
+  }));
+  document.querySelectorAll("[data-hide-sauce]").forEach(b => b.addEventListener("click", () => {
+    state.sauceHidden.push(b.dataset.hideSauce); saveState(); openMySauces();
+  }));
+  const hiddenLink = document.getElementById("sauce-hidden-link");
+  if (hiddenLink) hiddenLink.addEventListener("click", () => { state.sauceHidden = []; saveState(); openMySauces(); });
   document.getElementById("btn-new-sauce").addEventListener("click", () => openSauceForm(null));
   document.querySelectorAll("[data-edit-sauce]").forEach(b => b.addEventListener("click", () => openSauceForm(b.dataset.editSauce)));
   document.querySelectorAll("[data-del-sauce]").forEach(b => b.addEventListener("click", () => {
@@ -1461,6 +1501,52 @@ function openSauceForm(sauceId) {
 }
 
 document.getElementById("btn-my-sauces").addEventListener("click", openMySauces);
+
+// "🥣 Sauce" on a day card — the same attach/take-off the View window offers,
+// one tap closer.
+function openSauceEditor(dayIndex) {
+  const entry = state.weekPlan[dayIndex];
+  if (!entry || !entry.recipeId) {
+    alert("Pick a recipe for this day first, then you can add a sauce.");
+    return;
+  }
+  const rid = entry.recipeId;
+  function render() {
+    const recipe = recipeById(rid);
+    const attached = recipe.attachedSauces || [];
+    const attachedIds = new Set(attached.map(s => s.id));
+    const pickable = pickableSauces().filter(s => !attachedIds.has(s.id));
+    openModal(`
+      <div class="modal-body-title">🥣 Sauce for "${recipe.name}"</div>
+      <div class="modal-body-meta">Tap a sauce to add it — its ingredients go on the grocery list. Changes stick for every future time this meal comes up.</div>
+      ${attached.length ? `<p class="field-label" style="margin-top:0">On this meal — tap to take off</p>
+        <div class="suggestion-row">${attached.map(s => `<button type="button" class="suggestion-pill used" data-detach-sauce-day="${s.id}">${s.name} ✕</button>`).join("")}</div>` : ""}
+      <p class="field-label">Tap to add</p>
+      <div class="suggestion-row">${pickable.map(s => `<button type="button" class="suggestion-pill" data-attach-sauce-day="${s.id}" title="${escapeHtmlAttr(s.ingredients.map(i => i.name).join(", "))}">${s.name}</button>`).join("") || "<p class='recipe-picker-empty'>Every sauce is already on this meal!</p>"}</div>
+      <button type="button" class="btn btn-secondary btn-full" id="sauce-day-manage" style="margin-top:12px">🥣 Manage My Sauces</button>
+    `);
+    document.querySelectorAll("[data-attach-sauce-day]").forEach(b => b.addEventListener("click", () => {
+      if (!state.recipeCustomizations[rid]) state.recipeCustomizations[rid] = { added: [], removed: [] };
+      const c = state.recipeCustomizations[rid];
+      if (!c.sauces) c.sauces = [];
+      c.sauces.push(b.dataset.attachSauceDay);
+      refreshGroceryList();
+      saveState();
+      renderWeek(state.weekPlan);
+      render();
+    }));
+    document.querySelectorAll("[data-detach-sauce-day]").forEach(b => b.addEventListener("click", () => {
+      const c = state.recipeCustomizations[rid];
+      if (c) c.sauces = (c.sauces || []).filter(id => id !== b.dataset.detachSauceDay);
+      refreshGroceryList();
+      saveState();
+      renderWeek(state.weekPlan);
+      render();
+    }));
+    document.getElementById("sauce-day-manage").addEventListener("click", openMySauces);
+  }
+  render();
+}
 
 function openDayPicker(dayIndex) {
   const current = state.weekPlan[dayIndex];
