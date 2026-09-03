@@ -341,5 +341,38 @@
 <script src="recipes.js"></script>
 <script src="app.js"></script>
 <script src="sync.js"></script>
+
+<script>
+/* Show/hide password eye - wraps every password field on the page (and any
+   added later) so tapping the eye reveals what was typed. */
+(function(){
+  var css = document.createElement("style");
+  css.textContent = ".pw-wrap{position:relative;display:block}.pw-wrap>input{width:100%;box-sizing:border-box;padding-right:2.6em}.pw-eye{position:absolute;right:.45em;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.15em;padding:2px;line-height:1;opacity:.75;z-index:2}.pw-eye:hover{opacity:1}";
+  document.head.appendChild(css);
+  function addEye(inp){
+    if (inp.closest(".pw-wrap")) return;
+    var wrap = document.createElement("span");
+    wrap.className = "pw-wrap";
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pw-eye";
+    btn.textContent = "\uD83D\uDC41\uFE0F";
+    btn.setAttribute("aria-label", "Show password");
+    btn.addEventListener("click", function(){
+      var show = inp.type === "password";
+      inp.type = show ? "text" : "password";
+      btn.textContent = show ? "\uD83D\uDE48" : "\uD83D\uDC41\uFE0F";
+      btn.setAttribute("aria-label", show ? "Hide password" : "Show password");
+      inp.focus();
+    });
+    wrap.appendChild(btn);
+  }
+  function sweep(){ document.querySelectorAll('input[type="password"]').forEach(addEye); }
+  sweep();
+  new MutationObserver(sweep).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 </body>
 </html>
