@@ -1317,6 +1317,18 @@ h1 {
 }
 .idea-act:hover { border-color: var(--red); }
 
+/* The labeled "Add to Day" button — the row's main action, spelled out */
+.idea-add-btn {
+  width: auto;
+  padding: 0 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--red);
+  border-color: var(--red);
+  white-space: nowrap;
+}
+.idea-add-btn:hover { background: var(--red); color: #fff; }
+
 .idea-hidden-link {
   display: block;
   margin: 12px auto 0;

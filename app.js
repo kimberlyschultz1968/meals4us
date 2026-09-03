@@ -1771,7 +1771,7 @@ function ideaTagLabels(r) {
 function openMealIdeas() {
   openModal(`
     <div class="modal-body-title">📖 Meal Ideas</div>
-    <div class="modal-body-meta">Tap a meal to put it on a day. 👁 shows the recipe, 🗑 deletes ideas you never want to see. ⚠️ = conflicts with your profile.</div>
+    <div class="modal-body-meta">📅 Add to Day puts a meal on a day of your week. 👁 shows the recipe, 🗑 deletes ideas you never want to see. ⚠️ = conflicts with your profile.</div>
     <div class="idea-filters" id="idea-filters"></div>
     <div class="idea-toolbar">
       <input type="text" id="idea-search" class="recipe-picker-search" placeholder="Search meals..." />
@@ -1818,6 +1818,7 @@ function renderIdeaResults() {
         <span class="idea-name">${r.emoji} ${r.name}${flagged}</span>
         <span class="idea-meta">${meta}</span>
       </button>
+      <button type="button" class="idea-act idea-add-btn" data-pick="${r.id}" title="Put this meal on a day" aria-label="Add ${escapeHtmlAttr(r.name)} to a day">📅 Add to Day</button>
       <button type="button" class="idea-act" data-view="${r.id}" title="See the recipe" aria-label="See the recipe">👁</button>
       <button type="button" class="idea-act" data-del="${r.id}" title="Delete this idea" aria-label="Delete this idea">🗑</button>
     </div>`;
