@@ -2023,6 +2023,15 @@ document.getElementById("notes-banner").addEventListener("click", () => {
   if (opening) document.getElementById("family-notes").focus();
 });
 
+document.getElementById("familytext-banner").addEventListener("click", () => {
+  const banner = document.getElementById("familytext-banner");
+  const body = document.getElementById("familytext-body");
+  const opening = body.classList.contains("hidden");
+  body.classList.toggle("hidden", !opening);
+  banner.classList.toggle("open", opening);
+  if (opening) document.getElementById("family-text").focus();
+});
+
 document.getElementById("add-word-btn").addEventListener("click", addCustomWord);
 document.getElementById("add-word-input").addEventListener("keydown", e => {
   if (e.key === "Enter") { e.preventDefault(); addCustomWord(); }
@@ -2090,7 +2099,8 @@ function showSuggestions(key, label) {
     regenerateFamilyText();
   };
 
-  baseWords.forEach(word => {
+  // Alphabetical order keeps the word grid tidy and predictable.
+  [...baseWords].sort((a, b) => a.localeCompare(b)).forEach(word => {
     const pill = document.createElement("button");
     pill.type = "button";
     pill.className = "suggestion-pill";
@@ -2102,7 +2112,7 @@ function showSuggestions(key, label) {
 
   // Words she's added herself — same toggle behavior, plus a ✕ to remove
   // the bubble entirely (built-in example words can't be deleted, only hers).
-  state.customSuggestions[key].forEach(word => {
+  [...state.customSuggestions[key]].sort((a, b) => a.localeCompare(b)).forEach(word => {
     const wrap = document.createElement("span");
     wrap.className = "suggestion-pill-wrap";
 
@@ -2391,12 +2401,7 @@ function boot() {
   const hasSelections = Object.values(state.selections).some(list => list && list.length);
   if (hasSelections) regenerateFamilyText();
   else if (state.familyText) document.getElementById("family-text").value = state.familyText;
-  if (state.familyNotes) {
-    document.getElementById("family-notes").value = state.familyNotes;
-    // She wrote notes — open that banner so they're visible, not hidden away.
-    document.getElementById("notes-body").classList.remove("hidden");
-    document.getElementById("notes-banner").classList.add("open");
-  }
+  if (state.familyNotes) document.getElementById("family-notes").value = state.familyNotes;
   document.getElementById("household-adults").value = state.household.adults;
   document.getElementById("household-kids").value = state.household.kids;
   document.getElementById("no-repeat-weeks").value = state.noRepeatWeeks;

@@ -137,13 +137,15 @@
           </div>
         </div>
 
-        <textarea id="family-text" class="family-textarea" spellcheck="false"
-          placeholder="Tell us about your family...&#10;&#10;Example: We love tacos, burgers and pasta. We don't eat fish. The kids don't like spicy food. We like easy meals and leftovers."></textarea>
-
-        <button type="button" class="clear-text-btn" id="btn-clear-text">Clear text</button>
-
-        <p class="field-label">Need ideas? Tap a section to open it, then tap what fits:</p>
+        <p class="field-label">Tap a section to open it, then tap what fits — the next page shows everything we learned:</p>
         <div class="chip-row" id="chip-row" aria-label="Tap a section to open it, then tap words to add them">
+          <button type="button" class="chip" id="familytext-banner"><span class="chip-emoji">💬</span>Tell us in your own words</button>
+          <div class="suggestion-box hidden" id="familytext-body">
+            <textarea id="family-text" class="family-textarea" spellcheck="false"
+              placeholder="Tell us about your family...&#10;&#10;Example: We love tacos, burgers and pasta. We don't eat fish. The kids don't like spicy food. We like easy meals and leftovers."></textarea>
+            <button type="button" class="clear-text-btn" id="btn-clear-text">Clear text</button>
+          </div>
+
           <button type="button" class="chip" data-key="love" data-label="Foods we love"><span class="chip-emoji">❤️</span>Foods we love</button>
           <button type="button" class="chip" data-key="meals" data-label="Favorite meals"><span class="chip-emoji">🍽️</span>Favorite meals</button>
           <button type="button" class="chip" data-key="dislike" data-label="Foods we don't like"><span class="chip-emoji">🚫</span>Foods we don't like</button>
