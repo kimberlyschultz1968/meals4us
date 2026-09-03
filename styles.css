@@ -1329,14 +1329,22 @@ h1 {
 }
 .idea-add-btn:hover { background: var(--red); color: #fff; }
 
-/* Welcome splash — the branded front door at every sign-in. Dense, one screen. */
+/* Welcome splash — the branded front door at every sign-in. Dense, one screen.
+   The red lives in a centered panel; the page ground around it stays the
+   app's off-white so it matches the rest of the app. */
 .welcome-splash {
   position: fixed; inset: 0; z-index: 70;
-  background: var(--header-gradient);
+  background: var(--bg);
   display: flex; align-items: center; justify-content: center;
   padding: 14px;
 }
-.ws-inner { max-width: 620px; width: 100%; text-align: center; }
+.ws-inner {
+  max-width: 620px; width: 100%; text-align: center;
+  background: var(--header-gradient);
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 14px 40px rgba(23, 17, 17, .35);
+}
 .ws-brandrow { display: flex; align-items: center; justify-content: center; gap: 10px; text-align: left; }
 .ws-icon { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,.45); }
 .ws-brand { font-size: 19px; font-weight: 800; color: #fff; letter-spacing: -0.01em; line-height: 1.15; }
@@ -1365,9 +1373,10 @@ h1 {
 .ws-close {
   position: absolute; top: 12px; right: 14px;
   width: 30px; height: 30px; border-radius: 50%;
-  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3);
-  color: #fff; font-size: 13px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--line);
+  color: var(--ink-soft); font-size: 13px; cursor: pointer;
 }
+.ws-close:hover { border-color: var(--red); color: var(--red); }
 /* Only a truly tiny window is allowed to scroll the splash */
 @media (max-height: 500px) { .welcome-splash { overflow-y: auto; align-items: flex-start; } }
 
