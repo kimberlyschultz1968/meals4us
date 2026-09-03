@@ -7,9 +7,11 @@
 // in, her data lives on the server under her own account, and every device signed
 // into that account picks it up the next time it signs in or reloads.
 //
-// Unlike the old Firestore version, there's no live cross-device listener here —
-// same as every other app in the family (Home 360, Pets, Auto, etc.): pull on
-// sign-in, push (debounced) on every local change.
+// Unlike the old Firestore version, there's no live cross-device listener here.
+// Instead: every real edit stamps the state with the time it happened
+// (state._syncStamp), every open — and every return to the tab/app — pulls the
+// cloud copy and adopts it if it's newer than this device's copy ("newest edit
+// wins"), and every local change still pushes (debounced) to the cloud.
 
 const MEALS4US_API = "https://the-binder-api.onrender.com";
 const TRIAL_DAYS = 7;
@@ -74,8 +76,19 @@ function hasMeaningfulLocalData() {
     (state.customRecipes && state.customRecipes.length) || (state.recentWeeksHistory && state.recentWeeksHistory.length));
 }
 
+// "Newest edit wins" needs to know when this copy was last really edited.
+// Boot-time saves never reach queueCloudSave (app.js boots before this file
+// loads, and adoption of a cloud copy is guarded by applyingRemoteState), so
+// every stamp here corresponds to an actual user edit on this device.
+function stampState() {
+  state._syncStamp = Date.now();
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
 function queueCloudSave() {
-  if (!isSignedIn() || applyingRemoteState) return;
+  if (applyingRemoteState) return;
+  stampState();
+  if (!isSignedIn()) return;
   clearTimeout(cloudSaveTimer);
   cloudSaveTimer = setTimeout(pushCloudState, 800);
 }
@@ -83,6 +96,7 @@ function queueCloudSave() {
 function pushCloudState() {
   if (!isSignedIn()) return;
   if (!initialCloudSyncDone) { cloudSaveTimer = setTimeout(pushCloudState, 400); return; }
+  if (!state._syncStamp) stampState(); // pre-stamp-era data being seeded up for the first time
   api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
     .catch(err => console.error("Meals4Us: cloud save failed", err));
 }
@@ -92,9 +106,16 @@ async function connectCloud() {
     const { data } = await api("/meals4us/data");
     const cloudHas = data && Object.keys(data).length > 0;
     initialCloudSyncDone = true;
-    if (cloudHas && !hasMeaningfulLocalData()) {
+    const cloudStamp = (cloudHas && data._syncStamp) || 0;
+    const localStamp = state._syncStamp || 0;
+    if (cloudHas && (!hasMeaningfulLocalData() || cloudStamp > localStamp)) {
+      // The cloud copy is newer (another device edited more recently) — adopt it.
       applyingRemoteState = true;
-      try { state = hydrateStateDefaults(data); boot(); } finally { applyingRemoteState = false; }
+      try {
+        state = hydrateStateDefaults(data);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+        boot();
+      } finally { applyingRemoteState = false; }
     } else {
       pushCloudState(); // seed her account with what's on this device, or push a newer local edit up
     }
@@ -103,6 +124,13 @@ async function connectCloud() {
     initialCloudSyncDone = true; // don't block local saves forever if the initial pull failed
   }
 }
+
+// Coming back to the app (switching back to the tab, reopening it on a phone)
+// re-checks the cloud, so another device's changes show up without needing a
+// full page reload.
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && isSignedIn()) connectCloud();
+});
 
 // "Lock It In" — a save she can see and trust, unlike the silent background sync.
 // Waits for the server to confirm the write before saying it's done.
@@ -114,6 +142,7 @@ function lockItIn() {
     return;
   }
   clearTimeout(cloudSaveTimer);
+  if (!state._syncStamp) stampState();
   btn.disabled = true;
   btn.textContent = "Saving…";
   api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })

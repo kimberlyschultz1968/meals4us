@@ -26,20 +26,19 @@ fully offline/local if she skips signing in ("Not now" on the sign-in screen).
 
 ## Accounts + sync
 
-Real accounts now exist via Firebase (project `meals4us-app`): email/password sign-in,
-each account's data in its own Firestore document at `/users/{uid}`, locked down by
-[firestore.rules](firestore.rules) so nobody can read or write anyone else's data.
+Accounts live on the same shared Postgres backend as the rest of The Binder family
+(`https://the-binder-api.onrender.com`, `/meals4us/*` routes) — the separate Firebase
+project is retired for auth/data (Firebase Hosting still serves the site).
 [sync.js](sync.js) is a plain classic script loaded after [app.js](app.js) (shares its
 global scope on purpose — no build step) that:
 
 - shows an auth gate ([index.html](index.html)'s `#auth-gate`) until she's signed in
-- on sign-in, pulls her cloud document and re-renders via `boot()` — or, if this is the
-  first time that account has synced, pushes whatever's already on this device up as
-  the seed
-- keeps a live `onSnapshot` listener open, so a change on one device shows up on any
-  other signed-in device within about a second, no manual export/import step
+- stamps every real edit with the time it happened (`state._syncStamp`)
+- on every open — and every return to the tab/app (`visibilitychange`) — pulls the
+  cloud copy and adopts it if it's newer than this device's copy (**newest edit
+  wins**); otherwise pushes this device's copy up
 - hooks into `app.js`'s existing `saveState()` (via a `queueCloudSave()` global it
-  checks for) so every local save also queues a debounced push to Firestore
+  checks for) so every local save also queues a debounced push to the server
 
 ## Expanding later
 
