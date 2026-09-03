@@ -95,6 +95,33 @@
     </div>
   </div>
 
+  <!-- Welcome splash: the branded front door, shown at every sign-in.
+       Dense by design — the whole thing fits on one screen, no scrolling. -->
+  <div class="welcome-splash hidden" id="welcome-splash">
+    <button type="button" class="ws-close" id="ws-close" aria-label="Close">✕</button>
+    <div class="ws-inner">
+      <div class="ws-brandrow">
+        <img src="icon.svg" alt="" class="ws-icon" />
+        <div>
+          <div class="ws-brand">Meals<span>4</span>Us</div>
+          <div class="ws-tag">Dinner, planned. Groceries, done.</div>
+        </div>
+      </div>
+      <p class="ws-tonight hidden" id="ws-tonight"></p>
+      <div class="ws-grid">
+        <div class="ws-card"><b>🧠 Fits your family</b><span>Plans dinners around your likes, dislikes, and allergies.</span></div>
+        <div class="ws-card"><b>📖 163 meal ideas + yours</b><span>Browse, search, Add to Day — or add your own recipes.</span></div>
+        <div class="ws-card"><b>✏️ Make any meal yours</b><span>Rename it, swap ingredients, rewrite the steps — saved for good.</span></div>
+        <div class="ws-card"><b>🥣 Sauces</b><span>Your own mixes plus 22 ready-mades, one tap onto any meal.</span></div>
+        <div class="ws-card"><b>🛒 Self-writing grocery list</b><span>Sorted by aisle, updates the moment a meal changes.</span></div>
+        <div class="ws-card"><b>❤️ Learns what you love</b><span>Love it / It's OK feedback shapes future weeks.</span></div>
+        <div class="ws-card"><b>📅 Two weeks at a glance</b><span>Free days, meat swaps, sides, and a no-repeat rule.</span></div>
+        <div class="ws-card"><b>☁️ Follows you everywhere</b><span>One account keeps computer and phone in step.</span></div>
+      </div>
+      <button type="button" class="ws-go" id="ws-go">Start planning →</button>
+    </div>
+  </div>
+
   <main id="app">
 
     <!-- SCREEN 1: Tell Us About Your Family -->
