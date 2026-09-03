@@ -31,6 +31,10 @@ html, body {
 body { min-height: 100vh; }
 button { font-family: inherit; }
 
+/* Generic hide utility — some components have their own scoped .hidden rules,
+   this covers everything else (e.g. the collapsed sauce library). */
+.hidden { display: none !important; }
+
 .app-shell {
   max-width: 560px;
   margin: 0 auto;

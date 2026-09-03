@@ -1404,9 +1404,15 @@ function openMySauces() {
     <button type="button" class="btn btn-primary btn-full" id="btn-new-sauce" style="margin-bottom:12px">+ New Sauce</button>
     <p class="field-label" style="margin-top:0">Your own</p>
     <div class="recipe-picker-list">${mineRows}</div>
-    <p class="field-label">Ready-made ideas</p>
-    <div class="recipe-picker-list">${libRows}</div>
+    <button type="button" class="chip" id="lib-sauces-banner" style="display:flex;align-items:center;width:100%;text-align:left;padding:10px 12px;font-weight:700;border-radius:10px;margin-top:10px;">Ready-made ideas (${SAUCE_LIBRARY.length})<span id="lib-sauces-chevron" style="margin-left:auto">▸</span></button>
+    <div class="recipe-picker-list hidden" id="lib-sauces-list" style="margin-top:6px">${libRows}</div>
   `);
+  document.getElementById("lib-sauces-banner").addEventListener("click", () => {
+    const list = document.getElementById("lib-sauces-list");
+    const opening = list.classList.contains("hidden");
+    list.classList.toggle("hidden", !opening);
+    document.getElementById("lib-sauces-chevron").textContent = opening ? "▾" : "▸";
+  });
   document.getElementById("btn-new-sauce").addEventListener("click", () => openSauceForm(null));
   document.querySelectorAll("[data-edit-sauce]").forEach(b => b.addEventListener("click", () => openSauceForm(b.dataset.editSauce)));
   document.querySelectorAll("[data-del-sauce]").forEach(b => b.addEventListener("click", () => {
