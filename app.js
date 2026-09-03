@@ -243,7 +243,11 @@ function allRecipes() {
   const cust = (state && state.recipeCustomizations) || {};
   return [...RECIPES, ...state.customRecipes].map(r => {
     const c = cust[r.id];
-    return c && c.customName ? { ...r, name: c.customName } : r;
+    if (!c || (!c.customName && !(c.instructions && c.instructions.length))) return r;
+    const out = { ...r };
+    if (c.customName) out.name = c.customName;
+    if (c.instructions && c.instructions.length) out.instructions = c.instructions;
+    return out;
   });
 }
 
@@ -1192,14 +1196,35 @@ function saveCustomRecipe() {
 
 function openRecipeModal(recipe) {
   const rid = recipe.id;
+  let editingSteps = false;
 
   function render(r) {
-    const steps = r.instructions && r.instructions.length
-      ? `<div class="modal-instructions">
+    const baseSteps = r.instructions || [];
+    const hasCustomSteps = !!(rid && state.recipeCustomizations[rid] &&
+      state.recipeCustomizations[rid].instructions && state.recipeCustomizations[rid].instructions.length);
+    let steps;
+    if (editingSteps) {
+      steps = `<div class="modal-instructions">
           <h3>How to make it</h3>
-          <ol>${r.instructions.map(step => `<li>${step}</li>`).join("")}</ol>
-        </div>`
-      : `<p class="empty-note">No steps written for this one yet — just the ingredients.</p>`;
+          <textarea id="steps-edit" class="add-word-input" rows="7" style="width:100%;box-sizing:border-box;resize:vertical;" placeholder="One step per line...">${escapeHtmlAttr(baseSteps.join("\n"))}</textarea>
+          <div class="recipe-form-actions" style="margin-top:8px">
+            <button type="button" class="btn btn-secondary" id="steps-cancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="steps-save">Save Steps</button>
+          </div>
+        </div>`;
+    } else {
+      const list = baseSteps.length
+        ? `<ol>${baseSteps.map(step => `<li>${step}</li>`).join("")}</ol>`
+        : `<p class="empty-note">No steps written for this one yet — just the ingredients.</p>`;
+      steps = `<div class="modal-instructions">
+          <h3>How to make it</h3>
+          ${list}
+          ${rid ? `<div class="recipe-form-actions" style="margin-top:8px">
+            ${hasCustomSteps ? `<button type="button" class="btn btn-secondary" id="steps-original">Use Original Steps</button>` : ""}
+            <button type="button" class="btn btn-secondary" id="steps-edit-btn">✏️ ${baseSteps.length ? "Edit Steps" : "Write Steps"}</button>
+          </div>` : ""}
+        </div>`;
+    }
 
     // ✕ on every non-meat row (meat changes go through Swap Meat, same rule as
     // the side editor); meat rows show without a delete button.
@@ -1234,6 +1259,7 @@ function openRecipeModal(recipe) {
       return state.recipeCustomizations[rid];
     };
     const afterEdit = () => {
+      refreshGroceryList(); // ingredient changes flow straight into the grocery list
       saveState();
       if (state.weekPlan) renderWeek(state.weekPlan);
       if (state.weekPlan2) renderWeek2(state.weekPlan2);
@@ -1261,6 +1287,26 @@ function openRecipeModal(recipe) {
     });
     document.getElementById("ing-add-input").addEventListener("keydown", e => {
       if (e.key === "Enter") { e.preventDefault(); document.getElementById("ing-add-btn").click(); }
+    });
+
+    const stepsEditBtn = document.getElementById("steps-edit-btn");
+    if (stepsEditBtn) stepsEditBtn.addEventListener("click", () => { editingSteps = true; render(recipeById(rid) || r); });
+    const stepsCancel = document.getElementById("steps-cancel");
+    if (stepsCancel) stepsCancel.addEventListener("click", () => { editingSteps = false; render(recipeById(rid) || r); });
+    const stepsSave = document.getElementById("steps-save");
+    if (stepsSave) stepsSave.addEventListener("click", () => {
+      // One step per line; a typed "1." or "2)" prefix is stripped — the list numbers itself.
+      const lines = document.getElementById("steps-edit").value.split("\n")
+        .map(s => s.trim().replace(/^\d+[.)]\s*/, "")).filter(Boolean);
+      const c = custom();
+      if (lines.length) c.instructions = lines; else delete c.instructions;
+      editingSteps = false;
+      afterEdit();
+    });
+    const stepsOriginal = document.getElementById("steps-original");
+    if (stepsOriginal) stepsOriginal.addEventListener("click", () => {
+      delete custom().instructions;
+      afterEdit();
     });
   }
 
@@ -1716,6 +1762,7 @@ function openSideEditor(dayIndex) {
     if (!custom.added) custom.added = [];
     custom.added.push(ing);
     custom.removed = (custom.removed || []).filter(n => n !== ing.name);
+    refreshGroceryList();
     saveState();
     renderWeek(state.weekPlan);
     render();
@@ -1762,6 +1809,7 @@ function openSideEditor(dayIndex) {
         custom.added = (custom.added || []).filter(a => a.name !== name);
         if (!custom.removed) custom.removed = [];
         if (!custom.removed.includes(name)) custom.removed.push(name);
+        refreshGroceryList();
         saveState();
         renderWeek(state.weekPlan);
         render();
@@ -1847,6 +1895,28 @@ function buildGroceryList(weekPlan, keepAtHome, staples = []) {
 
   list.sort((a, b) => a.name.localeCompare(b.name));
   return list;
+}
+
+// After a recipe's ingredients change, rebuild the grocery list from the
+// current plans — keeping what she's already done to it: checked-off state
+// carries over (matched by name+unit) and items she added by hand stay.
+function refreshGroceryList() {
+  if (!state.groceryList || !state.weekPlan || !state.profile) return;
+  const old = state.groceryList;
+  const plans = state.includeWeek2Groceries && state.weekPlan2
+    ? [...state.weekPlan, ...state.weekPlan2]
+    : state.weekPlan;
+  const fresh = buildGroceryList(plans, state.profile.keepAtHome, state.staples);
+  const oldByKey = new Map(old.map(i => [`${i.name}|${i.unit}`, i]));
+  fresh.forEach(item => {
+    const prev = oldByKey.get(`${item.name}|${item.unit}`);
+    if (prev && prev.checked) item.checked = true;
+  });
+  const freshKeys = new Set(fresh.map(i => `${i.name}|${i.unit}`));
+  old.forEach(i => { if (i.custom && !freshKeys.has(`${i.name}|${i.unit}`)) fresh.push(i); });
+  fresh.sort((a, b) => a.name.localeCompare(b.name));
+  state.groceryList = fresh;
+  renderGrocery(state.groceryList);
 }
 
 function renderGrocery(list) {
