@@ -103,7 +103,7 @@
         <p class="subtitle">Tell us what your family loves, what you don't like, and how you like to eat.</p>
 
         <div class="household-box">
-          <p class="field-label">How many are you feeding? <span>(this scales every recipe's ingredient amounts and the grocery list — kids count as about half a portion)</span></p>
+          <p class="field-label" style="margin-top:0">How many are you feeding? <span>(scales every recipe and the grocery list — kids count as about half a portion)</span></p>
           <div class="household-row">
             <div class="household-field">
               <label for="household-adults">Adults</label>
@@ -115,21 +115,26 @@
             </div>
           </div>
 
-          <p class="field-label" style="margin:8px 0 4px">Don't repeat a meal for <span>(how long before a dish can come back around)</span></p>
-          <select id="no-repeat-weeks" class="household-field-select">
-            <option value="2">2 weeks</option>
-            <option value="3" selected>3 weeks</option>
-            <option value="4">4 weeks</option>
-            <option value="6">6 weeks</option>
-          </select>
-
-          <p class="field-label" style="margin:12px 0 4px">Season <span>(nudges toward heartier meals in fall/winter, lighter ones in spring/summer)</span></p>
-          <select id="season" class="household-field-select">
-            <option value="spring">🌱 Spring</option>
-            <option value="summer">☀️ Summer</option>
-            <option value="fall">🍂 Fall</option>
-            <option value="winter">❄️ Winter</option>
-          </select>
+          <div class="household-row" style="margin-top:10px">
+            <div class="household-field">
+              <label for="no-repeat-weeks" title="How long before a dish can come back around">Don't repeat a meal for</label>
+              <select id="no-repeat-weeks" class="household-field-select">
+                <option value="2">2 weeks</option>
+                <option value="3" selected>3 weeks</option>
+                <option value="4">4 weeks</option>
+                <option value="6">6 weeks</option>
+              </select>
+            </div>
+            <div class="household-field">
+              <label for="season" title="Nudges toward heartier meals in fall/winter, lighter ones in spring/summer">Season</label>
+              <select id="season" class="household-field-select">
+                <option value="spring">🌱 Spring</option>
+                <option value="summer">☀️ Summer</option>
+                <option value="fall">🍂 Fall</option>
+                <option value="winter">❄️ Winter</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <textarea id="family-text" class="family-textarea" spellcheck="false"
@@ -161,7 +166,7 @@
 
         <p class="field-label">Anything else? <span>(totally optional — type freely, this is never touched by the buttons above)</span></p>
         <textarea id="family-notes" class="family-textarea family-notes" spellcheck="false"
-          placeholder="Anything the bubbles above didn't cover — allergies in your own words, a foster kid who won't eat anything green, whatever's on your mind..."></textarea>
+          placeholder="Anything the bubbles above didn't cover — whatever's on your mind..."></textarea>
 
         <button type="button" class="reset-everything-btn" id="btn-reset-everything">⚠️ Reset everything and start over</button>
       </div>
