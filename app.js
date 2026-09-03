@@ -1191,23 +1191,80 @@ function saveCustomRecipe() {
 }
 
 function openRecipeModal(recipe) {
-  const steps = recipe.instructions && recipe.instructions.length
-    ? `<div class="modal-instructions">
-        <h3>How to make it</h3>
-        <ol>${recipe.instructions.map(step => `<li>${step}</li>`).join("")}</ol>
-      </div>`
-    : `<p class="empty-note">No steps written for this one yet — just the ingredients.</p>`;
+  const rid = recipe.id;
 
-  openModal(`
-    <div class="modal-body-emoji">${recipe.emoji}</div>
-    <div class="modal-body-title">${recipe.name}</div>
-    <div class="modal-body-meta">${recipe.timeMinutes} min • ${capitalize(recipe.cuisine)}</div>
-    <div class="modal-ingredients">
-      <h3>Ingredients <span style="font-weight:400;text-transform:none;letter-spacing:normal;">— sized for ${state.household.adults} adult${state.household.adults === 1 ? "" : "s"}${state.household.kids ? ` + ${state.household.kids} kid${state.household.kids === 1 ? "" : "s"}` : ""}</span></h3>
-      <ul>${recipe.ingredients.map(i => `<li>${formatQty(scaleQty(i.qty, i.unit))} ${i.unit === "count" ? "" : i.unit} ${i.name}`.trim() + "</li>").join("")}</ul>
-    </div>
-    ${steps}
-  `);
+  function render(r) {
+    const steps = r.instructions && r.instructions.length
+      ? `<div class="modal-instructions">
+          <h3>How to make it</h3>
+          <ol>${r.instructions.map(step => `<li>${step}</li>`).join("")}</ol>
+        </div>`
+      : `<p class="empty-note">No steps written for this one yet — just the ingredients.</p>`;
+
+    // ✕ on every non-meat row (meat changes go through Swap Meat, same rule as
+    // the side editor); meat rows show without a delete button.
+    const rows = r.ingredients.map(i => {
+      const label = `${formatQty(scaleQty(i.qty, i.unit))} ${i.unit === "count" ? "" : i.unit} ${i.name}`.trim();
+      const removable = rid && i.category !== "Meat & Seafood";
+      return `<li>${label}${removable ? ` <button type="button" class="ing-del" data-del-ing="${escapeHtmlAttr(i.name)}" title="Take this ingredient out for good" aria-label="Remove ${escapeHtmlAttr(i.name)}" style="background:none;border:none;cursor:pointer;color:#a33;font-size:0.95em;padding:0 4px;">✕</button>` : ""}</li>`;
+    }).join("");
+
+    const editRow = rid ? `
+      <div class="add-word-row" style="margin-top:10px">
+        <input type="text" id="ing-add-input" class="add-word-input" placeholder="Add an ingredient..." />
+        <button type="button" class="add-word-btn" id="ing-add-btn">+ Add</button>
+      </div>
+      <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up.</p>` : "";
+
+    openModal(`
+      <div class="modal-body-emoji">${r.emoji}</div>
+      <div class="modal-body-title">${r.name}</div>
+      <div class="modal-body-meta">${r.timeMinutes} min • ${capitalize(r.cuisine)}</div>
+      <div class="modal-ingredients">
+        <h3>Ingredients <span style="font-weight:400;text-transform:none;letter-spacing:normal;">— sized for ${state.household.adults} adult${state.household.adults === 1 ? "" : "s"}${state.household.kids ? ` + ${state.household.kids} kid${state.household.kids === 1 ? "" : "s"}` : ""}</span></h3>
+        <ul>${rows}</ul>
+        ${editRow}
+      </div>
+      ${steps}
+    `);
+
+    if (!rid) return;
+    const custom = () => {
+      if (!state.recipeCustomizations[rid]) state.recipeCustomizations[rid] = { added: [], removed: [] };
+      return state.recipeCustomizations[rid];
+    };
+    const afterEdit = () => {
+      saveState();
+      if (state.weekPlan) renderWeek(state.weekPlan);
+      if (state.weekPlan2) renderWeek2(state.weekPlan2);
+      render(recipeById(rid) || r);
+    };
+    document.querySelectorAll("[data-del-ing]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const name = btn.dataset.delIng;
+        const c = custom();
+        c.added = (c.added || []).filter(a => a.name !== name);
+        if (!c.removed) c.removed = [];
+        if (!c.removed.includes(name)) c.removed.push(name);
+        afterEdit();
+      });
+    });
+    document.getElementById("ing-add-btn").addEventListener("click", () => {
+      const input = document.getElementById("ing-add-input");
+      const name = input.value.trim().toLowerCase();
+      if (!name) return;
+      const c = custom();
+      if (!c.added) c.added = [];
+      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: "count", category: "Other" });
+      c.removed = (c.removed || []).filter(n => n !== name);
+      afterEdit();
+    });
+    document.getElementById("ing-add-input").addEventListener("keydown", e => {
+      if (e.key === "Enter") { e.preventDefault(); document.getElementById("ing-add-btn").click(); }
+    });
+  }
+
+  render(recipe);
 }
 
 function openDayPicker(dayIndex) {
