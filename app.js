@@ -1070,6 +1070,12 @@ function openRecipePicker2(dayIndex) {
 function openModal(html) {
   document.getElementById("modal-body").innerHTML = html;
   document.getElementById("recipe-modal").classList.remove("hidden");
+  // Every new modal view starts at the top — otherwise swapping from a long
+  // list (like Meal Ideas) to a shorter one leaves the window scrolled deep
+  // and it looks like the tap did nothing.
+  const card = document.querySelector("#recipe-modal .modal-card");
+  if (card) card.scrollTop = 0;
+  document.getElementById("recipe-modal").scrollTop = 0;
 }
 
 function closeModal() {
