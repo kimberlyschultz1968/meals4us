@@ -129,14 +129,14 @@ button { font-family: inherit; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.screen-inner { flex: 1; padding: 14px 20px 24px; }
+.screen-inner { flex: 1; padding: 10px 20px 16px; }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   background: none;
   border: none;
-  padding: 0 0 14px;
+  padding: 0 0 8px;
   margin: 0;
   font-size: 14.5px;
   font-weight: 600;
@@ -147,19 +147,19 @@ button { font-family: inherit; }
 .back-link:hover { color: var(--red); }
 
 h1 {
-  font-size: 23px;
+  font-size: 20px;
   font-weight: 600;
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   letter-spacing: -0.01em;
   line-height: 1.2;
   color: var(--ink);
 }
 
 .subtitle {
-  font-size: 16px;
+  font-size: 14.5px;
   color: var(--ink-soft);
-  margin: 0 0 12px;
-  line-height: 1.4;
+  margin: 0 0 8px;
+  line-height: 1.35;
 }
 
 .screen-footer {
@@ -210,8 +210,8 @@ h1 {
   margin-bottom: 10px;
 }
 
-.household-row { display: flex; gap: 8px; margin-top: 2px; }
-.household-field { flex: 1; }
+.household-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.household-field { flex: 1 1 110px; }
 
 .household-field label {
   display: block;
@@ -295,7 +295,7 @@ h1 {
 .reset-everything-btn {
   display: block;
   width: 100%;
-  margin-top: 22px;
+  margin-top: 10px;
   background: none;
   border: 1px dashed var(--line);
   border-radius: 10px;
@@ -325,24 +325,31 @@ h1 {
 
 .clear-text-btn:hover { color: var(--red); }
 
-/* Screen 1 — the categories are full-width banners that open up in place */
+/* Screen 1 — the categories are full-width banners that open up in place;
+   two across on wider screens so the whole list fits on one page */
 .chip-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
   margin-top: 6px;
 }
+
+@media (min-width: 480px) {
+  .chip-row { grid-template-columns: 1fr 1fr; }
+}
+
+#chip-row .suggestion-box { grid-column: 1 / -1; }
 
 #chip-row .chip {
   display: flex;
   align-items: center;
   width: 100%;
   text-align: left;
-  padding: 12px 14px;
-  font-size: 15px;
+  padding: 10px 12px;
+  font-size: 14.5px;
   font-weight: 700;
   color: var(--ink);
-  border-radius: 12px;
+  border-radius: 10px;
   box-shadow: var(--shadow);
 }
 
@@ -491,28 +498,28 @@ h1 {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 16px 18px;
-  margin-bottom: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
   box-shadow: var(--shadow);
 }
 
 .learned-card h2 {
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .04em;
   color: var(--ink);
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
-.tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .tag {
   background: #F7F4EF;
   border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 7px 13px;
-  font-size: 15.5px;
+  border-radius: 7px;
+  padding: 4px 10px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--ink);
   text-transform: capitalize;

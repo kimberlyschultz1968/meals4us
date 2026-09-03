@@ -100,10 +100,8 @@
     <section class="screen" id="screen-1" data-screen="1">
       <div class="screen-inner">
         <h1>Let's get to know your family.</h1>
-        <p class="subtitle">Tell us what your family loves, what you don't like, and how you like to eat.</p>
 
-        <div class="household-box">
-          <p class="field-label" style="margin-top:0">How many are you feeding? <span>(scales every recipe and the grocery list — kids count as about half a portion)</span></p>
+        <div class="household-box" title="Adults and kids scale every recipe and the grocery list — kids count as about half a portion">
           <div class="household-row">
             <div class="household-field">
               <label for="household-adults">Adults</label>
@@ -113,11 +111,8 @@
               <label for="household-kids">Kids</label>
               <input type="number" id="household-kids" min="0" value="2" />
             </div>
-          </div>
-
-          <div class="household-row" style="margin-top:10px">
             <div class="household-field">
-              <label for="no-repeat-weeks" title="How long before a dish can come back around">Don't repeat a meal for</label>
+              <label for="no-repeat-weeks" title="How long before a dish can come back around">Don't repeat meals for</label>
               <select id="no-repeat-weeks" class="household-field-select">
                 <option value="2">2 weeks</option>
                 <option value="3" selected>3 weeks</option>
@@ -137,7 +132,7 @@
           </div>
         </div>
 
-        <p class="field-label">Tap a section to open it, then tap what fits — the next page shows everything we learned:</p>
+        <p class="field-label">Tap a section to open it — the next page shows everything we learned:</p>
         <div class="chip-row" id="chip-row" aria-label="Tap a section to open it, then tap words to add them">
           <button type="button" class="chip" id="familytext-banner"><span class="chip-emoji">💬</span>Tell us in your own words</button>
           <div class="suggestion-box hidden" id="familytext-body">
