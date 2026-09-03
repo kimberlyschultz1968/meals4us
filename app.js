@@ -131,6 +131,7 @@ function defaultState() {
     neverSuggest: [],     // recipeIds removed forever via "Remove It"
     nextWeekQueue: [],    // [{ recipeId, proteinOverride, day }] — moved forward via "Change Day → Next Week"
     customRecipes: [],    // recipes she's added herself — same shape as the built-in library
+    sauces: [],           // her own sauces: { id, name, ingredients: [...], instructions: [...] } — attachable to any meal
     recipeCustomizations: {}, // { recipeId: { added: [ingredient,...], removed: [name,...] } } — permanent per-recipe tweaks (e.g. "always add corn to Air Fryer Chicken & Potatoes")
     removalNotes: [],     // [{ recipeId, name, reason }] — why she removed something, for her own record
     household: { adults: 2, kids: 2 }, // scales every recipe's quantities and the grocery list
@@ -170,6 +171,7 @@ function hydrateStateDefaults(s) {
   if (!s.staples) s.staples = [];
   if (!s.nextWeekQueue) s.nextWeekQueue = [];
   if (!s.customRecipes) s.customRecipes = [];
+  if (!s.sauces) s.sauces = [];
   if (!s.recipeCustomizations) s.recipeCustomizations = {};
   // One-time carryover: day-renames made before renames lived on the recipe
   // itself (so her existing renamed meals appear in Meal Ideas too).
@@ -269,11 +271,16 @@ function saveState() {
   if (typeof queueCloudSave === "function") queueCloudSave();
 }
 
+function allSauces() { return [...state.sauces, ...SAUCE_LIBRARY]; }
+function sauceById(id) { return allSauces().find(s => s.id === id); }
+
 function recipeById(id) {
   const base = allRecipes().find(r => r.id === id);
   if (!base) return base;
   const custom = state.recipeCustomizations[id];
-  if (!custom || (!custom.added?.length && !custom.removed?.length)) return base;
+  if (!custom) return base;
+  const sauces = (custom.sauces || []).map(sauceById).filter(Boolean);
+  if (!custom.added?.length && !custom.removed?.length && !sauces.length) return base;
 
   let ingredients = base.ingredients;
   if (custom.removed?.length) ingredients = ingredients.filter(i => !custom.removed.includes(i.name));
@@ -281,7 +288,15 @@ function recipeById(id) {
     const already = new Set(ingredients.map(i => i.name));
     ingredients = [...ingredients, ...custom.added.filter(a => !already.has(a.name))];
   }
-  return { ...base, ingredients };
+  // Attached sauces fold their ingredients in, so the grocery list gets them too.
+  if (sauces.length) {
+    const already = new Set(ingredients.map(i => i.name));
+    const removed = custom.removed || [];
+    sauces.forEach(s => s.ingredients.forEach(ing => {
+      if (!already.has(ing.name) && !removed.includes(ing.name)) { ingredients = [...ingredients, ing]; already.add(ing.name); }
+    }));
+  }
+  return { ...base, ingredients, attachedSauces: sauces };
 }
 
 // ---------- Screen navigation ----------
@@ -1197,6 +1212,7 @@ function saveCustomRecipe() {
 function openRecipeModal(recipe) {
   const rid = recipe.id;
   let editingSteps = false;
+  let pickingSauce = false;
 
   function render(r) {
     const baseSteps = r.instructions || [];
@@ -1241,6 +1257,33 @@ function openRecipeModal(recipe) {
       </div>
       <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up.</p>` : "";
 
+    // 🥣 Sauces — attached ones listed with their mixing steps; the picker
+    // offers her own sauces first, then the built-in library.
+    let sauceSection = "";
+    if (rid) {
+      const attached = r.attachedSauces || [];
+      const attachedRows = attached.length
+        ? `<ul>${attached.map(s => `<li>${s.name}
+            <button type="button" class="ing-del" data-detach-sauce="${s.id}" title="Take this sauce off this meal" aria-label="Remove ${escapeHtmlAttr(s.name)}" style="background:none;border:none;cursor:pointer;color:#a33;font-size:0.95em;padding:0 4px;">✕</button>
+            ${s.instructions && s.instructions.length ? `<div class="empty-note" style="margin:2px 0 4px">${s.ingredients.map(i => i.name).join(", ")} — ${s.instructions.join(" ")}</div>` : `<div class="empty-note" style="margin:2px 0 4px">${s.ingredients.map(i => i.name).join(", ")}</div>`}
+          </li>`).join("")}</ul>`
+        : `<p class="empty-note" style="margin:0 0 6px">No sauce on this meal yet.</p>`;
+      const attachedIds = new Set(attached.map(s => s.id));
+      const pickable = allSauces().filter(s => !attachedIds.has(s.id));
+      const pickerRows = pickingSauce
+        ? (pickable.length
+          ? `<div class="suggestion-row" style="margin-top:6px">${pickable.map(s => `<button type="button" class="suggestion-pill" data-attach-sauce="${s.id}" title="${escapeHtmlAttr(s.ingredients.map(i => i.name).join(", "))}">${s.name}</button>`).join("")}</div>`
+          : `<p class="empty-note">Every sauce is already on this meal!</p>`)
+        : "";
+      sauceSection = `
+        <div class="modal-ingredients" style="margin-top:10px">
+          <h3>🥣 Sauces</h3>
+          ${attachedRows}
+          ${pickerRows}
+          <button type="button" class="add-word-btn" id="btn-attach-sauce" style="margin-top:6px">${pickingSauce ? "Done" : "+ Add a Sauce"}</button>
+        </div>`;
+    }
+
     openModal(`
       <div class="modal-body-emoji">${r.emoji}</div>
       <div class="modal-body-title">${r.name}</div>
@@ -1250,6 +1293,7 @@ function openRecipeModal(recipe) {
         <ul>${rows}</ul>
         ${editRow}
       </div>
+      ${sauceSection}
       ${steps}
     `);
 
@@ -1308,10 +1352,109 @@ function openRecipeModal(recipe) {
       delete custom().instructions;
       afterEdit();
     });
+
+    const attachBtn = document.getElementById("btn-attach-sauce");
+    if (attachBtn) attachBtn.addEventListener("click", () => { pickingSauce = !pickingSauce; render(recipeById(rid) || r); });
+    document.querySelectorAll("[data-attach-sauce]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const c = custom();
+        if (!c.sauces) c.sauces = [];
+        c.sauces.push(btn.dataset.attachSauce);
+        pickingSauce = false;
+        afterEdit();
+      });
+    });
+    document.querySelectorAll("[data-detach-sauce]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const c = custom();
+        c.sauces = (c.sauces || []).filter(sid => sid !== btn.dataset.detachSauce);
+        afterEdit();
+      });
+    });
   }
 
   render(recipe);
 }
+
+// ---------- My Sauces ----------
+// Her own mixed dipping sauces plus the built-in library. A sauce attaches to
+// any meal from its View window; its ingredients then ride into the grocery
+// list exactly like the meal's own.
+
+function openMySauces() {
+  const mineRows = state.sauces.length ? state.sauces.map(s => `
+    <div class="idea-row">
+      <div class="idea-main" style="cursor:default">
+        <span class="idea-name">🥣 ${s.name}</span>
+        <span class="idea-meta">${s.ingredients.map(i => i.name).join(", ")}</span>
+      </div>
+      <button type="button" class="idea-act" data-edit-sauce="${s.id}" title="Edit this sauce" aria-label="Edit ${escapeHtmlAttr(s.name)}">✏️</button>
+      <button type="button" class="idea-act" data-del-sauce="${s.id}" title="Delete this sauce" aria-label="Delete ${escapeHtmlAttr(s.name)}">🗑</button>
+    </div>`).join("") : `<p class="recipe-picker-empty">No sauces of your own yet — make your first one!</p>`;
+  const libRows = SAUCE_LIBRARY.map(s => `
+    <div class="idea-row">
+      <div class="idea-main" style="cursor:default">
+        <span class="idea-name">🥣 ${s.name}</span>
+        <span class="idea-meta">${s.ingredients.map(i => i.name).join(", ")}</span>
+      </div>
+    </div>`).join("");
+  openModal(`
+    <div class="modal-body-title">🥣 My Sauces</div>
+    <div class="modal-body-meta">Add any of these to a meal from its 👁 View window — the sauce's ingredients go on the grocery list automatically.</div>
+    <button type="button" class="btn btn-primary btn-full" id="btn-new-sauce" style="margin-bottom:12px">+ New Sauce</button>
+    <p class="field-label" style="margin-top:0">Your own</p>
+    <div class="recipe-picker-list">${mineRows}</div>
+    <p class="field-label">Ready-made ideas</p>
+    <div class="recipe-picker-list">${libRows}</div>
+  `);
+  document.getElementById("btn-new-sauce").addEventListener("click", () => openSauceForm(null));
+  document.querySelectorAll("[data-edit-sauce]").forEach(b => b.addEventListener("click", () => openSauceForm(b.dataset.editSauce)));
+  document.querySelectorAll("[data-del-sauce]").forEach(b => b.addEventListener("click", () => {
+    const s = sauceById(b.dataset.delSauce);
+    if (!s || !confirm(`Delete "${s.name}"? It also comes off any meals it's on.`)) return;
+    state.sauces = state.sauces.filter(x => x.id !== s.id);
+    Object.values(state.recipeCustomizations).forEach(c => { if (c.sauces) c.sauces = c.sauces.filter(id => id !== s.id); });
+    refreshGroceryList();
+    saveState();
+    if (state.weekPlan) renderWeek(state.weekPlan);
+    if (state.weekPlan2) renderWeek2(state.weekPlan2);
+    openMySauces();
+  }));
+}
+
+function openSauceForm(sauceId) {
+  const sauce = sauceId ? state.sauces.find(s => s.id === sauceId) : null;
+  openModal(`
+    <div class="modal-body-title">${sauce ? "Edit Sauce" : "New Sauce"}</div>
+    <div class="recipe-form-field"><label>Name</label>
+      <input type="text" id="sauce-name" class="add-word-input" style="width:100%;box-sizing:border-box" placeholder="e.g. Spicy Cajun Mustard Sauce" value="${sauce ? escapeHtmlAttr(sauce.name) : ""}" /></div>
+    <div class="recipe-form-field" style="margin-top:10px"><label>What goes in it — one ingredient per line</label>
+      <textarea id="sauce-ings" class="family-textarea" style="min-height:90px" placeholder="sour cream&#10;spicy cajun mustard&#10;mayo">${sauce ? escapeHtmlAttr(sauce.ingredients.map(i => i.name).join("\n")) : ""}</textarea></div>
+    <div class="recipe-form-field" style="margin-top:10px"><label>How to make it (optional) — one step per line</label>
+      <textarea id="sauce-steps" class="family-textarea" style="min-height:70px" placeholder="Mix everything together and chill 10 minutes">${sauce && sauce.instructions ? escapeHtmlAttr(sauce.instructions.join("\n")) : ""}</textarea></div>
+    <div class="recipe-form-actions" style="margin-top:12px">
+      <button type="button" class="btn btn-secondary" id="sauce-cancel">← Back</button>
+      <button type="button" class="btn btn-primary" id="sauce-save">Save Sauce</button>
+    </div>
+  `);
+  document.getElementById("sauce-cancel").addEventListener("click", openMySauces);
+  document.getElementById("sauce-save").addEventListener("click", () => {
+    const name = document.getElementById("sauce-name").value.trim();
+    if (!name) { alert("Give your sauce a name first."); return; }
+    const ings = document.getElementById("sauce-ings").value.split("\n").map(s => s.trim().toLowerCase()).filter(Boolean)
+      .map(n => ({ name: n, qty: 1, unit: "count", category: "Other" }));
+    if (!ings.length) { alert("List at least one ingredient."); return; }
+    const steps = document.getElementById("sauce-steps").value.split("\n").map(s => s.trim().replace(/^\d+[.)]\s*/, "")).filter(Boolean);
+    if (sauce) { sauce.name = name; sauce.ingredients = ings; sauce.instructions = steps; }
+    else state.sauces.push({ id: "sauce-" + Date.now(), name, ingredients: ings, instructions: steps });
+    refreshGroceryList();
+    saveState();
+    if (state.weekPlan) renderWeek(state.weekPlan);
+    openMySauces();
+  });
+}
+
+document.getElementById("btn-my-sauces").addEventListener("click", openMySauces);
 
 function openDayPicker(dayIndex) {
   const current = state.weekPlan[dayIndex];

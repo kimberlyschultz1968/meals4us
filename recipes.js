@@ -3171,3 +3171,128 @@ const KEYWORD_MAP = {
   // so a plural entry here would just double-add the same tag.
   dislikeFoods: ["fish", "mushroom", "spicy", "seafood", "shrimp", "cilantro", "onion", "pork", "beef", "chicken", "tomato", "egg"]
 };
+
+// ---------- Built-in sauce library ----------
+// Ready-made dipping/mixing sauces anyone can add to a meal (🥣 My Sauces).
+// Same shape as her own sauces in state.sauces, but with lib- ids so the two
+// never collide. Ingredients carry real grocery categories so they file
+// correctly on the list.
+const SAUCE_LIBRARY = [
+  { id: "sauce-lib-fry-sauce", name: "Fry Sauce", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "ketchup", qty: 0.25, unit: "cup", category: "Pantry" }],
+    instructions: ["Stir the mayo and ketchup together until smooth."] },
+  { id: "sauce-lib-spicy-mayo", name: "Spicy Mayo", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "sriracha", qty: 1.5, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Mix, taste, and add more sriracha if you dare."] },
+  { id: "sauce-lib-ranch-dip", name: "Ranch Dip", ingredients: [
+      { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "ranch seasoning mix", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Stir everything together and chill 30 minutes for the flavor to wake up."] },
+  { id: "sauce-lib-honey-mustard", name: "Honey Mustard", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "honey", qty: 2, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Whisk until smooth — great on chicken tenders and pretzels."] },
+  { id: "sauce-lib-bbq-ranch", name: "BBQ Ranch", ingredients: [
+      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "bbq sauce", qty: 0.25, unit: "cup", category: "Pantry" }],
+    instructions: ["Stir together — dunk fries, chicken, or drizzle on a wrap."] },
+  { id: "sauce-lib-garlic-butter", name: "Garlic Butter Sauce", ingredients: [
+      { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
+      { name: "dried parsley", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Melt the butter, stir in minced garlic and parsley, warm 1 minute."] },
+  { id: "sauce-lib-cheese-sauce", name: "Cheese Sauce", ingredients: [
+      { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "milk", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
+      { name: "butter", qty: 1, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Melt butter, whisk in flour 1 minute.", "Whisk in milk until it thickens, then stir in the cheese off the heat."] },
+  { id: "sauce-lib-buffalo", name: "Buffalo Sauce", ingredients: [
+      { name: "hot sauce", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" }],
+    instructions: ["Melt the butter into the hot sauce and whisk until glossy."] },
+  { id: "sauce-lib-tzatziki", name: "Tzatziki", ingredients: [
+      { name: "greek yogurt", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "cucumber", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
+      { name: "lemon juice", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "dried dill", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Grate and squeeze the cucumber dry, then stir everything together."] },
+  { id: "sauce-lib-chipotle-crema", name: "Chipotle Crema", ingredients: [
+      { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "chipotle peppers in adobo", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Blend or mash until smooth — killer on tacos and quesadillas."] },
+  { id: "sauce-lib-sweet-sour", name: "Sweet & Sour Sauce", ingredients: [
+      { name: "ketchup", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "rice vinegar", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "brown sugar", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "soy sauce", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Simmer everything 3-4 minutes until it turns glossy."] },
+  { id: "sauce-lib-teriyaki", name: "Teriyaki Glaze", ingredients: [
+      { name: "soy sauce", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "brown sugar", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
+      { name: "ground ginger", qty: 0.5, unit: "tsp", category: "Pantry" }],
+    instructions: ["Simmer until it coats the back of a spoon, about 5 minutes."] },
+  { id: "sauce-lib-cocktail", name: "Cocktail Sauce", ingredients: [
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "horseradish", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "lemon juice", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Stir together — add horseradish a little at a time to taste."] },
+  { id: "sauce-lib-tartar", name: "Tartar Sauce", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "sweet pickle relish", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "lemon juice", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Mix and chill — better after 20 minutes in the fridge."] },
+  { id: "sauce-lib-queso", name: "Queso Blanco", ingredients: [
+      { name: "white american cheese", qty: 8, unit: "oz", category: "Dairy & Eggs" },
+      { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "canned diced green chiles", qty: 2, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Melt the cheese into the milk over low heat, then stir in the chiles."] },
+  { id: "sauce-lib-comeback", name: "Comeback Sauce", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "hot sauce", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "worcestershire sauce", qty: 0.5, unit: "tsp", category: "Pantry" },
+      { name: "garlic powder", qty: 0.5, unit: "tsp", category: "Pantry" }],
+    instructions: ["Whisk everything together — good on absolutely everything."] },
+  { id: "sauce-lib-burger-sauce", name: "Burger Sauce", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "french dressing", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "sweet pickle relish", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "white vinegar", qty: 0.5, unit: "tsp", category: "Pantry" },
+      { name: "onion powder", qty: 0.5, unit: "tsp", category: "Pantry" }],
+    instructions: ["Mix and let it sit 10 minutes — tastes like the drive-thru classic."] },
+  { id: "sauce-lib-cajun-dip", name: "Cajun Dipping Sauce", ingredients: [
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "mayo", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "spicy cajun mustard", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "cajun seasoning", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Stir together — the longer it chills, the better it gets."] },
+  { id: "sauce-lib-garlic-parm", name: "Garlic Parmesan Sauce", ingredients: [
+      { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
+      { name: "grated parmesan", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }],
+    instructions: ["Melt butter with minced garlic, stir in the parmesan off the heat."] },
+  { id: "sauce-lib-honey-sriracha", name: "Honey Sriracha", ingredients: [
+      { name: "honey", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "sriracha", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 1, unit: "tsp", category: "Pantry" }],
+    instructions: ["Warm gently and stir — sweet heat for wings, shrimp, or rice bowls."] },
+  { id: "sauce-lib-marinara-dip", name: "Marinara Dip", ingredients: [
+      { name: "canned crushed tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Simmer everything 10 minutes — mozzarella sticks love it."] },
+  { id: "sauce-lib-guacamole", name: "Guacamole", ingredients: [
+      { name: "avocados", qty: 2, unit: "whole", category: "Produce" },
+      { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "garlic salt", qty: 0.5, unit: "tsp", category: "Pantry" }],
+    instructions: ["Mash the avocados with lime juice and garlic salt — chunky or smooth, your call."] }
+];
