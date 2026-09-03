@@ -263,8 +263,12 @@ function onSignedIn(session) {
   clearAuthMessage();
   hideAuthGate();
   initialCloudSyncDone = false;
-  connectCloud();
-  checkBilling();
+  // Wait for the first cloud pull before the welcome check, so a device that
+  // already saw the tour (flag synced from the cloud) doesn't show it twice.
+  connectCloud().then(() => {
+    checkBilling();
+    if (typeof maybeShowWelcome === "function") maybeShowWelcome();
+  });
 }
 
 function signOut() {
@@ -345,6 +349,7 @@ if (new URLSearchParams(location.search).has("upgraded")) {
     hideAuthGate();
     await connectCloud();
     await checkBilling();
+    if (typeof maybeShowWelcome === "function") maybeShowWelcome();
   } else {
     showAuthGate();
   }

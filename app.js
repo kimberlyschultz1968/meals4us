@@ -1399,6 +1399,43 @@ function openRecipeModal(recipe) {
   render(recipe);
 }
 
+// ---------- Welcome tour ----------
+// Shows once, right after a person first signs in (sync.js calls
+// maybeShowWelcome after the first cloud pull), and any time from ✨ Tour.
+
+function openWelcome() {
+  const row = (emoji, title, sub) => `
+    <div class="welcome-row"><span class="w-emoji">${emoji}</span>
+      <div><b>${title}</b><span class="w-sub">${sub}</span></div>
+    </div>`;
+  openModal(`
+    <div class="modal-body-emoji">🍽️</div>
+    <div class="modal-body-title">Welcome to Meals4Us!</div>
+    <div class="modal-body-meta">Tell us about your family once — then dinner practically plans itself. Here's everything you can do:</div>
+    <div class="welcome-list">
+      ${row("🧠", "A week that fits your family", "It plans dinners around what you love, what you don't, and any allergies.")}
+      ${row("📖", "163 meal ideas — plus your own", "Browse, search, and tap Add to Day. Add your family recipes too.")}
+      ${row("✏️", "Make any meal yours", "Rename it, swap ingredients, rewrite the steps — it remembers forever.")}
+      ${row("🥣", "Sauces", "Your own mixes plus 22 ready-made dips and drizzles, one tap onto any meal.")}
+      ${row("🛒", "A grocery list that writes itself", "Sorted by aisle, and it updates the moment a meal changes.")}
+      ${row("❤️", "It learns what you love", "Love it / It's OK feedback nudges future weeks toward favorites.")}
+      ${row("📅", "Two weeks at a glance", "Free days, meat swaps, sides, and a no-repeat rule so dinner stays fresh.")}
+      ${row("☁️", "Follows you everywhere", "One account keeps your computer and phone perfectly in step.")}
+    </div>
+    <button type="button" class="btn btn-primary btn-full" id="welcome-go" style="margin-top:14px">Let's plan dinner →</button>
+  `);
+  document.getElementById("welcome-go").addEventListener("click", closeModal);
+}
+
+function maybeShowWelcome() {
+  if (state.welcomeSeen) return;
+  state.welcomeSeen = true;
+  saveState();
+  openWelcome();
+}
+
+document.getElementById("btn-welcome-tour").addEventListener("click", openWelcome);
+
 // ---------- My Sauces ----------
 // Her own mixed dipping sauces plus the built-in library. A sauce attaches to
 // any meal from its View window; its ingredients then ride into the grocery
