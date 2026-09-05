@@ -984,6 +984,7 @@ function renderWeek(weekPlan) {
       node.querySelector(".undo-free-day").addEventListener("click", () => requireUnlockedWeek(() => {
         const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
         state.weekPlan[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
+        refreshGroceryList();
         saveState();
         renderWeek(state.weekPlan);
       }));
@@ -996,6 +997,7 @@ function renderWeek(weekPlan) {
     node.querySelector(".day-name").textContent = dayLabel(state.weekStartDate, index, entry.day);
     node.querySelector(".free-day-toggle").addEventListener("click", () => requireUnlockedWeek(() => {
       state.weekPlan[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
+      refreshGroceryList();
       saveState();
       renderWeek(state.weekPlan);
     }));
@@ -1125,6 +1127,7 @@ function renderWeek2(weekPlan2) {
       node.querySelector(".undo-free-day").addEventListener("click", () => {
         const newId = pickReplacement(state.profile, state.feedback, state.weekPlan2, index, state.neverSuggest, week2HistoryIds);
         state.weekPlan2[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
+        refreshGroceryList(); // no-op unless she's opted in to including Week 2
         saveState();
         renderWeek2(state.weekPlan2);
       });
@@ -1137,6 +1140,7 @@ function renderWeek2(weekPlan2) {
     node.querySelector(".day-name").textContent = dayLabel(week2StartDate, index, entry.day);
     node.querySelector(".free-day-toggle").addEventListener("click", () => {
       state.weekPlan2[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
+      refreshGroceryList();
       saveState();
       renderWeek2(state.weekPlan2);
     });
@@ -1265,6 +1269,7 @@ function openRecipePicker2(dayIndex) {
     list.querySelectorAll("[data-recipe-id]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.weekPlan2[dayIndex] = { day: entry.day, recipeId: btn.dataset.recipeId, proteinOverride: null, freeDay: false };
+        refreshGroceryList(); // no-op unless she's opted in to including Week 2
         saveState();
         renderWeek2(state.weekPlan2);
         closeModal();
@@ -1879,6 +1884,7 @@ function openDayPicker(dayIndex) {
       state.weekPlan[dayIndex].recipeId = replacementId;
       state.weekPlan[dayIndex].proteinOverride = null;
       delete state.weekPlan[dayIndex].customName;
+      refreshGroceryList();
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -1897,6 +1903,7 @@ function openDayPicker(dayIndex) {
     state.weekPlan[dayIndex].recipeId = replacementId;
     state.weekPlan[dayIndex].proteinOverride = null;
     delete state.weekPlan[dayIndex].customName;
+    refreshGroceryList();
     saveState();
     renderWeek(state.weekPlan);
     closeModal();
@@ -1926,6 +1933,7 @@ function openMeatPicker(dayIndex) {
   document.querySelectorAll(".day-pick-option[data-protein]").forEach(btn => {
     btn.addEventListener("click", () => {
       entry.proteinOverride = btn.dataset.protein;
+      refreshGroceryList();
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -1957,6 +1965,7 @@ function openRecipePicker(dayIndex) {
     list.querySelectorAll("[data-recipe-id]").forEach(btn => {
       btn.addEventListener("click", () => {
         state.weekPlan[dayIndex] = { day: entry.day, recipeId: btn.dataset.recipeId, proteinOverride: null, freeDay: false };
+        refreshGroceryList();
         saveState();
         renderWeek(state.weekPlan);
         closeModal();
@@ -2226,6 +2235,7 @@ function finalizeRemoval(dayIndex, recipe, reason) {
   const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, dayIndex, state.neverSuggest, recentHistoryIds());
   state.weekPlan[dayIndex].recipeId = newId;
   delete state.weekPlan[dayIndex].customName; // the renamed dish is gone for good — its name shouldn't stick to whatever replaces it
+  refreshGroceryList();
   saveState();
   renderWeek(state.weekPlan);
 }
@@ -2687,6 +2697,7 @@ function rebuildProfileFromScreen1() {
 document.getElementById("btn-continue-1").addEventListener("click", () => {
   rebuildProfileFromScreen1();
   renderLearned(state.profile);
+  refreshGroceryList(); // household size (adults/kids) scales every ingredient quantity — no-ops if there's no list yet
   showScreen(2);
 });
 
