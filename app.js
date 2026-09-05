@@ -9,6 +9,46 @@ const STORAGE_KEY = "meals4us_state_v2"; // bumped to auto-discard old corrupted
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
 
+// ---------- Real calendar dates for each week ----------
+// state.weekPlan is anchored to state.weekStartDate (the Sunday it starts
+// on, "YYYY-MM-DD"); Week 2 always follows immediately, 7 days later. A
+// day's actual date is derived from that anchor + its position in the
+// array — never stored per-entry — so swapping meals between days (or
+// pushing one to next week) just works: the date belongs to the slot, not
+// to whichever meal currently sits in it.
+function isoDateLocal(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+// The Sunday on/before today — so a week she starts building mid-week still
+// covers the days she's actually in, not a week that hasn't started yet.
+function currentWeekStartDate() {
+  const now = new Date();
+  const sunday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+  return isoDateLocal(sunday);
+}
+function dateForDayIndex(weekStartDate, index) {
+  if (!weekStartDate) return null;
+  const [y, m, d] = weekStartDate.split("-").map(Number);
+  return new Date(y, m - 1, d + index);
+}
+function formatShortDate(date) {
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+// Advances a "YYYY-MM-DD" anchor by 7 days, for Week 2 -> Week 1 rotation.
+function addDaysToDateString(dateStr, days) {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return isoDateLocal(new Date(y, m - 1, d + days));
+}
+// What a day card's header actually shows — falls back to just the day
+// name for any account that hasn't hydrated a start date yet.
+function dayLabel(weekStartDate, index, day) {
+  const date = dateForDayIndex(weekStartDate, index);
+  return date ? `${day}, ${formatShortDate(date)}` : day;
+}
+
 // Generic dish words families use that don't literally appear in every
 // matching recipe's name (e.g. "pasta" should match Spaghetti, Ziti, Alfredo).
 // Keys are singular stems only — "taco" already matches "tacos" as a
@@ -125,6 +165,7 @@ function defaultState() {
     customSuggestions: {}, // { categoryKey: [word, ...] } — words she's added herself, become reusable bubbles
     profile: null,
     weekPlan: null,      // [{ day, recipeId }]
+    weekStartDate: null,  // "YYYY-MM-DD" — the Sunday state.weekPlan starts on; Week 2 is always the 7 days right after
     weekPlan2: null,      // [{ day, recipeId }] — Week 2, a look-ahead plan shown alongside the current week
     includeWeek2Groceries: false, // opt-in: whether "Create Grocery List" folds Week 2's ingredients in too
     feedback: {},         // { recipeId: score }
@@ -193,6 +234,10 @@ function hydrateStateDefaults(s) {
   if (!s.heldBackRecipes) s.heldBackRecipes = [];
   if (s.weekPlan2 === undefined) s.weekPlan2 = null;
   if (typeof s.includeWeek2Groceries !== "boolean") s.includeWeek2Groceries = false;
+  // Backfill for any account that predates real dates — anchor it to the
+  // Sunday of the week she's actually in right now, so it lines up with
+  // whatever week she already has open, no matter when this first runs.
+  if (!s.weekStartDate && s.weekPlan) s.weekStartDate = currentWeekStartDate();
   return s;
 }
 
@@ -773,7 +818,7 @@ function renderWeek(weekPlan) {
   weekPlan.forEach((entry, index) => {
     if (entry.freeDay) {
       const node = freeTpl.content.cloneNode(true);
-      node.querySelector(".day-name").textContent = entry.day;
+      node.querySelector(".day-name").textContent = dayLabel(state.weekStartDate, index, entry.day);
       node.querySelector(".undo-free-day").addEventListener("click", () => {
         const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
         state.weekPlan[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
@@ -786,7 +831,7 @@ function renderWeek(weekPlan) {
 
     const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     const node = tpl.content.cloneNode(true);
-    node.querySelector(".day-name").textContent = entry.day;
+    node.querySelector(".day-name").textContent = dayLabel(state.weekStartDate, index, entry.day);
     node.querySelector(".free-day-toggle").addEventListener("click", () => {
       state.weekPlan[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
       saveState();
@@ -899,11 +944,12 @@ function renderWeek2(weekPlan2) {
   const tpl = document.getElementById("tpl-day-card");
   const freeTpl = document.getElementById("tpl-free-day-card");
   const week2HistoryIds = [...recentHistoryIds(), ...state.weekPlan.map(d => d.recipeId).filter(Boolean)];
+  const week2StartDate = state.weekStartDate ? addDaysToDateString(state.weekStartDate, 7) : null;
 
   weekPlan2.forEach((entry, index) => {
     if (entry.freeDay) {
       const node = freeTpl.content.cloneNode(true);
-      node.querySelector(".day-name").textContent = entry.day;
+      node.querySelector(".day-name").textContent = dayLabel(week2StartDate, index, entry.day);
       node.querySelector(".undo-free-day").addEventListener("click", () => {
         const newId = pickReplacement(state.profile, state.feedback, state.weekPlan2, index, state.neverSuggest, week2HistoryIds);
         state.weekPlan2[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
@@ -916,7 +962,7 @@ function renderWeek2(weekPlan2) {
 
     const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     const node = tpl.content.cloneNode(true);
-    node.querySelector(".day-name").textContent = entry.day;
+    node.querySelector(".day-name").textContent = dayLabel(week2StartDate, index, entry.day);
     node.querySelector(".free-day-toggle").addEventListener("click", () => {
       state.weekPlan2[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
       saveState();
@@ -2478,6 +2524,7 @@ document.getElementById("btn-edit-2").addEventListener("click", () => {
 
 document.getElementById("btn-confirm-2").addEventListener("click", () => {
   state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
+  state.weekStartDate = currentWeekStartDate();
   generateWeek2();
   saveState();
   renderWeek(state.weekPlan);
@@ -2627,6 +2674,9 @@ function rotateToNextWeek(showNotice) {
   });
   pushWeekToHistory(state.weekPlan); // archive the week that's ending — keeps the 3-week no-repeat window honest
   state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest, presetByDay);
+  // Week 2's dates (whatever they were) become Week 1's dates — the new
+  // week picks up exactly where the calendar actually is, not a re-guess.
+  state.weekStartDate = state.weekStartDate ? addDaysToDateString(state.weekStartDate, 7) : currentWeekStartDate();
   tickHeldBack(); // count down anything sent "Beyond" — this generation used it, one fewer to go
   state.nextWeekQueue = [];
   state.groceryList = null;

@@ -3136,6 +3136,580 @@ const RECIPES = [
       "Toss everything with olive oil and garlic powder on a sheet pan.",
       "Roast at 400F for 25 minutes, stirring halfway, until the potatoes are tender and the sausage is browned."
     ]
+  },
+  {
+    id: "chicken-cordon-bleu", name: "Chicken Cordon Bleu", emoji: "🍗", cuisine: "american",
+    proteins: ["chicken"], tags: ["kidFriendly"], allergens: ["egg", "dairy", "gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "deli ham", qty: 6, unit: "oz", category: "Meat & Seafood" },
+      { name: "swiss cheese slices", qty: 6, unit: "count", category: "Dairy & Eggs" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Pound the chicken breasts thin, then top each with a slice of ham and swiss cheese and roll up tightly, securing with a toothpick.",
+      "Dip each roll in beaten egg, then coat in breadcrumbs.",
+      "Melt the butter in a baking dish and place the rolls in.",
+      "Bake at 375F for 30-35 minutes, until the chicken is cooked through (165F) and golden."
+    ]
+  },
+  {
+    id: "tuna-melt", name: "Tuna Melt", emoji: "🥪", cuisine: "american",
+    proteins: ["fish"], tags: ["quick"], allergens: ["fish", "dairy", "gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "canned tuna", qty: 2, unit: "can", category: "Pantry" },
+      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "mayo", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "celery", qty: 0.5, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Mix the drained tuna with mayo and diced celery.",
+      "Spread onto bread slices and top with shredded cheddar.",
+      "Broil or pan-toast until the cheese is melted and the bread is golden."
+    ]
+  },
+  {
+    id: "patty-melt", name: "Patty Melt", emoji: "🥪", cuisine: "american",
+    proteins: ["beef"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "rye bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "swiss cheese slices", qty: 4, unit: "count", category: "Dairy & Eggs" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Form the ground beef into 4 oval patties and cook in a skillet, 3-4 minutes per side.",
+      "Sauté the onion in a little of the butter until soft and caramelized.",
+      "Butter one side of each slice of rye bread.",
+      "Assemble each patty with swiss cheese and caramelized onions between two slices of bread, butter-side out.",
+      "Grill in the skillet until golden and the cheese is melted."
+    ]
+  },
+  {
+    id: "reuben-sandwich", name: "Reuben Sandwich", emoji: "🥪", cuisine: "american",
+    proteins: ["beef"], tags: ["quick"], allergens: ["dairy", "gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "corned beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "rye bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "swiss cheese slices", qty: 4, unit: "count", category: "Dairy & Eggs" },
+      { name: "sauerkraut", qty: 1, unit: "cup", category: "Produce" },
+      { name: "thousand island dressing", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Layer corned beef, sauerkraut, swiss cheese, and thousand island dressing between slices of rye bread.",
+      "Butter the outside of each sandwich.",
+      "Grill in a skillet over medium heat, 3-4 minutes per side, until golden and the cheese is melted."
+    ]
+  },
+  {
+    id: "swiss-steak", name: "Swiss Steak", emoji: "🥩", cuisine: "american",
+    proteins: ["beef"], tags: ["onepot"], allergens: ["gluten"],
+    timeMinutes: 50,
+    ingredients: [
+      { name: "round steak", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "flour", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "beef broth", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Pound the round steak, cut into portions, and dredge in flour.",
+      "Brown on both sides in a skillet.",
+      "Add the onion, bell pepper, diced tomatoes, and beef broth.",
+      "Cover and simmer 35-40 minutes, until the steak is fork-tender."
+    ]
+  },
+  {
+    id: "chicken-divan", name: "Chicken Divan", emoji: "🥦", cuisine: "american",
+    proteins: ["chicken"], tags: ["kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "broccoli", qty: 3, unit: "cup", category: "Produce" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Cook the chicken breast and cut into bite-size pieces (or use rotisserie chicken); steam the broccoli until just tender.",
+      "Make a sauce: melt the butter, whisk in flour, then milk, and simmer until thickened; stir in cheddar until melted.",
+      "Layer chicken and broccoli in a baking dish, pour the cheese sauce over the top, and sprinkle with breadcrumbs.",
+      "Bake at 375F for 20 minutes, until bubbly and golden on top."
+    ]
+  },
+  {
+    id: "chili-mac", name: "Chili Mac", emoji: "🧀", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "onepot", "kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "chili powder", qty: 2, unit: "tsp", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Brown the ground beef with the onion; drain excess fat.",
+      "Stir in chili powder and diced tomatoes; simmer 10 minutes.",
+      "Meanwhile, boil the elbow macaroni until al dente and drain.",
+      "Stir the macaroni into the chili and top with shredded cheddar to serve."
+    ]
+  },
+  {
+    id: "beef-pot-pie", name: "Beef Pot Pie", emoji: "🥧", cuisine: "american",
+    proteins: ["beef"], tags: ["kidFriendly"], allergens: ["gluten"],
+    timeMinutes: 55,
+    ingredients: [
+      { name: "beef stew meat", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "pie crust", qty: 2, unit: "count", category: "Pantry" },
+      { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "beef broth", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the beef stew meat in a pot; add the onion and cook until soft.",
+      "Sprinkle in flour, then stir in beef broth and peas and carrots; simmer 15 minutes until thickened.",
+      "Pour the filling into a pie dish lined with one crust, and top with the second crust, sealing and venting the top.",
+      "Bake at 400F for 30 minutes, until the crust is golden."
+    ]
+  },
+  {
+    id: "american-goulash", name: "American Goulash", emoji: "🍝", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "onepot", "kidFriendly"], allergens: ["gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "tomato sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the ground beef with the onion; drain excess fat.",
+      "Stir in diced tomatoes, tomato sauce, and italian seasoning; simmer 10 minutes.",
+      "Meanwhile, boil the elbow macaroni until al dente and drain.",
+      "Stir the macaroni into the beef and sauce to serve."
+    ]
+  },
+  {
+    id: "franks-and-beans", name: "Franks & Beans", emoji: "🌭", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly", "onepot"], allergens: [],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
+      { name: "baked beans", qty: 2, unit: "can", category: "Pantry" },
+      { name: "ketchup", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Slice the hot dogs into bite-size pieces.",
+      "Combine with baked beans, ketchup, and brown sugar in a saucepan.",
+      "Simmer 8-10 minutes, stirring occasionally, until heated through."
+    ]
+  },
+  {
+    id: "ham-scalloped-potatoes", name: "Ham & Scalloped Potatoes", emoji: "🥔", cuisine: "american",
+    proteins: ["pork"], tags: ["kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 60,
+    ingredients: [
+      { name: "deli ham", qty: 10, unit: "oz", category: "Meat & Seafood" },
+      { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
+      { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "milk", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Thinly slice the potatoes.",
+      "Make a cheese sauce: melt the butter, whisk in flour, then milk, and simmer until thickened; stir in cheddar until melted.",
+      "Layer potatoes and diced ham in a baking dish, pouring cheese sauce between each layer.",
+      "Cover and bake at 375F for 45 minutes, until the potatoes are tender; uncover for the last 10 minutes to brown the top."
+    ]
+  },
+  {
+    id: "classic-beef-chili", name: "Classic Beef Chili", emoji: "🌶️", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "onepot", "kidFriendly"], allergens: [],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "chili powder", qty: 2, unit: "tsp", category: "Pantry" },
+      { name: "cumin", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the ground beef with the onion; drain excess fat.",
+      "Stir in chili powder, cumin, diced tomatoes, and black beans.",
+      "Simmer 15-20 minutes, stirring occasionally, until thickened."
+    ]
+  },
+  {
+    id: "turkey-sloppy-joes", name: "Turkey Sloppy Joes", emoji: "🍔", cuisine: "american",
+    proteins: ["turkey"], tags: ["quick", "kidFriendly"], allergens: ["gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "burger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "tomato sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the ground turkey with the onion; drain excess fat.",
+      "Stir in tomato sauce, brown sugar, and worcestershire sauce.",
+      "Simmer 8-10 minutes, until thickened.",
+      "Spoon onto burger buns to serve."
+    ]
+  },
+  {
+    id: "meatloaf-muffins", name: "Meatloaf Muffins", emoji: "🧁", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly", "leftovers"], allergens: ["egg", "gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Mix ground beef, breadcrumbs, egg, minced onion, and half the ketchup.",
+      "Press into a muffin tin, filling each cup.",
+      "Top each with a little of the remaining ketchup.",
+      "Bake at 375F for 20-22 minutes, until cooked through (165F)."
+    ]
+  },
+  {
+    id: "chicken-caesar-salad", name: "Chicken Caesar Salad", emoji: "🥗", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick"], allergens: ["dairy", "gluten", "egg"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "romaine lettuce", qty: 4, unit: "cup", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "caesar dressing", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "croutons", qty: 1, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Season and cook the chicken breast in a skillet, 6-7 minutes per side, until done; slice.",
+      "Toss the romaine with caesar dressing and parmesan.",
+      "Top with sliced chicken and croutons."
+    ]
+  },
+  {
+    id: "egg-salad-sandwiches", name: "Egg Salad Sandwiches", emoji: "🥪", cuisine: "american",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["egg", "gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "eggs", qty: 8, unit: "count", category: "Dairy & Eggs" },
+      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "mayo", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "celery", qty: 0.25, unit: "cup", category: "Produce" },
+      { name: "mustard", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Hard-boil the eggs (about 10 minutes), then cool, peel, and chop.",
+      "Mix with mayo, diced celery, and mustard.",
+      "Spread onto bread to make sandwiches."
+    ]
+  },
+  {
+    id: "chicken-salad-sandwiches", name: "Chicken Salad Sandwiches", emoji: "🥪", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "leftovers"], allergens: ["gluten"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "mayo", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "celery", qty: 0.25, unit: "cup", category: "Produce" },
+      { name: "grapes", qty: 0.5, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Cook and chop the chicken breast (or use rotisserie chicken).",
+      "Mix with mayo, diced celery, and halved grapes.",
+      "Spread onto bread to make sandwiches."
+    ]
+  },
+  {
+    id: "loaded-baked-potatoes", name: "Loaded Baked Potatoes", emoji: "🥔", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "potatoes", qty: 4, unit: "whole", category: "Produce" },
+      { name: "bacon", qty: 6, unit: "oz", category: "Meat & Seafood" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "green onions", qty: 2, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Pierce the potatoes and microwave 10-12 minutes (or bake at 400F for about 45 minutes), until tender.",
+      "Cook the bacon until crisp and crumble.",
+      "Split each potato open and top with cheddar, bacon, sour cream, and green onions."
+    ]
+  },
+  {
+    id: "chicken-bacon-ranch-pasta", name: "Chicken Bacon Ranch Pasta", emoji: "🍝", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "onepot"], allergens: ["dairy", "gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook the penne until al dente and drain.",
+      "Season and cook the chicken breast in a skillet until done; slice. Cook the bacon until crisp and crumble.",
+      "Toss the pasta, chicken, and bacon with ranch dressing and cheddar until coated."
+    ]
+  },
+  {
+    id: "turkey-meatball-subs", name: "Turkey Meatball Subs", emoji: "🥖", cuisine: "american",
+    proteins: ["turkey"], tags: ["quick"], allergens: ["gluten", "dairy", "egg"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "sub rolls", qty: 6, unit: "count", category: "Pantry" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Mix ground turkey, breadcrumbs, and egg; form into meatballs.",
+      "Brown the meatballs in a skillet, then simmer in marinara sauce 10-12 minutes until cooked through.",
+      "Pile onto sub rolls and top with mozzarella; broil 2-3 minutes until melted."
+    ]
+  },
+  {
+    id: "bbq-chicken-pizza", name: "BBQ Chicken Pizza", emoji: "🍕", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["dairy", "gluten"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "pizza dough", qty: 1, unit: "lb", category: "Pantry" },
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "red onion", qty: 0.5, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cook and shred the chicken breast; toss with half the BBQ sauce.",
+      "Roll out the pizza dough and spread with the remaining BBQ sauce.",
+      "Top with the chicken, mozzarella, and sliced red onion.",
+      "Bake at 450F for 12-15 minutes, until the crust is golden and cheese is melted."
+    ]
+  },
+  {
+    id: "bbq-chicken-kabobs", name: "BBQ Chicken Kabobs", emoji: "🍢", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "grill"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
+      { name: "red onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cut the chicken, bell peppers, and red onion into chunks and thread onto skewers.",
+      "Brush with BBQ sauce.",
+      "Grill (or broil) 10-12 minutes, turning occasionally and brushing with more sauce, until the chicken is cooked through."
+    ]
+  },
+  {
+    id: "cornbread-casserole", name: "Cornbread Casserole", emoji: "🌽", cuisine: "american",
+    proteins: ["beef"], tags: ["kidFriendly"], allergens: ["egg", "dairy", "gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "cornbread mix", qty: 1, unit: "count", category: "Pantry" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 0.5, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the ground beef with the onion; drain excess fat.",
+      "Stir in black beans and diced tomatoes; spread in a baking dish and top with cheddar.",
+      "Mix the cornbread batter per the box directions and pour over the top.",
+      "Bake at 400F for 25-30 minutes, until the cornbread is golden and cooked through."
+    ]
+  },
+  {
+    id: "pigs-in-a-blanket", name: "Pigs in a Blanket", emoji: "🌭", cuisine: "american",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["gluten"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
+      { name: "crescent roll dough", qty: 2, unit: "can", category: "Pantry" },
+      { name: "mustard", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Cut the hot dogs in half (or leave whole for larger portions).",
+      "Wrap each in a triangle of crescent dough.",
+      "Bake at 375F for 12-15 minutes, until golden.",
+      "Serve with mustard for dipping."
+    ]
+  },
+  {
+    id: "sausage-biscuit-sandwiches", name: "Sausage Biscuit Sandwiches", emoji: "🧈", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "breakfastForDinner", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "breakfast sausage patties", qty: 8, unit: "count", category: "Meat & Seafood" },
+      { name: "refrigerated biscuits", qty: 8, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Bake the biscuits per the package directions.",
+      "Cook the sausage patties in a skillet until browned through.",
+      "Split the biscuits and fill with a sausage patty and cheddar."
+    ]
+  },
+  {
+    id: "ham-cheese-quiche", name: "Ham & Cheese Quiche", emoji: "🥧", cuisine: "american",
+    proteins: ["pork"], tags: ["breakfastForDinner", "kidFriendly"], allergens: ["egg", "dairy", "gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "pie crust", qty: 1, unit: "count", category: "Pantry" },
+      { name: "deli ham", qty: 8, unit: "oz", category: "Meat & Seafood" },
+      { name: "eggs", qty: 5, unit: "count", category: "Dairy & Eggs" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Press the pie crust into a pie dish and scatter in the diced ham and cheddar.",
+      "Whisk the eggs and milk together and pour over the top.",
+      "Bake at 375F for 35-40 minutes, until set and lightly golden.",
+      "Let rest 5 minutes before slicing."
+    ]
+  },
+  {
+    id: "smothered-chicken", name: "Smothered Chicken", emoji: "🍗", cuisine: "american",
+    proteins: ["chicken"], tags: ["onepot"], allergens: ["dairy", "gluten"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
+      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Season the chicken thighs and sear in a skillet, 4-5 minutes per side, then set aside.",
+      "Sauté onion and mushrooms in the same skillet until soft.",
+      "Sprinkle in flour, then whisk in chicken broth and milk to make a gravy.",
+      "Return the chicken to the skillet, cover, and simmer 15 minutes until cooked through."
+    ]
+  },
+  {
+    id: "beef-barley-soup", name: "Beef Barley Soup", emoji: "🍲", cuisine: "american",
+    proteins: ["beef"], tags: ["onepot"], allergens: ["gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "beef stew meat", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "barley", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "celery", qty: 1, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "beef broth", qty: 4, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the beef stew meat in a large pot.",
+      "Add onion, carrots, and celery; cook a few minutes until softened.",
+      "Stir in the beef broth and barley.",
+      "Cover and simmer 30-35 minutes, until the barley is tender and the beef is cooked through."
+    ]
+  },
+  {
+    id: "chicken-noodle-casserole", name: "Chicken Noodle Casserole", emoji: "🍝", cuisine: "american",
+    proteins: ["chicken"], tags: ["kidFriendly", "leftovers"], allergens: ["dairy", "gluten"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "milk", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook the chicken breast and cut into bite-size pieces (or use rotisserie chicken); boil the egg noodles until al dente and drain.",
+      "Make a sauce: melt the butter, whisk in flour, then milk, and simmer until thickened; stir in cheddar until melted.",
+      "Combine the chicken, noodles, peas and carrots, and sauce in a baking dish.",
+      "Bake at 375F for 20 minutes, until bubbly."
+    ]
+  },
+  {
+    id: "bacon-wrapped-chicken", name: "Bacon Wrapped Chicken", emoji: "🥓", cuisine: "american",
+    proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: [],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Cut the chicken breast into strips and season with garlic powder.",
+      "Wrap each strip in a slice of bacon and set on a baking sheet.",
+      "Sprinkle with brown sugar.",
+      "Bake at 400F for 20-25 minutes, until the bacon is crisp and the chicken is cooked through (165F)."
+    ]
+  },
+  {
+    id: "country-style-ribs", name: "Oven-Baked Country Ribs", emoji: "🍖", cuisine: "american",
+    proteins: ["pork"], tags: ["kidFriendly"], allergens: [],
+    timeMinutes: 60,
+    ingredients: [
+      { name: "country style pork ribs", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season the ribs with garlic powder and smoked paprika and place in a baking dish, covered tightly with foil.",
+      "Bake at 350F for 45 minutes, until tender.",
+      "Uncover, brush with BBQ sauce, and bake 10 more minutes, until caramelized."
+    ]
+  },
+  {
+    id: "cheesy-stuffed-peppers", name: "Cheesy Stuffed Peppers", emoji: "🫑", cuisine: "american",
+    proteins: ["beef"], tags: ["kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
+      { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "corn", qty: 1, unit: "cup", category: "Produce" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Slice the tops off the bell peppers and remove the seeds.",
+      "Brown the ground beef, then stir in diced tomatoes, black beans, and corn (no rice needed — the beans and corn keep it hearty).",
+      "Stuff the mixture into the peppers and set them in a baking dish.",
+      "Top with cheddar and bake at 375F for 25-30 minutes, until the peppers are tender and the cheese is melted."
+    ]
   }
 ];
 
