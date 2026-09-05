@@ -49,6 +49,146 @@ function dayLabel(weekStartDate, index, day) {
   return date ? `${day}, ${formatShortDate(date)}` : day;
 }
 
+// Persistent banner so she can tell at a glance whether Week 1 is locked —
+// the Lock It In button itself only flashes "Locked in!" for a few seconds.
+function updateLockStatusUI() {
+  document.getElementById("week-lock-status").classList.toggle("hidden", !state.weekLocked);
+}
+
+// ---------- Password-locking a week once it's Locked In ----------
+// Client-side only — a safety rail against an accidental tap (hers, or
+// anything else clicking through the UI) changing a week she's already
+// settled on, not real account security. Anyone with direct access to her
+// data (this app's own sync code included) could still bypass it; it can't
+// be more than that in a plain client-side app with no server to hold a
+// secret. The password itself is never stored, only its hash.
+async function hashPassword(pw) {
+  const enc = new TextEncoder().encode(pw);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Wrap any Week-1 action that changes what's happening this week with this.
+// Runs the action immediately if the week isn't locked; otherwise asks for
+// the password first and only runs it once that checks out.
+function requireUnlockedWeek(action) {
+  if (!state.weekLocked) { action(); return; }
+  openUnlockModal(action);
+}
+
+function openUnlockModal(onUnlocked) {
+  openModal(`
+    <div class="modal-body-title">🔒 This week is locked</div>
+    <div class="modal-body-meta">Enter the password to make changes to this week's meals.</div>
+    <div class="recipe-form-field">
+      <label>Password</label>
+      <input type="password" id="unlock-input" />
+    </div>
+    <p class="empty-note hidden" id="unlock-error">Wrong password.</p>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="unlock-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="unlock-confirm">Unlock</button>
+    </div>
+    <p class="field-label" style="margin-top:14px"><a href="#" id="unlock-forgot">Forgot it? Change the password</a></p>
+  `);
+  document.getElementById("unlock-cancel").addEventListener("click", closeModal);
+  document.getElementById("unlock-confirm").addEventListener("click", async () => {
+    const pw = document.getElementById("unlock-input").value;
+    const hash = await hashPassword(pw);
+    if (hash === state.lockPasswordHash) {
+      state.weekLocked = false;
+      saveState();
+      renderWeek(state.weekPlan);
+      closeModal();
+      onUnlocked();
+    } else {
+      document.getElementById("unlock-error").classList.remove("hidden");
+    }
+  });
+  document.getElementById("unlock-forgot").addEventListener("click", e => {
+    e.preventDefault();
+    openChangePasswordModal(onUnlocked);
+  });
+  document.getElementById("unlock-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") document.getElementById("unlock-confirm").click();
+  });
+  document.getElementById("unlock-input").focus();
+}
+
+// First time she locks in with no password yet — offered right from the
+// Lock It In button (see sync.js). Skippable: if she skips, the week saves
+// normally but isn't actually locked, since there'd be nothing to unlock it with.
+function openSetPasswordModal(onDone) {
+  openModal(`
+    <div class="modal-body-title">🔑 Set a password</div>
+    <div class="modal-body-meta">This locks the week once you tap Lock It In — you'll need this password to change any meal afterward. Week 2 stays freely editable either way.</div>
+    <div class="recipe-form-field">
+      <label>Password</label>
+      <input type="password" id="setpw-input" />
+    </div>
+    <div class="recipe-form-field">
+      <label>Confirm password</label>
+      <input type="password" id="setpw-confirm" />
+    </div>
+    <p class="empty-note hidden" id="setpw-error">Passwords didn't match.</p>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="setpw-cancel">Skip for now</button>
+      <button type="button" class="btn btn-primary" id="setpw-save">Set Password & Lock In</button>
+    </div>
+  `);
+  document.getElementById("setpw-cancel").addEventListener("click", () => { closeModal(); onDone(false); });
+  document.getElementById("setpw-save").addEventListener("click", async () => {
+    const pw = document.getElementById("setpw-input").value;
+    const confirmPw = document.getElementById("setpw-confirm").value;
+    if (!pw || pw !== confirmPw) {
+      document.getElementById("setpw-error").classList.remove("hidden");
+      return;
+    }
+    state.lockPasswordHash = await hashPassword(pw);
+    closeModal();
+    onDone(true);
+  });
+}
+
+// Lets her set a new password without knowing the old one (there's no
+// server-side recovery in a plain client-side app) — reachable from the
+// unlock prompt. Unlocks the week immediately once set, same as a correct
+// password would.
+function openChangePasswordModal(onUnlocked) {
+  openModal(`
+    <div class="modal-body-title">Change password</div>
+    <div class="modal-body-meta">Sets a new password and unlocks this week right away.</div>
+    <div class="recipe-form-field">
+      <label>New password</label>
+      <input type="password" id="chpw-new" />
+    </div>
+    <div class="recipe-form-field">
+      <label>Confirm new password</label>
+      <input type="password" id="chpw-confirm" />
+    </div>
+    <p class="empty-note hidden" id="chpw-error">Passwords didn't match.</p>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="chpw-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="chpw-save">Save & Unlock</button>
+    </div>
+  `);
+  document.getElementById("chpw-cancel").addEventListener("click", closeModal);
+  document.getElementById("chpw-save").addEventListener("click", async () => {
+    const next = document.getElementById("chpw-new").value;
+    const confirmNext = document.getElementById("chpw-confirm").value;
+    if (!next || next !== confirmNext) {
+      document.getElementById("chpw-error").classList.remove("hidden");
+      return;
+    }
+    state.lockPasswordHash = await hashPassword(next);
+    state.weekLocked = false;
+    saveState();
+    renderWeek(state.weekPlan);
+    closeModal();
+    if (onUnlocked) onUnlocked();
+  });
+}
+
 // Generic dish words families use that don't literally appear in every
 // matching recipe's name (e.g. "pasta" should match Spaghetti, Ziti, Alfredo).
 // Keys are singular stems only — "taco" already matches "tacos" as a
@@ -166,6 +306,8 @@ function defaultState() {
     profile: null,
     weekPlan: null,      // [{ day, recipeId }]
     weekStartDate: null,  // "YYYY-MM-DD" — the Sunday state.weekPlan starts on; Week 2 is always the 7 days right after
+    weekLocked: false,    // true once she's Locked In and set a password — blocks further changes to Week 1 until unlocked
+    lockPasswordHash: null, // SHA-256 hex of her chosen password; never the password itself
     weekPlan2: null,      // [{ day, recipeId }] — Week 2, a look-ahead plan shown alongside the current week
     includeWeek2Groceries: false, // opt-in: whether "Create Grocery List" folds Week 2's ingredients in too
     feedback: {},         // { recipeId: score }
@@ -234,6 +376,9 @@ function hydrateStateDefaults(s) {
   if (!s.heldBackRecipes) s.heldBackRecipes = [];
   if (s.weekPlan2 === undefined) s.weekPlan2 = null;
   if (typeof s.includeWeek2Groceries !== "boolean") s.includeWeek2Groceries = false;
+  if (typeof s.weekLocked !== "boolean") s.weekLocked = false;
+  if (s.lockPasswordHash === undefined) s.lockPasswordHash = null;
+  if (!s.lockPasswordHash) s.weekLocked = false; // can't be locked with nothing to unlock it
   // Backfill for any account that predates real dates — anchor it to the
   // Sunday of the week she's actually in right now, so it lines up with
   // whatever week she already has open, no matter when this first runs.
@@ -819,12 +964,12 @@ function renderWeek(weekPlan) {
     if (entry.freeDay) {
       const node = freeTpl.content.cloneNode(true);
       node.querySelector(".day-name").textContent = dayLabel(state.weekStartDate, index, entry.day);
-      node.querySelector(".undo-free-day").addEventListener("click", () => {
+      node.querySelector(".undo-free-day").addEventListener("click", () => requireUnlockedWeek(() => {
         const newId = pickReplacement(state.profile, state.feedback, state.weekPlan, index, state.neverSuggest, recentHistoryIds());
         state.weekPlan[index] = { day: entry.day, recipeId: newId, proteinOverride: null, freeDay: false };
         saveState();
         renderWeek(state.weekPlan);
-      });
+      }));
       listEl.appendChild(node);
       return;
     }
@@ -832,19 +977,19 @@ function renderWeek(weekPlan) {
     const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     const node = tpl.content.cloneNode(true);
     node.querySelector(".day-name").textContent = dayLabel(state.weekStartDate, index, entry.day);
-    node.querySelector(".free-day-toggle").addEventListener("click", () => {
+    node.querySelector(".free-day-toggle").addEventListener("click", () => requireUnlockedWeek(() => {
       state.weekPlan[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true };
       saveState();
       renderWeek(state.weekPlan);
-    });
-    node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker(index));
-    node.querySelector(".side-editor-btn").addEventListener("click", () => openSideEditor(index));
-    node.querySelector(".sauce-editor-btn").addEventListener("click", () => openSauceEditor(index));
+    }));
+    node.querySelector(".pick-recipe-btn").addEventListener("click", () => requireUnlockedWeek(() => openRecipePicker(index)));
+    node.querySelector(".side-editor-btn").addEventListener("click", () => requireUnlockedWeek(() => openSideEditor(index)));
+    node.querySelector(".sauce-editor-btn").addEventListener("click", () => requireUnlockedWeek(() => openSauceEditor(index)));
 
     if (recipe) {
       node.querySelector(".meal-emoji").textContent = recipe.emoji;
       node.querySelector(".meal-name").textContent = recipe.name;
-      node.querySelector(".rename-btn").addEventListener("click", () => openRenameModal(index, false));
+      node.querySelector(".rename-btn").addEventListener("click", () => requireUnlockedWeek(() => openRenameModal(index, false)));
       const metaBits = [`${recipe.timeMinutes} min`];
       if ((state.feedback[recipe.id] || 0) >= 2) metaBits.push("Family favorite");
       node.querySelector(".meal-meta").textContent = metaBits.join(" • ");
@@ -865,26 +1010,35 @@ function renderWeek(weekPlan) {
       // "Start Next Week," just without asking first since finishing out
       // the week isn't a "start over" she needs to confirm each time.
       loveBtn.addEventListener("click", () => {
-        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 1;
-        saveState();
-        if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
-        renderWeek(state.weekPlan);
+        const finish = () => {
+          state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 1;
+          saveState();
+          if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
+          renderWeek(state.weekPlan);
+        };
+        // Only gate the Saturday case — it ends the week, which is exactly
+        // the kind of change locking is meant to catch. Feedback on any
+        // other day doesn't touch what's actually being served.
+        entry.day === "Saturday" ? requireUnlockedWeek(finish) : finish();
       });
 
       okBtn.addEventListener("click", () => {
-        state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 0.25;
-        saveState();
-        if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
-        renderWeek(state.weekPlan);
+        const finish = () => {
+          state.feedback[recipe.id] = (state.feedback[recipe.id] || 0) + 0.25;
+          saveState();
+          if (entry.day === "Saturday") { rotateToNextWeek(true); return; }
+          renderWeek(state.weekPlan);
+        };
+        entry.day === "Saturday" ? requireUnlockedWeek(finish) : finish();
       });
 
       viewBtn.addEventListener("click", () => openRecipeModal(recipe));
 
-      dayBtn.addEventListener("click", () => openDayPicker(index));
+      dayBtn.addEventListener("click", () => requireUnlockedWeek(() => openDayPicker(index)));
 
-      swapBtn.addEventListener("click", () => openMeatPicker(index));
+      swapBtn.addEventListener("click", () => requireUnlockedWeek(() => openMeatPicker(index)));
 
-      removeBtn.addEventListener("click", () => openRemoveReasonModal(index, recipe));
+      removeBtn.addEventListener("click", () => requireUnlockedWeek(() => openRemoveReasonModal(index, recipe)));
     } else {
       node.querySelector(".meal-emoji").textContent = "🍽️";
       node.querySelector(".meal-name").textContent = "No match found";
@@ -896,6 +1050,7 @@ function renderWeek(weekPlan) {
     listEl.appendChild(node);
   });
 
+  updateLockStatusUI();
   renderNextWeekPreview();
 }
 
@@ -2702,7 +2857,7 @@ function startNewWeek() {
     ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
     : "";
   if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
-  rotateToNextWeek();
+  requireUnlockedWeek(() => rotateToNextWeek());
 }
 document.getElementById("btn-start-over").addEventListener("click", startNewWeek);
 document.getElementById("btn-start-next-week").addEventListener("click", startNewWeek);
@@ -2729,8 +2884,15 @@ function boot() {
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);
   // Backfill Week 2 for anyone who already had a week plan before this
-  // feature existed — including her own account right now.
-  if (state.weekPlan && !state.weekPlan2) { generateWeek2(); saveState(); }
+  // feature existed — including her own account right now. Persists locally
+  // only (not through saveState()/queueCloudSave()) — a backfill isn't a
+  // real edit, and stamping it as one could make a routine page open look
+  // like a fresh change and win a sync conflict it has no business winning.
+  // The real save timestamp catches up next time she actually does something.
+  if (state.weekPlan && !state.weekPlan2) {
+    generateWeek2();
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
   if (state.weekPlan2) renderWeek2(state.weekPlan2);
   document.getElementById("include-week2-groceries").checked = !!state.includeWeek2Groceries;
   if (state.groceryList) renderGrocery(state.groceryList);

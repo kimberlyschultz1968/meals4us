@@ -132,8 +132,10 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden && isSignedIn()) connectCloud();
 });
 
-// "Lock It In" — a save she can see and trust, unlike the silent background sync.
-// Waits for the server to confirm the write before saying it's done.
+// "Lock It In" — a save she can see and trust, unlike the silent background
+// sync. Waits for the server to confirm the write before saying it's done.
+// If she has a lock password set, this also freezes Week 1 against further
+// changes until she enters it again (see requireUnlockedWeek in app.js).
 function lockItIn() {
   const btn = document.getElementById("btn-lock-in");
   if (!isSignedIn()) {
@@ -141,20 +143,35 @@ function lockItIn() {
     setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 2500);
     return;
   }
-  clearTimeout(cloudSaveTimer);
-  if (!state._syncStamp) stampState();
-  btn.disabled = true;
-  btn.textContent = "Saving…";
-  api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
-    .then(() => { btn.textContent = "✓ Locked in!"; })
-    .catch(err => {
-      console.error("Meals4Us: Lock It In failed", err);
-      btn.textContent = "⚠️ Couldn't save — tap to retry";
-    })
-    .finally(() => {
-      btn.disabled = false;
-      setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 3500);
-    });
+
+  const proceed = () => {
+    clearTimeout(cloudSaveTimer);
+    if (state.lockPasswordHash) state.weekLocked = true;
+    stampState(); // a real, deliberate save — this one SHOULD win a sync conflict
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
+      .then(() => {
+        btn.textContent = "✓ Locked in!";
+        renderWeek(state.weekPlan);
+      })
+      .catch(err => {
+        console.error("Meals4Us: Lock It In failed", err);
+        btn.textContent = "⚠️ Couldn't save — tap to retry";
+      })
+      .finally(() => {
+        btn.disabled = false;
+        setTimeout(() => { btn.textContent = "🔒 Lock It In"; }, 3500);
+      });
+  };
+
+  // First time locking in with no password yet — offer to set one. Skipping
+  // still saves normally, just without the lock (nothing to unlock it with).
+  if (!state.lockPasswordHash) {
+    openSetPasswordModal(() => proceed());
+  } else {
+    proceed();
+  }
 }
 document.getElementById("btn-lock-in").addEventListener("click", lockItIn);
 

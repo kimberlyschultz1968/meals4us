@@ -287,6 +287,19 @@ h1 {
   margin: 12px 0 6px;
 }
 
+.week-lock-status {
+  background: var(--red-tint);
+  border: 1px solid var(--red);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  text-align: center;
+}
+.week-lock-status.hidden { display: none; }
+
 .field-label span {
   font-weight: 400;
   font-style: italic;
