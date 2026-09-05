@@ -76,6 +76,17 @@ function requireUnlockedWeek(action) {
   openUnlockModal(action);
 }
 
+// A typed password is invisible by default, same as anywhere else — but with
+// nothing to compare it against, a typo just looks like "wrong password"
+// with no way to tell why. This lets her check what she actually typed
+// before submitting, in any modal that asks for one.
+function wireShowPasswordToggle(checkboxId, inputIds) {
+  document.getElementById(checkboxId).addEventListener("change", e => {
+    const type = e.target.checked ? "text" : "password";
+    inputIds.forEach(id => { const el = document.getElementById(id); if (el) el.type = type; });
+  });
+}
+
 function openUnlockModal(onUnlocked) {
   openModal(`
     <div class="modal-body-title">🔒 This week is locked</div>
@@ -84,6 +95,7 @@ function openUnlockModal(onUnlocked) {
       <label>Password</label>
       <input type="password" id="unlock-input" />
     </div>
+    <label class="show-password-toggle"><input type="checkbox" id="unlock-show-pw" /> 👁 Show password</label>
     <p class="empty-note hidden" id="unlock-error">Wrong password.</p>
     <div class="recipe-form-actions">
       <button type="button" class="btn btn-secondary" id="unlock-cancel">Cancel</button>
@@ -91,6 +103,7 @@ function openUnlockModal(onUnlocked) {
     </div>
     <p class="field-label" style="margin-top:14px"><a href="#" id="unlock-forgot">Forgot it? Change the password</a></p>
   `);
+  wireShowPasswordToggle("unlock-show-pw", ["unlock-input"]);
   document.getElementById("unlock-cancel").addEventListener("click", closeModal);
   document.getElementById("unlock-confirm").addEventListener("click", async () => {
     const pw = document.getElementById("unlock-input").value;
@@ -130,12 +143,14 @@ function openSetPasswordModal(onDone) {
       <label>Confirm password</label>
       <input type="password" id="setpw-confirm" />
     </div>
+    <label class="show-password-toggle"><input type="checkbox" id="setpw-show-pw" /> 👁 Show password</label>
     <p class="empty-note hidden" id="setpw-error">Passwords didn't match.</p>
     <div class="recipe-form-actions">
       <button type="button" class="btn btn-secondary" id="setpw-cancel">Skip for now</button>
       <button type="button" class="btn btn-primary" id="setpw-save">Set Password & Lock In</button>
     </div>
   `);
+  wireShowPasswordToggle("setpw-show-pw", ["setpw-input", "setpw-confirm"]);
   document.getElementById("setpw-cancel").addEventListener("click", () => { closeModal(); onDone(false); });
   document.getElementById("setpw-save").addEventListener("click", async () => {
     const pw = document.getElementById("setpw-input").value;
@@ -166,12 +181,14 @@ function openChangePasswordModal(onUnlocked) {
       <label>Confirm new password</label>
       <input type="password" id="chpw-confirm" />
     </div>
+    <label class="show-password-toggle"><input type="checkbox" id="chpw-show-pw" /> 👁 Show password</label>
     <p class="empty-note hidden" id="chpw-error">Passwords didn't match.</p>
     <div class="recipe-form-actions">
       <button type="button" class="btn btn-secondary" id="chpw-cancel">Cancel</button>
       <button type="button" class="btn btn-primary" id="chpw-save">Save & Unlock</button>
     </div>
   `);
+  wireShowPasswordToggle("chpw-show-pw", ["chpw-new", "chpw-confirm"]);
   document.getElementById("chpw-cancel").addEventListener("click", closeModal);
   document.getElementById("chpw-save").addEventListener("click", async () => {
     const next = document.getElementById("chpw-new").value;
