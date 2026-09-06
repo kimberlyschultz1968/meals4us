@@ -163,6 +163,7 @@ function lockItIn() {
   const proceed = () => {
     clearTimeout(cloudSaveTimer);
     if (state.lockPasswordHash) state.weekLocked = true;
+    recordLockedWeekSnapshot(); // permanent record of this exact week, for Past Weeks
     stampState(); // a real, deliberate save — this one SHOULD win a sync conflict
     btn.disabled = true;
     btn.textContent = "Saving…";
