@@ -14,12 +14,12 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Season chicken breast with taco seasoning.",
@@ -35,13 +35,13 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 16, unit: "oz", category: "Pantry" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "spaghetti", qty: 16, unit: "oz", category: "Pasta & Grains" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Mix ground beef with breadcrumbs, egg, parmesan, and italian seasoning; roll into meatballs.",
@@ -59,7 +59,7 @@ const RECIPES = [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "paprika", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "paprika", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
       { name: "garlic", qty: 2, unit: "clove", category: "Produce" }
     ],
     instructions: [
@@ -75,12 +75,12 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "hamburger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "hamburger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Shape the ground beef into 6 patties and season with salt and pepper.",
@@ -99,9 +99,9 @@ const RECIPES = [
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -136,8 +136,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -156,7 +156,7 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "penne pasta", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "penne pasta", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 1, unit: "cup", category: "Dairy & Eggs" },
@@ -194,8 +194,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "pork shoulder", qty: 2.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "hamburger buns", qty: 6, unit: "count", category: "Pantry" }
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
+      { name: "hamburger buns", qty: 6, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Place the pork shoulder in the slow cooker and pour bbq sauce over it.",
@@ -211,11 +211,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 2, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "frozen peas", qty: 1, unit: "cup", category: "Frozen" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "green onion", qty: 1, unit: "bunch", category: "Produce" }
     ],
     instructions: [
@@ -235,8 +235,8 @@ const RECIPES = [
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" }
     ],
     instructions: [
@@ -252,11 +252,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "avocado", qty: 2, unit: "whole", category: "Produce" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -272,10 +272,10 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["kidFriendly", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "pizza dough", qty: 1, unit: "whole", category: "Pantry" },
-      { name: "pizza sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "pizza dough", qty: 1, unit: "whole", category: "Bread & Bakery" },
+      { name: "pizza sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Preheat the oven to 475F.",
@@ -290,8 +290,8 @@ const RECIPES = [
     proteins: ["pork"], tags: ["kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "pizza dough", qty: 1, unit: "whole", category: "Pantry" },
-      { name: "pizza sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "pizza dough", qty: 1, unit: "whole", category: "Bread & Bakery" },
+      { name: "pizza sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "pepperoni", qty: 3, unit: "oz", category: "Meat & Seafood" }
     ],
@@ -309,11 +309,11 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "chili powder", qty: 2, unit: "tsp", category: "Pantry" },
-      { name: "cumin", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "chili powder", qty: 2, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "cumin", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Brown the ground turkey with chopped onion in a large pot, about 6-7 minutes.",
@@ -329,10 +329,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "hamburger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "hamburger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Shape the ground turkey into 6 patties and season with salt and pepper.",
@@ -348,10 +348,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "eggs", qty: 8, unit: "count", category: "Dairy & Eggs" },
-      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Dice the bell pepper and saute in a skillet 3-4 minutes until softened.",
@@ -368,7 +368,7 @@ const RECIPES = [
     ingredients: [
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
-      { name: "pancake mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "pancake mix", qty: 2, unit: "cup", category: "Baking" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
     ],
@@ -385,10 +385,10 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 15,
     ingredients: [
-      { name: "bread loaf", qty: 1, unit: "whole", category: "Pantry" },
+      { name: "bread loaf", qty: 1, unit: "whole", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -405,10 +405,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "hot dog buns", qty: 8, unit: "count", category: "Pantry" },
+      { name: "hot dog buns", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "frozen fries", qty: 1, unit: "lb", category: "Frozen" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "mustard", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the frozen fries in the air fryer or oven according to package directions.",
@@ -424,11 +424,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "cabbage", qty: 1, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" },
-      { name: "chili powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "chili powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Toss shrimp with chili powder.",
@@ -445,9 +445,9 @@ const RECIPES = [
     ingredients: [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "broccoli", qty: 3, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -463,12 +463,12 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "pizza sauce", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "spaghetti", qty: 16, unit: "oz", category: "Pantry" }
+      { name: "pizza sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
+      { name: "spaghetti", qty: 16, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -484,7 +484,7 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
       { name: "feta cheese", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
@@ -505,7 +505,7 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -524,9 +524,9 @@ const RECIPES = [
     timeMinutes: 55,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "ketchup", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "ketchup", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -545,7 +545,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "tilapia", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "cabbage", qty: 1, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" }
@@ -564,8 +564,8 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "chicken broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
+      { name: "chicken broth", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -586,7 +586,7 @@ const RECIPES = [
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "carrots", qty: 1.5, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "chicken broth", qty: 2, unit: "cup", category: "Pantry" }
+      { name: "chicken broth", qty: 2, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Place the beef stew meat, potatoes, carrots, and onion in the slow cooker.",
@@ -601,11 +601,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 15,
     ingredients: [
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Saute the diced bell pepper for 3-4 minutes until softened.",
@@ -640,11 +640,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "green onion", qty: 1, unit: "bunch", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "chili powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "chili powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -661,8 +661,8 @@ const RECIPES = [
     ingredients: [
       { name: "bell pepper", qty: 3, unit: "whole", category: "Produce" },
       { name: "onion", qty: 2, unit: "whole", category: "Produce" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "avocado", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -681,7 +681,7 @@ const RECIPES = [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "bell pepper", qty: 3, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -698,11 +698,11 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "penne pasta", qty: 16, unit: "oz", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "penne pasta", qty: 16, unit: "oz", category: "Pasta & Grains" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Preheat the oven to 375F. Cook the penne pasta until just shy of al dente and drain.",
@@ -718,9 +718,9 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "peanut butter", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "green onion", qty: 1, unit: "bunch", category: "Produce" }
     ],
@@ -738,7 +738,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
       { name: "feta cheese", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
@@ -759,9 +759,9 @@ const RECIPES = [
     ingredients: [
       { name: "ground turkey", qty: 1, unit: "lb", category: "Meat & Seafood" },
       { name: "zucchini", qty: 4, unit: "whole", category: "Produce" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Preheat the oven to 400F. Halve the zucchini lengthwise and scoop out the centers.",
@@ -779,7 +779,7 @@ const RECIPES = [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
       { name: "avocado", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -799,9 +799,9 @@ const RECIPES = [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "coconut milk", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "coconut milk", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -816,12 +816,12 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["onepot", "leftovers", "vegetarian"], allergens: ["dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "lentils", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "lentils", qty: 2, unit: "cup", category: "Pasta & Grains" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "coconut milk", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "coconut milk", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -837,10 +837,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "teriyaki sauce", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "teriyaki sauce", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "sesame seeds", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
+      { name: "sesame seeds", qty: 1, unit: "tbsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -857,9 +857,9 @@ const RECIPES = [
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "orange marmalade", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "broccoli", qty: 1, unit: "cup", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -875,10 +875,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Baking" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "green onion", qty: 1, unit: "bunch", category: "Produce" }
     ],
     instructions: [
@@ -895,9 +895,9 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice noodles", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "rice noodles", qty: 8, unit: "oz", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
-      { name: "peanuts", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "peanuts", qty: 0.25, unit: "cup", category: "Snacks & Chips" },
       { name: "bean sprouts", qty: 1, unit: "cup", category: "Produce" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -915,11 +915,11 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "tahini", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" }
+      { name: "tahini", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -935,7 +935,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" },
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tzatziki", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -953,11 +953,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten"],
     timeMinutes: 25,
     ingredients: [
-      { name: "chickpeas", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" },
+      { name: "chickpeas", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" },
-      { name: "tahini", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "tahini", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Mash the chickpeas and form into small patties (or use a food processor to combine).",
@@ -972,7 +972,7 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "elbow macaroni", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "elbow macaroni", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" }
@@ -991,7 +991,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "elbow macaroni", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "elbow macaroni", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
@@ -1012,8 +1012,8 @@ const RECIPES = [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "frozen peas", qty: 1, unit: "cup", category: "Frozen" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
-      { name: "pie crust", qty: 2, unit: "count", category: "Pantry" },
-      { name: "chicken broth", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "pie crust", qty: 2, unit: "count", category: "Bread & Bakery" },
+      { name: "chicken broth", qty: 1, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Preheat the oven to 400F. Cut the chicken breast into small pieces and cook in a skillet until browned and cooked through.",
@@ -1029,10 +1029,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "egg noodles", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "egg noodles", qty: 8, unit: "oz", category: "Pasta & Grains" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" }
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Bring the chicken broth to a boil in a large pot.",
@@ -1047,12 +1047,12 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["onepot", "vegetarian", "leftovers"], allergens: ["gluten"],
     timeMinutes: 35,
     ingredients: [
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" },
-      { name: "penne pasta", qty: 8, unit: "oz", category: "Pantry" },
-      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" }
+      { name: "penne pasta", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Bring the chicken broth to a boil in a large pot.",
@@ -1070,8 +1070,8 @@ const RECIPES = [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "beef broth", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "beef broth", qty: 1, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Cook the egg noodles according to package directions and drain.",
@@ -1086,8 +1086,8 @@ const RECIPES = [
     proteins: ["fish"], tags: ["kidFriendly", "leftovers"], allergens: ["fish", "gluten", "dairy"],
     timeMinutes: 35,
     ingredients: [
-      { name: "canned tuna", qty: 2, unit: "can", category: "Pantry" },
-      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "canned tuna", qty: 2, unit: "can", category: "Canned & Jarred" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "frozen peas", qty: 1, unit: "cup", category: "Frozen" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -1106,8 +1106,8 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -1125,8 +1125,8 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
-      { name: "enchilada sauce", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Bread & Bakery" },
+      { name: "enchilada sauce", qty: 1.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -1144,8 +1144,8 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
-      { name: "enchilada sauce", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Bread & Bakery" },
+      { name: "enchilada sauce", qty: 1.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1162,8 +1162,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "pork shoulder", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
     ],
@@ -1183,7 +1183,7 @@ const RECIPES = [
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
       { name: "bell pepper", qty: 3, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "sub rolls", qty: 6, unit: "count", category: "Pantry" }
+      { name: "sub rolls", qty: 6, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Slice the bell peppers and onion.",
@@ -1199,7 +1199,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "sub rolls", qty: 6, unit: "count", category: "Pantry" },
+      { name: "sub rolls", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" }
@@ -1218,10 +1218,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "sub rolls", qty: 6, unit: "count", category: "Pantry" },
-      { name: "pizza sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "sub rolls", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "pizza sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1238,9 +1238,9 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "hamburger buns", qty: 6, unit: "count", category: "Pantry" },
-      { name: "ketchup", qty: 4, unit: "tbsp", category: "Pantry" },
-      { name: "bbq sauce", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "hamburger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "ketchup", qty: 4, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "bbq sauce", qty: 0.25, unit: "cup", category: "Sauces & Condiments" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -1257,8 +1257,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
-      { name: "hot sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "hot sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" }
     ],
@@ -1276,8 +1276,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
-      { name: "caesar dressing", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "caesar dressing", qty: 0.25, unit: "cup", category: "Sauces & Condiments" },
       { name: "parmesan", qty: 0.25, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 2, unit: "cup", category: "Produce" }
     ],
@@ -1295,10 +1295,10 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "bacon", qty: 12, unit: "oz", category: "Meat & Seafood" },
-      { name: "bread loaf", qty: 1, unit: "whole", category: "Pantry" },
+      { name: "bread loaf", qty: 1, unit: "whole", category: "Bread & Bakery" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the bacon in a skillet until crisp, then drain on paper towels.",
@@ -1315,10 +1315,10 @@ const RECIPES = [
     ingredients: [
       { name: "deli turkey", qty: 8, unit: "oz", category: "Meat & Seafood" },
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
-      { name: "bread loaf", qty: 1, unit: "whole", category: "Pantry" },
+      { name: "bread loaf", qty: 1, unit: "whole", category: "Bread & Bakery" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the bacon in a skillet until crisp, then drain on paper towels.",
@@ -1373,7 +1373,7 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "penne pasta", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "penne pasta", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "tomato", qty: 3, unit: "whole", category: "Produce" },
       { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "basil", qty: 1, unit: "bunch", category: "Produce" },
@@ -1393,10 +1393,10 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "eggplant", qty: 2, unit: "whole", category: "Produce" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "pizza sauce", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "pizza sauce", qty: 1.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1413,7 +1413,7 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "veggie burger patties", qty: 6, unit: "count", category: "Frozen" },
-      { name: "hamburger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "hamburger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
       { name: "avocado", qty: 1, unit: "whole", category: "Produce" }
@@ -1431,11 +1431,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["onepot", "vegetarian", "leftovers"], allergens: [],
     timeMinutes: 35,
     ingredients: [
-      { name: "lentils", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "lentils", qty: 2, unit: "cup", category: "Pasta & Grains" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "vegetable broth", qty: 4, unit: "cup", category: "Pantry" }
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "vegetable broth", qty: 4, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Saute the onion and carrots in a pot for 4-5 minutes.",
@@ -1451,7 +1451,7 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "breakfast sausage links", qty: 12, unit: "oz", category: "Meat & Seafood" },
-      { name: "waffle mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "waffle mix", qty: 2, unit: "cup", category: "Baking" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
@@ -1469,7 +1469,7 @@ const RECIPES = [
     proteins: ["pork"], tags: ["quick", "breakfastForDinner", "kidFriendly"], allergens: ["egg", "gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "bread loaf", qty: 1, unit: "whole", category: "Pantry" },
+      { name: "bread loaf", qty: 1, unit: "whole", category: "Bread & Bakery" },
       { name: "eggs", qty: 4, unit: "count", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
@@ -1509,10 +1509,10 @@ const RECIPES = [
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
       { name: "andouille sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Slice the andouille sausage and brown it in a large pot, about 4-5 minutes.",
@@ -1528,8 +1528,8 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "andouille sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -1547,9 +1547,9 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "crab meat", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "lemon", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -1567,7 +1567,7 @@ const RECIPES = [
     ingredients: [
       { name: "tilapia", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "frozen fries", qty: 1, unit: "lb", category: "Frozen" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "lemon", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -1586,9 +1586,9 @@ const RECIPES = [
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "honey", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -1604,7 +1604,7 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "chorizo", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" }
@@ -1623,11 +1623,11 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "lettuce", qty: 3, unit: "cup", category: "Produce" },
-      { name: "tortilla chips", qty: 4, unit: "oz", category: "Pantry" },
+      { name: "tortilla chips", qty: 4, unit: "oz", category: "Snacks & Chips" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Brown the ground beef in a skillet, about 6-7 minutes.",
@@ -1643,11 +1643,11 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "tortilla chips", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "tortilla chips", qty: 8, unit: "oz", category: "Snacks & Chips" },
       { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Preheat the oven to 400F (or use the broiler). Brown the ground beef in a skillet, about 6-7 minutes.",
@@ -1663,8 +1663,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -1681,9 +1681,9 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "breakfastForDinner", "vegetarian"], allergens: ["egg", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "tortilla chips", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "tortilla chips", qty: 8, unit: "oz", category: "Snacks & Chips" },
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -1701,10 +1701,10 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "cabbage", qty: 1, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -1721,9 +1721,9 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
-      { name: "corn tortillas", qty: 6, unit: "count", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "salsa", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "corn tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "salsa", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1740,9 +1740,9 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "cornbread mix", qty: 1, unit: "count", category: "Pantry" },
+      { name: "cornbread mix", qty: 1, unit: "count", category: "Baking" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1762,7 +1762,7 @@ const RECIPES = [
       { name: "lemon", qty: 2, unit: "whole", category: "Produce" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -1778,7 +1778,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "shrimp", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
       { name: "lemon", qty: 1, unit: "whole", category: "Produce" }
@@ -1797,10 +1797,10 @@ const RECIPES = [
     timeMinutes: 60,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "lasagna noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "lasagna noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "ricotta cheese", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1816,11 +1816,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["vegetarian"], allergens: ["dairy"],
     timeMinutes: 40,
     ingredients: [
-      { name: "arborio rice", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "arborio rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
       { name: "mushrooms", qty: 2, unit: "cup", category: "Produce" },
       { name: "parmesan", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" }
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Warm the chicken broth in a saucepan and keep it at a low simmer.",
@@ -1837,9 +1837,9 @@ const RECIPES = [
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "mushrooms", qty: 2, unit: "cup", category: "Produce" },
-      { name: "marsala wine", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "marsala wine", qty: 0.5, unit: "cup", category: "Beverages" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -1854,11 +1854,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["leftovers", "vegetarian"], allergens: ["gluten", "dairy", "egg"],
     timeMinutes: 45,
     ingredients: [
-      { name: "jumbo pasta shells", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "jumbo pasta shells", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "ricotta cheese", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "pizza sauce", qty: 2, unit: "cup", category: "Pantry" }
+      { name: "pizza sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Preheat the oven to 375F. Cook the jumbo pasta shells according to package directions and drain.",
@@ -1874,11 +1874,11 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground turkey", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "parmesan", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -1914,7 +1914,7 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken thighs", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 1.5, unit: "cup", category: "Baking" },
       { name: "buttermilk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" }
     ],
@@ -1932,10 +1932,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "frozen fries", qty: 1, unit: "lb", category: "Frozen" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the frozen fries in the oven or air fryer according to package directions.",
@@ -1951,7 +1951,7 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
@@ -1994,7 +1994,7 @@ const RECIPES = [
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "carrots", qty: 1.5, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "beef broth", qty: 2, unit: "cup", category: "Pantry" }
+      { name: "beef broth", qty: 2, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Place the beef stew meat, potatoes, carrots, and onion in the slow cooker.",
@@ -2010,7 +2010,7 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "beef cube steak", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 1, unit: "cup", category: "Baking" },
       { name: "buttermilk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
@@ -2029,9 +2029,9 @@ const RECIPES = [
     proteins: ["pork"], tags: ["quick", "breakfastForDinner", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 25,
     ingredients: [
-      { name: "biscuits", qty: 8, unit: "count", category: "Pantry" },
+      { name: "biscuits", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "breakfast sausage links", qty: 12, unit: "oz", category: "Meat & Seafood" },
-      { name: "flour", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 0.25, unit: "cup", category: "Baking" },
       { name: "milk", qty: 2, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -2048,10 +2048,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "cornmeal", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "cornmeal", qty: 1, unit: "cup", category: "Baking" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "frozen fries", qty: 1, unit: "lb", category: "Frozen" },
-      { name: "mustard", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the frozen fries in the oven or air fryer according to package directions.",
@@ -2067,7 +2067,7 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken wings", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "hot sauce", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "hot sauce", qty: 4, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" }
     ],
@@ -2085,10 +2085,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground turkey", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "pizza sauce", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "spaghetti", qty: 16, unit: "oz", category: "Pantry" }
+      { name: "pizza sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" },
+      { name: "spaghetti", qty: 16, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -2104,10 +2104,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "sesame seeds", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "sesame seeds", qty: 1, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Baking" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2123,10 +2123,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "brown sugar", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 3, unit: "tbsp", category: "Baking" },
       { name: "green onion", qty: 1, unit: "bunch", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2142,8 +2142,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "lo mein noodles", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "lo mein noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" }
     ],
@@ -2160,11 +2160,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "onepot", "vegetarian"], allergens: ["soy", "gluten"],
     timeMinutes: 20,
     ingredients: [
-      { name: "lo mein noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "lo mein noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "broccoli", qty: 1, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" }
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the lo mein noodles according to package directions and drain.",
@@ -2180,10 +2180,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "pineapple chunks", qty: 1, unit: "cup", category: "Produce" },
+      { name: "pineapple chunks", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" },
+      { name: "soy sauce", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2199,10 +2199,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "peanuts", qty: 0.25, unit: "cup", category: "Pantry" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "peanuts", qty: 0.25, unit: "cup", category: "Snacks & Chips" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2218,10 +2218,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Baking" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2237,9 +2237,9 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2254,11 +2254,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "onepot", "vegetarian"], allergens: ["soy", "egg"],
     timeMinutes: 20,
     ingredients: [
-      { name: "rice", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 2, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "frozen peas", qty: 1, unit: "cup", category: "Frozen" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
-      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Pantry" }
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the rice ahead of time (or use leftover cold rice).",
@@ -2274,9 +2274,9 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "salmon", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "teriyaki sauce", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "teriyaki sauce", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2296,7 +2296,7 @@ const RECIPES = [
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" },
       { name: "lemon", qty: 1, unit: "whole", category: "Produce" },
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" }
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Cut the chicken breast, bell pepper, and onion into chunks.",
@@ -2313,7 +2313,7 @@ const RECIPES = [
     ingredients: [
       { name: "spinach", qty: 4, unit: "cup", category: "Produce" },
       { name: "feta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "phyllo dough", qty: 12, unit: "count", category: "Pantry" },
+      { name: "phyllo dough", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" }
     ],
@@ -2330,11 +2330,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten"],
     timeMinutes: 15,
     ingredients: [
-      { name: "hummus", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "hummus", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" }
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Dice the cucumber, tomato, and bell pepper.",
@@ -2407,11 +2407,11 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "coconut milk", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "coconut milk", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2427,10 +2427,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "coconut milk", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "coconut milk", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2447,9 +2447,9 @@ const RECIPES = [
     ingredients: [
       { name: "spinach", qty: 4, unit: "cup", category: "Produce" },
       { name: "paneer cheese", qty: 8, unit: "oz", category: "Dairy & Eggs" },
-      { name: "coconut milk", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "curry powder", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "coconut milk", qty: 0.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "curry powder", qty: 1, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2464,11 +2464,11 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["onepot", "vegetarian", "leftovers"], allergens: [],
     timeMinutes: 30,
     ingredients: [
-      { name: "chickpeas", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "chickpeas", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "rice", qty: 1.5, unit: "cup", category: "Pantry" }
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "rice", qty: 1.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the rice according to package directions.",
@@ -2484,9 +2484,9 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 2, unit: "cup", category: "Pasta & Grains" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "curry powder", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "curry powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "yogurt", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -2504,9 +2504,9 @@ const RECIPES = [
     ingredients: [
       { name: "eggs", qty: 8, unit: "count", category: "Dairy & Eggs" },
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the bacon in a skillet until crisp, then crumble.",
@@ -2521,7 +2521,7 @@ const RECIPES = [
     proteins: ["pork"], tags: ["breakfastForDinner", "kidFriendly"], allergens: ["egg", "gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "pizza dough", qty: 1, unit: "whole", category: "Pantry" },
+      { name: "pizza dough", qty: 1, unit: "whole", category: "Bread & Bakery" },
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
@@ -2559,7 +2559,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "feta cheese", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -2578,10 +2578,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "pork baby back ribs", qty: 3, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
-      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "bbq sauce", qty: 1.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Baking" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Rub the ribs all over with brown sugar, garlic powder, and smoked paprika.",
@@ -2597,11 +2597,11 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "biscuit mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "biscuit mix", qty: 2, unit: "cup", category: "Baking" },
       { name: "milk", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
     ],
@@ -2622,8 +2622,8 @@ const RECIPES = [
       { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
       { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "beef broth", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "tomato paste", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "beef broth", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "tomato paste", qty: 2, unit: "tbsp", category: "Canned & Jarred" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -2641,12 +2641,12 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "burger buns", qty: 6, unit: "count", category: "Pantry" },
+      { name: "burger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Form ground beef into 6 patties, season with salt and pepper.",
@@ -2662,12 +2662,12 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "beef stew meat", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "beef broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "beef broth", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" }
     ],
     instructions: [
       "Brown the beef stew meat in a large pot; remove and set aside.",
@@ -2683,8 +2683,8 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
-      { name: "crescent roll dough", qty: 2, unit: "can", category: "Pantry" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
+      { name: "crescent roll dough", qty: 2, unit: "can", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -2701,9 +2701,9 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken thighs", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
-      { name: "onion powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "onion powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Season chicken thighs with garlic powder and onion powder.",
@@ -2718,11 +2718,11 @@ const RECIPES = [
     timeMinutes: 55,
     ingredients: [
       { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Mix ground turkey, breadcrumbs, egg, minced onion, and half the ketchup with the worcestershire sauce.",
@@ -2739,7 +2739,7 @@ const RECIPES = [
     ingredients: [
       { name: "potatoes", qty: 2.5, unit: "lb", category: "Produce" },
       { name: "bacon", qty: 6, unit: "oz", category: "Meat & Seafood" },
-      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Canned & Jarred" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
@@ -2761,11 +2761,11 @@ const RECIPES = [
       { name: "broccoli", qty: 4, unit: "cup", category: "Produce" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "vegetable broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "vegetable broth", qty: 3, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" }
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" }
     ],
     instructions: [
       "Sauté onion and carrots in butter until softened.",
@@ -2781,9 +2781,9 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "catfish fillets", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "cornmeal", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "flour", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "cajun seasoning", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "cornmeal", qty: 1, unit: "cup", category: "Baking" },
+      { name: "flour", qty: 0.5, unit: "cup", category: "Baking" },
+      { name: "cajun seasoning", qty: 1, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "vegetable oil", qty: 0.5, unit: "cup", category: "Pantry" }
     ],
@@ -2802,8 +2802,8 @@ const RECIPES = [
     ingredients: [
       { name: "chicken tenders", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "buttermilk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "flour", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "waffle mix", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 1, unit: "cup", category: "Baking" },
+      { name: "waffle mix", qty: 2, unit: "cup", category: "Baking" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "vegetable oil", qty: 0.5, unit: "cup", category: "Pantry" },
       { name: "maple syrup", qty: 0.5, unit: "cup", category: "Pantry" }
@@ -2822,7 +2822,7 @@ const RECIPES = [
     ingredients: [
       { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "honey", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
       { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
     ],
@@ -2839,7 +2839,7 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "ranch seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "ranch seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "bacon bits", qty: 0.25, unit: "cup", category: "Pantry" }
@@ -2859,7 +2859,7 @@ const RECIPES = [
       { name: "corn", qty: 4, unit: "cup", category: "Produce" },
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "vegetable broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "vegetable broth", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
     ],
@@ -2878,8 +2878,8 @@ const RECIPES = [
       { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
       { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -2895,12 +2895,12 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
-      { name: "beef broth", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "beef broth", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" }
     ],
     instructions: [
       "Mix ground beef, breadcrumbs, egg, and a little minced onion; shape into oval patties.",
@@ -2915,12 +2915,12 @@ const RECIPES = [
     proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "deli ham", qty: 12, unit: "oz", category: "Meat & Seafood" },
       { name: "swiss cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "poppy seeds", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "poppy seeds", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Slice the pack of slider buns in half as one sheet (don't separate them) and set the bottom half in a baking dish.",
@@ -2936,11 +2936,11 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "mustard", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "mustard", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Season the ground beef and shape into 12 mini patties.",
@@ -2955,8 +2955,8 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "cooked pulled pork", qty: 3, unit: "cup", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
-      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "coleslaw mix", qty: 2, unit: "cup", category: "Produce" }
     ],
     instructions: [
@@ -2971,9 +2971,9 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "deli turkey", qty: 12, unit: "oz", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "provolone cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
-      { name: "mayo", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" }
     ],
     instructions: [
@@ -2987,8 +2987,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "hot dog buns", qty: 8, unit: "count", category: "Pantry" },
-      { name: "canned chili", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "hot dog buns", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "canned chili", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" }
     ],
@@ -3005,10 +3005,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
-      { name: "hot sauce", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
+      { name: "hot sauce", qty: 4, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook and shred the chicken (rotisserie chicken works great here for speed).",
@@ -3022,7 +3022,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "thin sliced steak", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "provolone cheese slices", qty: 12, unit: "count", category: "Dairy & Eggs" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
@@ -3040,8 +3040,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "frozen meatballs", qty: 1.5, unit: "lb", category: "Frozen" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
-      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 0.75, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3055,7 +3055,7 @@ const RECIPES = [
     proteins: ["pork"], tags: ["quick", "kidFriendly"], allergens: ["dairy", "gluten"],
     timeMinutes: 15,
     ingredients: [
-      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "bread", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "deli ham", qty: 8, unit: "oz", category: "Meat & Seafood" },
       { name: "swiss cheese slices", qty: 8, unit: "count", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
@@ -3073,8 +3073,8 @@ const RECIPES = [
     ingredients: [
       { name: "deli turkey", qty: 12, unit: "oz", category: "Meat & Seafood" },
       { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 4, unit: "count", category: "Pantry" },
-      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" },
+      { name: "flour tortillas", qty: 4, unit: "count", category: "Bread & Bakery" },
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Sauces & Condiments" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -3092,9 +3092,9 @@ const RECIPES = [
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
+      { name: "ranch dressing", qty: 0.25, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook and shred the chicken (rotisserie chicken works great here); cook the bacon until crisp and crumble.",
@@ -3109,10 +3109,10 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
-      { name: "slider buns", qty: 12, unit: "count", category: "Pantry" },
+      { name: "slider buns", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "lettuce", qty: 1, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
-      { name: "mayo", qty: 3, unit: "tbsp", category: "Pantry" }
+      { name: "mayo", qty: 3, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cook the bacon until crisp.",
@@ -3129,7 +3129,7 @@ const RECIPES = [
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Cut the potatoes into bite-size chunks and slice the sausage and bell pepper.",
@@ -3145,7 +3145,7 @@ const RECIPES = [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "deli ham", qty: 6, unit: "oz", category: "Meat & Seafood" },
       { name: "swiss cheese slices", qty: 6, unit: "count", category: "Dairy & Eggs" },
-      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 1, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 2, unit: "count", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
     ],
@@ -3161,10 +3161,10 @@ const RECIPES = [
     proteins: ["fish"], tags: ["quick"], allergens: ["fish", "dairy", "gluten"],
     timeMinutes: 15,
     ingredients: [
-      { name: "canned tuna", qty: 2, unit: "can", category: "Pantry" },
-      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "canned tuna", qty: 2, unit: "can", category: "Canned & Jarred" },
+      { name: "bread", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "mayo", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 4, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "celery", qty: 0.5, unit: "cup", category: "Produce" }
     ],
     instructions: [
@@ -3179,7 +3179,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "rye bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "rye bread", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "swiss cheese slices", qty: 4, unit: "count", category: "Dairy & Eggs" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
@@ -3198,10 +3198,10 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "corned beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rye bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "rye bread", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "swiss cheese slices", qty: 4, unit: "count", category: "Dairy & Eggs" },
       { name: "sauerkraut", qty: 1, unit: "cup", category: "Produce" },
-      { name: "thousand island dressing", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "thousand island dressing", qty: 4, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3216,11 +3216,11 @@ const RECIPES = [
     timeMinutes: 50,
     ingredients: [
       { name: "round steak", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour", qty: 0.25, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "flour", qty: 0.25, unit: "cup", category: "Baking" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
-      { name: "beef broth", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "beef broth", qty: 0.5, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Pound the round steak, cut into portions, and dredge in flour.",
@@ -3238,9 +3238,9 @@ const RECIPES = [
       { name: "broccoli", qty: 3, unit: "cup", category: "Produce" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the chicken breast and cut into bite-size pieces (or use rotisserie chicken); steam the broccoli until just tender.",
@@ -3255,9 +3255,9 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "chili powder", qty: 2, unit: "tsp", category: "Pantry" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "chili powder", qty: 2, unit: "tsp", category: "Spices & Seasonings" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -3274,11 +3274,11 @@ const RECIPES = [
     timeMinutes: 55,
     ingredients: [
       { name: "beef stew meat", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "pie crust", qty: 2, unit: "count", category: "Pantry" },
+      { name: "pie crust", qty: 2, unit: "count", category: "Bread & Bakery" },
       { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "beef broth", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "beef broth", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" }
     ],
     instructions: [
       "Brown the beef stew meat in a pot; add the onion and cook until soft.",
@@ -3293,10 +3293,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "tomato sauce", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "tomato sauce", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -3312,9 +3312,9 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "baked beans", qty: 2, unit: "can", category: "Pantry" },
-      { name: "ketchup", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "baked beans", qty: 2, unit: "can", category: "Canned & Jarred" },
+      { name: "ketchup", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Baking" }
     ],
     instructions: [
       "Slice the hot dogs into bite-size pieces.",
@@ -3330,7 +3330,7 @@ const RECIPES = [
       { name: "deli ham", qty: 10, unit: "oz", category: "Meat & Seafood" },
       { name: "potatoes", qty: 2, unit: "lb", category: "Produce" },
       { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
       { name: "milk", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -3347,11 +3347,11 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "chili powder", qty: 2, unit: "tsp", category: "Pantry" },
-      { name: "cumin", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "chili powder", qty: 2, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "cumin", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Brown the ground beef with the onion; drain excess fat.",
@@ -3365,11 +3365,11 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "burger buns", qty: 6, unit: "count", category: "Pantry" },
-      { name: "tomato sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "burger buns", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "tomato sauce", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Baking" },
+      { name: "worcestershire sauce", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Brown the ground turkey with the onion; drain excess fat.",
@@ -3384,10 +3384,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" },
-      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Mix ground beef, breadcrumbs, egg, minced onion, and half the ketchup.",
@@ -3404,8 +3404,8 @@ const RECIPES = [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "romaine lettuce", qty: 4, unit: "cup", category: "Produce" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "caesar dressing", qty: 0.33, unit: "cup", category: "Pantry" },
-      { name: "croutons", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "caesar dressing", qty: 0.33, unit: "cup", category: "Sauces & Condiments" },
+      { name: "croutons", qty: 1, unit: "cup", category: "Snacks & Chips" }
     ],
     instructions: [
       "Season and cook the chicken breast in a skillet, 6-7 minutes per side, until done; slice.",
@@ -3419,10 +3419,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "eggs", qty: 8, unit: "count", category: "Dairy & Eggs" },
-      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
-      { name: "mayo", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "bread", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "mayo", qty: 0.33, unit: "cup", category: "Sauces & Condiments" },
       { name: "celery", qty: 0.25, unit: "cup", category: "Produce" },
-      { name: "mustard", qty: 1, unit: "tbsp", category: "Pantry" }
+      { name: "mustard", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Hard-boil the eggs (about 10 minutes), then cool, peel, and chop.",
@@ -3436,8 +3436,8 @@ const RECIPES = [
     timeMinutes: 15,
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
-      { name: "mayo", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "bread", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "mayo", qty: 0.33, unit: "cup", category: "Sauces & Condiments" },
       { name: "celery", qty: 0.25, unit: "cup", category: "Produce" },
       { name: "grapes", qty: 0.5, unit: "cup", category: "Produce" }
     ],
@@ -3471,8 +3471,8 @@ const RECIPES = [
     ingredients: [
       { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
       { name: "bacon", qty: 4, unit: "oz", category: "Meat & Seafood" },
-      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3487,10 +3487,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground turkey", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
-      { name: "sub rolls", qty: 6, unit: "count", category: "Pantry" },
-      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "sub rolls", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3504,9 +3504,9 @@ const RECIPES = [
     proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["dairy", "gluten"],
     timeMinutes: 25,
     ingredients: [
-      { name: "pizza dough", qty: 1, unit: "lb", category: "Pantry" },
+      { name: "pizza dough", qty: 1, unit: "lb", category: "Bread & Bakery" },
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "red onion", qty: 0.5, unit: "whole", category: "Produce" }
     ],
@@ -3523,7 +3523,7 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Pantry" },
+      { name: "bbq sauce", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "red onion", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -3539,9 +3539,9 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "cornbread mix", qty: 1, unit: "count", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "cornbread mix", qty: 1, unit: "count", category: "Baking" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 0.5, unit: "whole", category: "Produce" }
     ],
@@ -3558,8 +3558,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "hot dogs", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "crescent roll dough", qty: 2, unit: "can", category: "Pantry" },
-      { name: "mustard", qty: 2, unit: "tbsp", category: "Pantry" }
+      { name: "crescent roll dough", qty: 2, unit: "can", category: "Bread & Bakery" },
+      { name: "mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Cut the hot dogs in half (or leave whole for larger portions).",
@@ -3574,7 +3574,7 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "breakfast sausage patties", qty: 8, unit: "count", category: "Meat & Seafood" },
-      { name: "refrigerated biscuits", qty: 8, unit: "count", category: "Pantry" },
+      { name: "refrigerated biscuits", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3588,7 +3588,7 @@ const RECIPES = [
     proteins: ["pork"], tags: ["breakfastForDinner", "kidFriendly"], allergens: ["egg", "dairy", "gluten"],
     timeMinutes: 45,
     ingredients: [
-      { name: "pie crust", qty: 1, unit: "count", category: "Pantry" },
+      { name: "pie crust", qty: 1, unit: "count", category: "Bread & Bakery" },
       { name: "deli ham", qty: 8, unit: "oz", category: "Meat & Seafood" },
       { name: "eggs", qty: 5, unit: "count", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
@@ -3609,8 +3609,8 @@ const RECIPES = [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "mushrooms", qty: 1, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "chicken broth", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
       { name: "milk", qty: 0.25, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3626,11 +3626,11 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "beef stew meat", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "barley", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "barley", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "beef broth", qty: 4, unit: "cup", category: "Pantry" }
+      { name: "beef broth", qty: 4, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Brown the beef stew meat in a large pot.",
@@ -3645,10 +3645,10 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "frozen peas and carrots", qty: 1.5, unit: "cup", category: "Frozen" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "flour", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" },
       { name: "milk", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -3666,8 +3666,8 @@ const RECIPES = [
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "bacon", qty: 8, unit: "oz", category: "Meat & Seafood" },
-      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "brown sugar", qty: 2, unit: "tbsp", category: "Baking" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Cut the chicken breast into strips and season with garlic powder.",
@@ -3682,9 +3682,9 @@ const RECIPES = [
     timeMinutes: 60,
     ingredients: [
       { name: "country style pork ribs", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "bbq sauce", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "garlic powder", qty: 1, unit: "tsp", category: "Pantry" },
-      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "bbq sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "smoked paprika", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Season the ribs with garlic powder and smoked paprika and place in a baking dish, covered tightly with foil.",
@@ -3699,8 +3699,8 @@ const RECIPES = [
     ingredients: [
       { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
       { name: "ground beef", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
-      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -3717,7 +3717,7 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "sun-dried tomatoes", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "sun-dried tomatoes", qty: 0.5, unit: "cup", category: "Canned & Jarred" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
       { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
@@ -3737,10 +3737,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "gnocchi", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "gnocchi", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -3758,10 +3758,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "cheese tortellini", qty: 16, unit: "oz", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "cheese tortellini", qty: 16, unit: "oz", category: "Pasta & Grains" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "heavy cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -3776,8 +3776,8 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy", "egg"],
     timeMinutes: 20,
     ingredients: [
-      { name: "cheese ravioli", qty: 20, unit: "oz", category: "Pantry" },
-      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "cheese ravioli", qty: 20, unit: "oz", category: "Pasta & Grains" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "basil", qty: 1, unit: "bunch", category: "Produce" }
     ],
@@ -3793,7 +3793,7 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "zucchini", qty: 1, unit: "whole", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
@@ -3814,10 +3814,10 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "penne pasta", qty: 16, unit: "oz", category: "Pantry" },
-      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "penne pasta", qty: 16, unit: "oz", category: "Pasta & Grains" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "heavy cream", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
-      { name: "vodka", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "vodka", qty: 0.25, unit: "cup", category: "Beverages" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -3837,9 +3837,9 @@ const RECIPES = [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "mushrooms", qty: 2, unit: "cup", category: "Produce" },
-      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Season the chicken thighs and brown them in a deep skillet; remove.",
@@ -3854,12 +3854,12 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["onepot", "vegetarian", "leftovers"], allergens: ["gluten"],
     timeMinutes: 35,
     ingredients: [
-      { name: "cannellini beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "cannellini beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pasta & Grains" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "celery", qty: 1, unit: "cup", category: "Produce" },
-      { name: "vegetable broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "vegetable broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -3874,9 +3874,9 @@ const RECIPES = [
     proteins: ["pork"], tags: ["kidFriendly", "leftovers"], allergens: ["gluten", "dairy"],
     timeMinutes: 45,
     ingredients: [
-      { name: "rigatoni", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "rigatoni", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -3892,8 +3892,8 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" },
-      { name: "marinara sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "pita bread", qty: 4, unit: "count", category: "Bread & Bakery" },
+      { name: "marinara sauce", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "basil", qty: 1, unit: "bunch", category: "Produce" },
       { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
@@ -3911,8 +3911,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "pesto", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "pesto", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" }
     ],
@@ -3928,7 +3928,7 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "gnocchi", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "gnocchi", qty: 16, unit: "oz", category: "Pasta & Grains" },
       { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
       { name: "spinach", qty: 3, unit: "cup", category: "Produce" },
@@ -3947,11 +3947,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef stew meat", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "canned crushed tomatoes", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 3, unit: "cup", category: "Canned & Jarred" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" }
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Put the beef, crushed tomatoes, diced carrots, onion, and garlic in the slow cooker.",
@@ -3970,7 +3970,7 @@ const RECIPES = [
       { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" }
     ],
     instructions: [
       "Cook the spaghetti according to package directions and drain.",
@@ -3986,9 +3986,9 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
-      { name: "chicken broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Sauces & Condiments" },
+      { name: "chicken broth", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -4007,7 +4007,7 @@ const RECIPES = [
       { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
       { name: "spinach", qty: 3, unit: "cup", category: "Produce" },
       { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" }
     ],
@@ -4026,10 +4026,10 @@ const RECIPES = [
       { name: "lettuce", qty: 4, unit: "cup", category: "Produce" },
       { name: "salami", qty: 6, unit: "oz", category: "Meat & Seafood" },
       { name: "fresh mozzarella", qty: 8, unit: "oz", category: "Dairy & Eggs" },
-      { name: "olives", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "olives", qty: 0.5, unit: "cup", category: "Canned & Jarred" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
       { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
-      { name: "italian dressing", qty: 0.5, unit: "cup", category: "Pantry" }
+      { name: "italian dressing", qty: 0.5, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Chop the lettuce, tomato, and cucumber into a big bowl.",
@@ -4044,8 +4044,8 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "cannellini beans", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "cannellini beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
       { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
       { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
@@ -4062,7 +4062,7 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
     timeMinutes: 20,
     ingredients: [
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
       { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lemon", qty: 1, unit: "whole", category: "Produce" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
@@ -4082,8 +4082,8 @@ const RECIPES = [
     ingredients: [
       { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
       { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "rice", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "rice", qty: 1, unit: "cup", category: "Pasta & Grains" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -4099,9 +4099,9 @@ const RECIPES = [
     proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy", "treeNut"],
     timeMinutes: 20,
     ingredients: [
-      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "bread", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "pesto", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "pesto", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" }
     ],
@@ -4118,9 +4118,9 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "lasagna noodles", qty: 8, unit: "oz", category: "Pantry" },
-      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "beef broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "lasagna noodles", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "beef broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
       { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
@@ -4138,8 +4138,8 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "orzo", qty: 8, unit: "oz", category: "Pantry" },
-      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "orzo", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Canned & Jarred" },
       { name: "parmesan", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
       { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
       { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
@@ -4157,10 +4157,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
-      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pasta & Grains" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "red pepper flakes", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "red pepper flakes", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
       { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" }
     ],
     instructions: [
@@ -4178,7 +4178,7 @@ const RECIPES = [
     ingredients: [
       { name: "eggplant", qty: 2, unit: "whole", category: "Produce" },
       { name: "ricotta cheese", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -4196,11 +4196,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "beef sirloin", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" },
       { name: "cilantro", qty: 1, unit: "bunch", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "cumin", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "cumin", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Season the steak with cumin, salt, and the juice of one lime.",
@@ -4215,11 +4215,11 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "pork shoulder", qty: 2.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" },
       { name: "cilantro", qty: 1, unit: "bunch", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "cumin", qty: 2, unit: "tsp", category: "Pantry" }
+      { name: "cumin", qty: 2, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Season the pork shoulder with cumin and salt and put it in the slow cooker with half the onion and the juice of one lime.",
@@ -4234,9 +4234,9 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
       { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -4252,10 +4252,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "tostada shells", qty: 8, unit: "count", category: "Pantry" },
-      { name: "refried beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "tostada shells", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "refried beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "queso fresco", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 2, unit: "cup", category: "Produce" }
     ],
@@ -4272,8 +4272,8 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "salsa verde", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
+      { name: "salsa verde", qty: 2, unit: "cup", category: "Sauces & Condiments" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Bread & Bakery" },
       { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
@@ -4294,8 +4294,8 @@ const RECIPES = [
       { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
       { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -4312,11 +4312,11 @@ const RECIPES = [
     ingredients: [
       { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Halve the peppers and scoop out the seeds.",
@@ -4331,11 +4331,11 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "beef broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "beef broth", qty: 3, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
     ],
     instructions: [
@@ -4351,10 +4351,10 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Canned & Jarred" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "corn", qty: 1, unit: "cup", category: "Produce" },
-      { name: "tortilla chips", qty: 4, unit: "oz", category: "Pantry" },
+      { name: "tortilla chips", qty: 4, unit: "oz", category: "Snacks & Chips" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
       { name: "avocado", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -4371,10 +4371,10 @@ const RECIPES = [
     timeMinutes: 25,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "salsa", qty: 1.5, unit: "cup", category: "Pantry" },
-      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "salsa", qty: 1.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" }
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Dice the chicken and cook it in a skillet until golden.",
@@ -4389,11 +4389,11 @@ const RECIPES = [
     timeMinutes: 45,
     ingredients: [
       { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
-      { name: "canned diced green chiles", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Bread & Bakery" },
+      { name: "canned diced green chiles", qty: 4, unit: "tbsp", category: "Canned & Jarred" },
       { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "chicken broth", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "chicken broth", qty: 1, unit: "cup", category: "Canned & Jarred" }
     ],
     instructions: [
       "Cook and shred the chicken; stir it with the sour cream, green chiles, and chicken broth.",
@@ -4408,10 +4408,10 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Brown the ground beef with the taco seasoning; drain.",
@@ -4426,9 +4426,9 @@ const RECIPES = [
     timeMinutes: 35,
     ingredients: [
       { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "pineapple chunks", qty: 1, unit: "cup", category: "Pantry" },
-      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "pineapple chunks", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Canned & Jarred" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
@@ -4446,10 +4446,10 @@ const RECIPES = [
     ingredients: [
       { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
       { name: "corn", qty: 2, unit: "cup", category: "Produce" },
-      { name: "mayo", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "queso fresco", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
-      { name: "chili powder", qty: 1, unit: "tsp", category: "Pantry" }
+      { name: "chili powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
     ],
     instructions: [
       "Season and grill or sear the chicken thighs until cooked through.",
@@ -4463,9 +4463,9 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 25,
     ingredients: [
-      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
-      { name: "refried beans", qty: 3, unit: "cup", category: "Pantry" },
-      { name: "enchilada sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "refried beans", qty: 3, unit: "cup", category: "Canned & Jarred" },
+      { name: "enchilada sauce", qty: 2, unit: "cup", category: "Sauces & Condiments" },
       { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 2, unit: "cup", category: "Produce" }
     ],
@@ -4482,10 +4482,10 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "beef stew meat", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "chipotle peppers in adobo", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "chipotle peppers in adobo", qty: 3, unit: "tbsp", category: "Canned & Jarred" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Bread & Bakery" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -4501,8 +4501,8 @@ const RECIPES = [
     timeMinutes: 20,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "tortilla chips", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "tortilla chips", qty: 8, unit: "oz", category: "Snacks & Chips" },
       { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 2, unit: "cup", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
@@ -4523,8 +4523,8 @@ const RECIPES = [
       { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
       { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
       { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
-      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" }
     ],
     instructions: [
       "Broil the poblanos until blistered, then peel, seed, and slice them open.",
@@ -4541,8 +4541,8 @@ const RECIPES = [
       { name: "chicken thighs", qty: 2, unit: "lb", category: "Meat & Seafood" },
       { name: "lime", qty: 2, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
-      { name: "cumin", qty: 2, unit: "tsp", category: "Pantry" },
-      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "cumin", qty: 2, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
     ],
     instructions: [
@@ -4558,11 +4558,11 @@ const RECIPES = [
     timeMinutes: 40,
     ingredients: [
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pasta & Grains" },
       { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
       { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
       { name: "potatoes", qty: 1, unit: "lb", category: "Produce" },
-      { name: "chicken broth", qty: 5, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 5, unit: "cup", category: "Canned & Jarred" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
     ],
     instructions: [
@@ -4577,8 +4577,8 @@ const RECIPES = [
     proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["dairy"],
     timeMinutes: 15,
     ingredients: [
-      { name: "tostada shells", qty: 8, unit: "count", category: "Pantry" },
-      { name: "refried beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "tostada shells", qty: 8, unit: "count", category: "Bread & Bakery" },
+      { name: "refried beans", qty: 2, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "lettuce", qty: 2, unit: "cup", category: "Produce" },
       { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
@@ -4597,11 +4597,11 @@ const RECIPES = [
     timeMinutes: 50,
     ingredients: [
       { name: "pork shoulder", qty: 2, unit: "lb", category: "Meat & Seafood" },
-      { name: "salsa verde", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "salsa verde", qty: 2, unit: "cup", category: "Sauces & Condiments" },
       { name: "potatoes", qty: 1, unit: "lb", category: "Produce" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" },
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" }
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" }
     ],
     instructions: [
       "Cube the pork and brown it in a pot with the diced onion.",
@@ -4616,8 +4616,8 @@ const RECIPES = [
     timeMinutes: 30,
     ingredients: [
       { name: "tilapia", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
-      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
-      { name: "olives", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "olives", qty: 0.5, unit: "cup", category: "Canned & Jarred" },
       { name: "onion", qty: 1, unit: "whole", category: "Produce" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
       { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" }
@@ -4634,12 +4634,12 @@ const RECIPES = [
     proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
     timeMinutes: 30,
     ingredients: [
-      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Bread & Bakery" },
       { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
-      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "refried beans", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "refried beans", qty: 1.5, unit: "cup", category: "Canned & Jarred" },
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Sauces & Condiments" },
       { name: "tomato", qty: 1, unit: "whole", category: "Produce" }
     ],
     instructions: [
@@ -4658,7 +4658,7 @@ const RECIPES = [
       { name: "lettuce", qty: 4, unit: "cup", category: "Produce" },
       { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
       { name: "avocado", qty: 1, unit: "whole", category: "Produce" },
-      { name: "taco seasoning", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "taco seasoning", qty: 1, unit: "tbsp", category: "Spices & Seasonings" },
       { name: "lime", qty: 1, unit: "whole", category: "Produce" },
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
     ],
@@ -4711,40 +4711,40 @@ const KEYWORD_MAP = {
 // correctly on the list.
 const SAUCE_LIBRARY = [
   { id: "sauce-lib-fry-sauce", name: "Fry Sauce", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "ketchup", qty: 0.25, unit: "cup", category: "Pantry" }],
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "ketchup", qty: 0.25, unit: "cup", category: "Sauces & Condiments" }],
     instructions: ["Stir the mayo and ketchup together until smooth."] },
   { id: "sauce-lib-spicy-mayo", name: "Spicy Mayo", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "sriracha", qty: 1.5, unit: "tbsp", category: "Pantry" }],
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "sriracha", qty: 1.5, unit: "tbsp", category: "Sauces & Condiments" }],
     instructions: ["Mix, taste, and add more sriracha if you dare."] },
   { id: "sauce-lib-ranch-dip", name: "Ranch Dip", ingredients: [
       { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "ranch seasoning mix", qty: 1, unit: "tbsp", category: "Pantry" }],
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "ranch seasoning mix", qty: 1, unit: "tbsp", category: "Spices & Seasonings" }],
     instructions: ["Stir everything together and chill 30 minutes for the flavor to wake up."] },
   { id: "sauce-lib-honey-mustard", name: "Honey Mustard", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "dijon mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "honey", qty: 2, unit: "tbsp", category: "Pantry" }],
     instructions: ["Whisk until smooth — great on chicken tenders and pretzels."] },
   { id: "sauce-lib-bbq-ranch", name: "BBQ Ranch", ingredients: [
-      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "bbq sauce", qty: 0.25, unit: "cup", category: "Pantry" }],
+      { name: "ranch dressing", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "bbq sauce", qty: 0.25, unit: "cup", category: "Sauces & Condiments" }],
     instructions: ["Stir together — dunk fries, chicken, or drizzle on a wrap."] },
   { id: "sauce-lib-garlic-butter", name: "Garlic Butter Sauce", ingredients: [
       { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
       { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
-      { name: "dried parsley", qty: 1, unit: "tsp", category: "Pantry" }],
+      { name: "dried parsley", qty: 1, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Melt the butter, stir in minced garlic and parsley, warm 1 minute."] },
   { id: "sauce-lib-cheese-sauce", name: "Cheese Sauce", ingredients: [
       { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
       { name: "butter", qty: 1, unit: "tbsp", category: "Dairy & Eggs" },
-      { name: "flour", qty: 1, unit: "tbsp", category: "Pantry" }],
+      { name: "flour", qty: 1, unit: "tbsp", category: "Baking" }],
     instructions: ["Melt butter, whisk in flour 1 minute.", "Whisk in milk until it thickens, then stir in the cheese off the heat."] },
   { id: "sauce-lib-buffalo", name: "Buffalo Sauce", ingredients: [
-      { name: "hot sauce", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "hot sauce", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
       { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" }],
     instructions: ["Melt the butter into the hot sauce and whisk until glossy."] },
   { id: "sauce-lib-tzatziki", name: "Tzatziki", ingredients: [
@@ -4752,59 +4752,59 @@ const SAUCE_LIBRARY = [
       { name: "cucumber", qty: 0.5, unit: "whole", category: "Produce" },
       { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
       { name: "lemon juice", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "dried dill", qty: 1, unit: "tsp", category: "Pantry" }],
+      { name: "dried dill", qty: 1, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Grate and squeeze the cucumber dry, then stir everything together."] },
   { id: "sauce-lib-chipotle-crema", name: "Chipotle Crema", ingredients: [
       { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
-      { name: "chipotle peppers in adobo", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "chipotle peppers in adobo", qty: 1, unit: "tbsp", category: "Canned & Jarred" },
       { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" }],
     instructions: ["Blend or mash until smooth — killer on tacos and quesadillas."] },
   { id: "sauce-lib-sweet-sour", name: "Sweet & Sour Sauce", ingredients: [
-      { name: "ketchup", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "ketchup", qty: 0.33, unit: "cup", category: "Sauces & Condiments" },
       { name: "rice vinegar", qty: 0.25, unit: "cup", category: "Pantry" },
-      { name: "brown sugar", qty: 0.33, unit: "cup", category: "Pantry" },
-      { name: "soy sauce", qty: 1, unit: "tbsp", category: "Pantry" }],
+      { name: "brown sugar", qty: 0.33, unit: "cup", category: "Baking" },
+      { name: "soy sauce", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }],
     instructions: ["Simmer everything 3-4 minutes until it turns glossy."] },
   { id: "sauce-lib-teriyaki", name: "Teriyaki Glaze", ingredients: [
-      { name: "soy sauce", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "brown sugar", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "soy sauce", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 0.25, unit: "cup", category: "Baking" },
       { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
-      { name: "ground ginger", qty: 0.5, unit: "tsp", category: "Pantry" }],
+      { name: "ground ginger", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Simmer until it coats the back of a spoon, about 5 minutes."] },
   { id: "sauce-lib-cocktail", name: "Cocktail Sauce", ingredients: [
-      { name: "ketchup", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "horseradish", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "ketchup", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "horseradish", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "lemon juice", qty: 1, unit: "tsp", category: "Pantry" }],
     instructions: ["Stir together — add horseradish a little at a time to taste."] },
   { id: "sauce-lib-tartar", name: "Tartar Sauce", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "sweet pickle relish", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "sweet pickle relish", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "lemon juice", qty: 1, unit: "tsp", category: "Pantry" }],
     instructions: ["Mix and chill — better after 20 minutes in the fridge."] },
   { id: "sauce-lib-queso", name: "Queso Blanco", ingredients: [
       { name: "white american cheese", qty: 8, unit: "oz", category: "Dairy & Eggs" },
       { name: "milk", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "canned diced green chiles", qty: 2, unit: "tbsp", category: "Pantry" }],
+      { name: "canned diced green chiles", qty: 2, unit: "tbsp", category: "Canned & Jarred" }],
     instructions: ["Melt the cheese into the milk over low heat, then stir in the chiles."] },
   { id: "sauce-lib-comeback", name: "Comeback Sauce", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "ketchup", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "hot sauce", qty: 1, unit: "tsp", category: "Pantry" },
-      { name: "worcestershire sauce", qty: 0.5, unit: "tsp", category: "Pantry" },
-      { name: "garlic powder", qty: 0.5, unit: "tsp", category: "Pantry" }],
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "ketchup", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "hot sauce", qty: 1, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "worcestershire sauce", qty: 0.5, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "garlic powder", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Whisk everything together — good on absolutely everything."] },
   { id: "sauce-lib-burger-sauce", name: "Burger Sauce", ingredients: [
-      { name: "mayo", qty: 0.5, unit: "cup", category: "Pantry" },
-      { name: "french dressing", qty: 2, unit: "tbsp", category: "Pantry" },
-      { name: "sweet pickle relish", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "french dressing", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "sweet pickle relish", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
       { name: "white vinegar", qty: 0.5, unit: "tsp", category: "Pantry" },
-      { name: "onion powder", qty: 0.5, unit: "tsp", category: "Pantry" }],
+      { name: "onion powder", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Mix and let it sit 10 minutes — tastes like the drive-thru classic."] },
   { id: "sauce-lib-cajun-dip", name: "Cajun Dipping Sauce", ingredients: [
       { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
-      { name: "mayo", qty: 0.25, unit: "cup", category: "Pantry" },
-      { name: "spicy cajun mustard", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "cajun seasoning", qty: 1, unit: "tsp", category: "Pantry" }],
+      { name: "mayo", qty: 0.25, unit: "cup", category: "Sauces & Condiments" },
+      { name: "spicy cajun mustard", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "cajun seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Stir together — the longer it chills, the better it gets."] },
   { id: "sauce-lib-garlic-parm", name: "Garlic Parmesan Sauce", ingredients: [
       { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
@@ -4813,18 +4813,18 @@ const SAUCE_LIBRARY = [
     instructions: ["Melt butter with minced garlic, stir in the parmesan off the heat."] },
   { id: "sauce-lib-honey-sriracha", name: "Honey Sriracha", ingredients: [
       { name: "honey", qty: 0.25, unit: "cup", category: "Pantry" },
-      { name: "sriracha", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "soy sauce", qty: 1, unit: "tsp", category: "Pantry" }],
+      { name: "sriracha", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "soy sauce", qty: 1, unit: "tsp", category: "Sauces & Condiments" }],
     instructions: ["Warm gently and stir — sweet heat for wings, shrimp, or rice bowls."] },
   { id: "sauce-lib-marinara-dip", name: "Marinara Dip", ingredients: [
-      { name: "canned crushed tomatoes", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 1, unit: "cup", category: "Canned & Jarred" },
       { name: "garlic", qty: 1, unit: "clove", category: "Produce" },
-      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "italian seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
       { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }],
     instructions: ["Simmer everything 10 minutes — mozzarella sticks love it."] },
   { id: "sauce-lib-guacamole", name: "Guacamole", ingredients: [
       { name: "avocados", qty: 2, unit: "whole", category: "Produce" },
       { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" },
-      { name: "garlic salt", qty: 0.5, unit: "tsp", category: "Pantry" }],
+      { name: "garlic salt", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
     instructions: ["Mash the avocados with lime juice and garlic salt — chunky or smooth, your call."] }
 ];

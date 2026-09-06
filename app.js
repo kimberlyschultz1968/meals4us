@@ -7,7 +7,7 @@
 
 const STORAGE_KEY = "meals4us_state_v2"; // bumped to auto-discard old corrupted saves
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
+const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bread & Bakery", "Pasta & Grains", "Canned & Jarred", "Sauces & Condiments", "Spices & Seasonings", "Baking", "Snacks & Chips", "Beverages", "Frozen", "Pantry", "Other"];
 
 // ---------- Real calendar dates for each week ----------
 // state.weekPlan is anchored to state.weekStartDate (the Sunday it starts
@@ -342,7 +342,7 @@ function defaultState() {
     recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
     heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
     staples: [             // recurring items added to every week's grocery list automatically
-      { id: "coffee", name: "coffee", qty: "", unit: "", category: "Pantry" },
+      { id: "coffee", name: "coffee", qty: "", unit: "", category: "Beverages" },
       { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
       { id: "bread", name: "bread", qty: "", unit: "", category: "Pantry" },
       { id: "lunch-meat", name: "lunch meat", qty: "", unit: "", category: "Meat & Seafood" },
@@ -1308,7 +1308,18 @@ function closeModal() {
 // ---------- Add Your Own Recipe ----------
 
 const UNIT_OPTIONS = ["count", "lb", "oz", "cup", "tbsp", "tsp", "clove", "whole", "bunch"];
-const CATEGORY_OPTIONS = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Pantry", "Frozen", "Other"];
+const CATEGORY_OPTIONS = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bread & Bakery", "Pasta & Grains", "Canned & Jarred", "Sauces & Condiments", "Spices & Seasonings", "Baking", "Snacks & Chips", "Beverages", "Frozen", "Pantry", "Other"];
+
+// Looks a typed ingredient name up in everything the app already knows —
+// the built-in recipes, her own recipes, and the sauce library — so a new
+// ingredient can inherit the right aisle and unit instead of guessing.
+function knownIngredientInfo(name) {
+  const n = String(name || "").trim().toLowerCase();
+  if (!n) return null;
+  const pools = [...allRecipes(), ...(typeof SAUCE_LIBRARY !== "undefined" ? SAUCE_LIBRARY : [])];
+  for (const r of pools) for (const i of (r.ingredients || [])) if (i.name === n) return i;
+  return null;
+}
 const TAG_OPTIONS = [
   ["quick", "Quick"], ["airfryer", "Air fryer"], ["slowcooker", "Slow cooker"], ["onepot", "One pot"],
   ["leftovers", "Leftovers"], ["kidFriendly", "Kid friendly"], ["spicy", "Spicy"], ["grill", "Grill"],
@@ -1501,7 +1512,11 @@ function openRecipeModal(recipe) {
         <input type="text" id="ing-add-input" class="add-word-input" placeholder="Add an ingredient..." />
         <button type="button" class="add-word-btn" id="ing-add-btn">+ Add</button>
       </div>
-      <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up.</p>` : "";
+      <div class="add-word-row" style="margin-top:6px">
+        <label for="ing-add-category" class="empty-note" style="margin:0;align-self:center;white-space:nowrap">Grocery aisle:</label>
+        <select id="ing-add-category" class="aisle-select" title="Which grocery-list section it lands in">${CATEGORY_OPTIONS.map(c => `<option value="${c}"${c === "Other" ? " selected" : ""}>${c}</option>`).join("")}</select>
+      </div>
+      <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up. Pick the aisle so it lands in the right spot on the grocery list (we'll guess it for foods we know).</p>` : "";
 
     // 🥣 Sauces — attached ones listed with their mixing steps; the picker
     // offers her own sauces first, then the built-in library.
@@ -1569,11 +1584,19 @@ function openRecipeModal(recipe) {
       const input = document.getElementById("ing-add-input");
       const name = input.value.trim().toLowerCase();
       if (!name) return;
+      const known = knownIngredientInfo(name);
+      const category = document.getElementById("ing-add-category").value;
       const c = custom();
       if (!c.added) c.added = [];
-      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: "count", category: "Other" });
+      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: known ? known.unit : "count", category });
       c.removed = (c.removed || []).filter(n => n !== name);
       afterEdit();
+    });
+    // As she types, pre-pick the aisle for any ingredient the app already
+    // knows — she can still change the dropdown before tapping + Add.
+    document.getElementById("ing-add-input").addEventListener("input", e => {
+      const known = knownIngredientInfo(e.target.value);
+      if (known) document.getElementById("ing-add-category").value = known.category;
     });
     document.getElementById("ing-add-input").addEventListener("keydown", e => {
       if (e.key === "Enter") { e.preventDefault(); document.getElementById("ing-add-btn").click(); }
@@ -2321,7 +2344,10 @@ function openSideEditor(dayIndex) {
       const input = document.getElementById("side-custom-input");
       const name = input.value.trim().toLowerCase();
       if (!name) return;
-      addIngredient({ name, qty: 1, unit: "count", category: "Other" });
+      const known = knownIngredientInfo(name);
+      addIngredient(known
+        ? { name, qty: 1, unit: known.unit, category: known.category }
+        : { name, qty: 1, unit: "count", category: "Other" });
     });
     document.getElementById("side-custom-input").addEventListener("keydown", e => {
       if (e.key === "Enter") { e.preventDefault(); document.getElementById("side-custom-add").click(); }

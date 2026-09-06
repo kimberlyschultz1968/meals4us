@@ -1422,3 +1422,16 @@ h1 {
 }
 .idea-hidden-link:hover { color: var(--red); }
 .idea-hidden-link:empty { display: none; }
+
+/* Aisle picker on the recipe editor's add-ingredient row */
+.aisle-select {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card);
+}
+.aisle-select:focus { outline: none; border-color: var(--red); }
