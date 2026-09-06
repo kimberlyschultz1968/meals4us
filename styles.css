@@ -300,6 +300,20 @@ h1 {
 }
 .week-lock-status.hidden { display: none; }
 
+.week-updated-banner {
+  background: rgba(242, 196, 51, 0.16);
+  border: 1px solid #F2C433;
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.week-updated-banner.hidden { display: none; }
+.week-updated-actions { display: flex; gap: 8px; margin-top: 8px; }
+.week-updated-actions .btn { flex: 1; padding: 8px 10px; font-size: 13px; }
+
 .show-password-toggle {
   display: flex;
   align-items: center;

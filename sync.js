@@ -109,7 +109,23 @@ async function connectCloud() {
     const cloudStamp = (cloudHas && data._syncStamp) || 0;
     const localStamp = state._syncStamp || 0;
     if (cloudHas && (!hasMeaningfulLocalData() || cloudStamp > localStamp)) {
-      // The cloud copy is newer (another device edited more recently) — adopt it.
+      // The cloud copy is newer (another device edited more recently) — adopt
+      // it. If it's about to replace a genuinely different week than the one
+      // sitting here, snapshot the one being replaced first — so a sync
+      // switch is never silent and never truly loses anything, whichever
+      // version turns out to be the one she actually wanted.
+      if (state.weekPlan && data.weekPlan) {
+        const localIds = JSON.stringify(state.weekPlan.map(d => d.recipeId));
+        const incomingIds = JSON.stringify(data.weekPlan.map(d => d.recipeId));
+        if (localIds !== incomingIds) {
+          data.weekPlanBackup = {
+            weekPlan: state.weekPlan,
+            weekPlan2: state.weekPlan2,
+            weekStartDate: state.weekStartDate,
+            savedAt: Date.now()
+          };
+        }
+      }
       applyingRemoteState = true;
       try {
         state = hydrateStateDefaults(data);
