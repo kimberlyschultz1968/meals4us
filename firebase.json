@@ -15,7 +15,10 @@
       "README.md",
       ".git/**",
       ".gitignore",
-      "node_modules/**"
+      "node_modules/**",
+      "android-package/**",
+      "gen-icons.js",
+      "gen-icons.html"
     ],
     "headers": [
       {
