@@ -4189,6 +4189,485 @@ const RECIPES = [
       "Spread each plank with the ricotta mixture, roll it up, and nestle seam-down in a baking dish with marinara underneath.",
       "Spoon more marinara over, top with mozzarella, and bake at 375F for 25 minutes, until bubbly."
     ]
+  },
+  {
+    id: "carne-asada-street-tacos", name: "Carne Asada Street Tacos", emoji: "🌮", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick", "grill"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "beef sirloin", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "lime", qty: 2, unit: "whole", category: "Produce" },
+      { name: "cilantro", qty: 1, unit: "bunch", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "cumin", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season the steak with cumin, salt, and the juice of one lime.",
+      "Grill or sear over high heat 3-4 minutes per side; rest, then dice small.",
+      "Warm the corn tortillas.",
+      "Fill with steak and top with diced onion, cilantro, and a squeeze of lime — street-cart style, no rice needed."
+    ]
+  },
+  {
+    id: "pork-carnitas-tacos", name: "Pork Carnitas Tacos", emoji: "🌮", cuisine: "mexican",
+    proteins: ["pork"], tags: ["slowcooker", "leftovers"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "pork shoulder", qty: 2.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "lime", qty: 2, unit: "whole", category: "Produce" },
+      { name: "cilantro", qty: 1, unit: "bunch", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "cumin", qty: 2, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season the pork shoulder with cumin and salt and put it in the slow cooker with half the onion and the juice of one lime.",
+      "Cook on low 8 hours, until it shreds easily.",
+      "Shred, then crisp the pork under the broiler 3-4 minutes.",
+      "Serve in warm tortillas with diced onion, cilantro, and lime."
+    ]
+  },
+  {
+    id: "chicken-quesadillas", name: "Chicken Quesadillas", emoji: "🫓", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
+      { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Dice and cook the chicken in a skillet until cooked through.",
+      "Layer tortillas with cheese and chicken, fold, and toast in the skillet until golden on both sides.",
+      "Cut into wedges.",
+      "Serve with salsa and sour cream for dunking."
+    ]
+  },
+  {
+    id: "chicken-tinga-tostadas", name: "Chicken Tinga Tostadas", emoji: "🌶", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["leftovers"], allergens: ["dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "tostada shells", qty: 8, unit: "count", category: "Pantry" },
+      { name: "refried beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "queso fresco", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 2, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Simmer the chicken in water 15 minutes, then shred.",
+      "Simmer the shredded chicken with the diced tomatoes and chopped chipotles 10 minutes.",
+      "Warm the refried beans and spread them on the tostada shells.",
+      "Pile on the chicken tinga and top with lettuce and queso fresco."
+    ]
+  },
+  {
+    id: "enchiladas-verdes", name: "Chicken Enchiladas Verdes", emoji: "🫔", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["leftovers"], allergens: ["dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "salsa verde", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
+      { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
+    ],
+    instructions: [
+      "Cook and shred the chicken.",
+      "Toss the chicken with half the salsa verde and a third of the cheese.",
+      "Fill and roll the tortillas, tuck them seam-down in a baking dish, and pour the rest of the salsa verde over.",
+      "Top with the remaining cheese and bake at 375F for 20 minutes.",
+      "Finish with sour cream and cilantro."
+    ]
+  },
+  {
+    id: "sheet-pan-shrimp-fajitas", name: "Sheet Pan Shrimp Fajitas", emoji: "🍤", cuisine: "mexican",
+    proteins: ["shrimp"], tags: ["quick"], allergens: ["gluten", "shellfish"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "lime", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Slice the peppers and onion and toss them with the shrimp and taco seasoning on a sheet pan.",
+      "Roast at 425F for 10-12 minutes, until the shrimp are pink.",
+      "Warm the tortillas.",
+      "Squeeze lime over the pan and serve fajita-style."
+    ]
+  },
+  {
+    id: "taco-stuffed-peppers", name: "Taco-Stuffed Peppers", emoji: "🫑", cuisine: "mexican",
+    proteins: ["beef"], tags: ["leftovers"], allergens: ["dairy"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "corn", qty: 1, unit: "cup", category: "Produce" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Halve the peppers and scoop out the seeds.",
+      "Brown the ground beef with the taco seasoning; stir in the beans, corn, and salsa.",
+      "Stuff the peppers, set them in a baking dish, and top with cheddar.",
+      "Bake at 375F for 25-30 minutes — all the taco flavor, no rice filler."
+    ]
+  },
+  {
+    id: "taco-soup", name: "Taco Soup", emoji: "🍲", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick", "onepot", "kidFriendly", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "black beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "corn", qty: 1, unit: "cup", category: "Produce" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "beef broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Brown the ground beef in a soup pot; drain.",
+      "Stir in the taco seasoning, beans, corn, diced tomatoes, and beef broth.",
+      "Simmer 15 minutes.",
+      "Ladle into bowls and top with cheddar — crushed tortilla chips on top if you have them."
+    ]
+  },
+  {
+    id: "chicken-tortilla-soup", name: "Chicken Tortilla Soup", emoji: "🥣", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["onepot", "leftovers"], allergens: [],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "corn", qty: 1, unit: "cup", category: "Produce" },
+      { name: "tortilla chips", qty: 4, unit: "oz", category: "Pantry" },
+      { name: "lime", qty: 1, unit: "whole", category: "Produce" },
+      { name: "avocado", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Simmer the chicken in the broth with the diced tomatoes 15 minutes; shred it right in the pot.",
+      "Add the corn and simmer 5 more minutes.",
+      "Squeeze in the lime.",
+      "Serve topped with crushed tortilla chips and diced avocado."
+    ]
+  },
+  {
+    id: "salsa-chicken-skillet", name: "Salsa Chicken Skillet", emoji: "🍗", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["quick", "onepot", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "salsa", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "black beans", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" }
+    ],
+    instructions: [
+      "Dice the chicken and cook it in a skillet until golden.",
+      "Stir in the salsa and beans and simmer 8-10 minutes.",
+      "Top with cheddar, cover, and let it melt.",
+      "Scoop into warm tortillas."
+    ]
+  },
+  {
+    id: "green-chile-chicken-casserole", name: "Green Chile Chicken Casserole", emoji: "🫔", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["kidFriendly", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "corn tortillas", qty: 10, unit: "count", category: "Pantry" },
+      { name: "canned diced green chiles", qty: 4, unit: "tbsp", category: "Pantry" },
+      { name: "sour cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "chicken broth", qty: 1, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Cook and shred the chicken; stir it with the sour cream, green chiles, and chicken broth.",
+      "Layer torn tortillas and the chicken mixture in a baking dish like a lasagna, ending with cheese on top.",
+      "Bake at 375F for 25 minutes, until bubbly around the edges.",
+      "Rest 5 minutes before serving."
+    ]
+  },
+  {
+    id: "beef-taquitos", name: "Air Fryer Beef Taquitos", emoji: "🌯", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick", "airfryer", "kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the ground beef with the taco seasoning; drain.",
+      "Warm the tortillas so they roll without cracking.",
+      "Fill each with beef and cheese, roll tight, and set seam-down in the air fryer.",
+      "Air fry at 400F for 7-8 minutes, until crisp; serve with salsa."
+    ]
+  },
+  {
+    id: "al-pastor-tacos", name: "Al Pastor-Style Pork Tacos", emoji: "🍍", cuisine: "mexican",
+    proteins: ["pork"], tags: ["grill"], allergens: [],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "pork chops", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "pineapple chunks", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "chipotle peppers in adobo", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Rub the pork with the chopped chipotles and a little pineapple juice; rest 10 minutes.",
+      "Grill or sear the pork 4-5 minutes per side, charring the pineapple chunks alongside; dice both.",
+      "Warm the tortillas.",
+      "Fill with pork and pineapple and top with diced onion and cilantro."
+    ]
+  },
+  {
+    id: "street-corn-chicken", name: "Street Corn Chicken", emoji: "🌽", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["quick", "grill"], allergens: ["dairy", "egg"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "corn", qty: 2, unit: "cup", category: "Produce" },
+      { name: "mayo", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "queso fresco", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lime", qty: 1, unit: "whole", category: "Produce" },
+      { name: "chili powder", qty: 1, unit: "tsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Season and grill or sear the chicken thighs until cooked through.",
+      "Char the corn in a hot skillet, then stir it with the mayo, lime juice, chili powder, and most of the queso fresco.",
+      "Spoon the street-corn mixture over the chicken.",
+      "Finish with the rest of the cheese."
+    ]
+  },
+  {
+    id: "smothered-bean-burritos", name: "Smothered Bean & Cheese Burritos", emoji: "🌯", cuisine: "mexican",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "flour tortillas", qty: 6, unit: "count", category: "Pantry" },
+      { name: "refried beans", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "enchilada sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 2, unit: "cup", category: "Produce" }
+    ],
+    instructions: [
+      "Warm the refried beans and roll them into the tortillas with a third of the cheese.",
+      "Set the burritos seam-down in a baking dish and pour the enchilada sauce over.",
+      "Top with the rest of the cheese and bake at 400F for 12-15 minutes.",
+      "Serve on shredded lettuce."
+    ]
+  },
+  {
+    id: "barbacoa-tacos", name: "Slow Cooker Barbacoa Tacos", emoji: "🌮", cuisine: "mexican",
+    proteins: ["beef"], tags: ["slowcooker", "leftovers"], allergens: [],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "beef stew meat", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "chipotle peppers in adobo", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "lime", qty: 2, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
+      { name: "corn tortillas", qty: 12, unit: "count", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Put the beef, chopped chipotles, garlic, half the onion, and the juice of one lime in the slow cooker.",
+      "Cook on low 8 hours, until it shreds easily.",
+      "Shred the beef in its juices.",
+      "Serve in warm tortillas with diced onion and lime."
+    ]
+  },
+  {
+    id: "walking-tacos", name: "Walking Tacos", emoji: "🥡", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "tortilla chips", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 2, unit: "cup", category: "Produce" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Brown the ground beef with the taco seasoning.",
+      "Pile tortilla chips into bowls (or single-serve chip bags for the full walking-taco experience).",
+      "Spoon the taco meat over the chips.",
+      "Let everyone top their own with cheese, lettuce, and sour cream."
+    ]
+  },
+  {
+    id: "chile-relleno-casserole", name: "Chile Relleno Casserole", emoji: "🌶", cuisine: "mexican",
+    proteins: ["vegetarian"], tags: ["vegetarian"], allergens: ["dairy", "egg", "gluten"],
+    timeMinutes: 50,
+    ingredients: [
+      { name: "poblano peppers", qty: 4, unit: "whole", category: "Produce" },
+      { name: "eggs", qty: 6, unit: "count", category: "Dairy & Eggs" },
+      { name: "milk", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded monterey jack", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Broil the poblanos until blistered, then peel, seed, and slice them open.",
+      "Layer the peppers and cheese in a baking dish.",
+      "Whisk the eggs, milk, and flour and pour it over.",
+      "Bake at 375F for 30-35 minutes, until puffed and set; serve with salsa."
+    ]
+  },
+  {
+    id: "pollo-asado", name: "Pollo Asado", emoji: "🔥", cuisine: "mexican",
+    proteins: ["chicken"], tags: ["quick", "grill"], allergens: [],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken thighs", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "lime", qty: 2, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
+      { name: "cumin", qty: 2, unit: "tsp", category: "Pantry" },
+      { name: "corn tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
+    ],
+    instructions: [
+      "Rub the chicken with the garlic, cumin, salt, and the juice of both limes; rest 10 minutes.",
+      "Grill or sear 6-7 minutes per side, until charred and cooked through.",
+      "Rest, then slice.",
+      "Serve with warm tortillas and cilantro."
+    ]
+  },
+  {
+    id: "albondigas-soup", name: "Albondigas Meatball Soup", emoji: "🍲", cuisine: "mexican",
+    proteins: ["beef"], tags: ["onepot", "leftovers"], allergens: ["gluten", "egg"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "breadcrumbs", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "potatoes", qty: 1, unit: "lb", category: "Produce" },
+      { name: "chicken broth", qty: 5, unit: "cup", category: "Pantry" },
+      { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" }
+    ],
+    instructions: [
+      "Mix the ground beef, breadcrumbs, and egg and roll into small meatballs — breadcrumbs stand in for the usual rice.",
+      "Bring the broth to a simmer with the diced carrots and potatoes.",
+      "Drop in the meatballs and simmer 15-18 minutes, until cooked through.",
+      "Finish with chopped cilantro."
+    ]
+  },
+  {
+    id: "bean-cheese-tostadas", name: "Bean & Cheese Tostadas", emoji: "🫘", cuisine: "mexican",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["dairy"],
+    timeMinutes: 15,
+    ingredients: [
+      { name: "tostada shells", qty: 8, unit: "count", category: "Pantry" },
+      { name: "refried beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lettuce", qty: 2, unit: "cup", category: "Produce" },
+      { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Warm the refried beans and spread them on the tostada shells.",
+      "Top with cheddar and pop under the broiler 1-2 minutes to melt.",
+      "Pile on lettuce, diced tomato, and a dollop of sour cream.",
+      "Dinner in 15 minutes, and everyone builds their own."
+    ]
+  },
+  {
+    id: "pork-chile-verde", name: "Pork Chile Verde", emoji: "🍲", cuisine: "mexican",
+    proteins: ["pork"], tags: ["leftovers", "onepot"], allergens: ["gluten"],
+    timeMinutes: 50,
+    ingredients: [
+      { name: "pork shoulder", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "salsa verde", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "potatoes", qty: 1, unit: "lb", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "cilantro", qty: 0.5, unit: "bunch", category: "Produce" },
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" }
+    ],
+    instructions: [
+      "Cube the pork and brown it in a pot with the diced onion.",
+      "Pour in the salsa verde and a splash of water, cover, and simmer 30 minutes.",
+      "Add the diced potatoes and simmer 15 more minutes, until tender.",
+      "Finish with cilantro and serve with warm tortillas for scooping."
+    ]
+  },
+  {
+    id: "fish-veracruz", name: "Fish Veracruz", emoji: "🐟", cuisine: "mexican",
+    proteins: ["fish"], tags: ["quick"], allergens: ["fish"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "tilapia", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "olives", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "lime", qty: 1, unit: "whole", category: "Produce" },
+      { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Saute the sliced onion in olive oil until soft.",
+      "Add the diced tomatoes and olives and simmer 5 minutes.",
+      "Nestle the tilapia into the sauce, cover, and cook 8-10 minutes, until it flakes.",
+      "Finish with lime — bright, light, and no rice required."
+    ]
+  },
+  {
+    id: "mexican-pizza", name: "Mexican Pizza", emoji: "🍕", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "flour tortillas", qty: 8, unit: "count", category: "Pantry" },
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "taco seasoning", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "refried beans", qty: 1.5, unit: "cup", category: "Pantry" },
+      { name: "shredded cheddar", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "salsa", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "tomato", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the ground beef with the taco seasoning.",
+      "Bake the tortillas at 400F for 3-4 minutes per side, until crisp.",
+      "Stack: tortilla, refried beans, taco meat, another tortilla, then salsa and cheese on top.",
+      "Bake 5 more minutes to melt; finish with diced tomato and cut into wedges."
+    ]
+  },
+  {
+    id: "fajita-steak-salad", name: "Fajita Steak Salad", emoji: "🥗", cuisine: "mexican",
+    proteins: ["beef"], tags: ["quick"], allergens: ["dairy"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "beef sirloin", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "lettuce", qty: 4, unit: "cup", category: "Produce" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "avocado", qty: 1, unit: "whole", category: "Produce" },
+      { name: "taco seasoning", qty: 1, unit: "tbsp", category: "Pantry" },
+      { name: "lime", qty: 1, unit: "whole", category: "Produce" },
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Season the steak with the taco seasoning and sear 3-4 minutes per side; rest and slice.",
+      "Sear the sliced bell pepper in the same pan.",
+      "Pile the lettuce with steak, peppers, and diced avocado.",
+      "Whisk the sour cream with lime juice for a quick dressing and drizzle over."
+    ]
   }
 ];
 
