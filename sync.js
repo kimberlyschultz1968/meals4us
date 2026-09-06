@@ -315,7 +315,8 @@ document.getElementById("btn-sign-up").addEventListener("click", async () => {
   if (password.length < 6) { showAuthMessage("Password needs to be at least 6 characters."); return; }
   clearAuthMessage();
   try {
-    const r = await api("/meals4us/auth/signup", { method: "POST", body: JSON.stringify({ email, password, source: SIGNUP_SOURCE }) });
+    const website = (document.getElementById("auth-website") || {}).value || "";
+    const r = await api("/meals4us/auth/signup", { method: "POST", body: JSON.stringify({ email, password, source: SIGNUP_SOURCE, website }) });
     onSignedIn({ token: r.token, email: r.email });
   } catch (e) { showAuthMessage(e.message); }
 });
