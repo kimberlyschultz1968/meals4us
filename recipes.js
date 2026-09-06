@@ -3710,6 +3710,485 @@ const RECIPES = [
       "Stuff the mixture into the peppers and set them in a baking dish.",
       "Top with cheddar and bake at 375F for 25-30 minutes, until the peppers are tender and the cheese is melted."
     ]
+  },
+  {
+    id: "creamy-tuscan-chicken", name: "Creamy Tuscan Chicken", emoji: "🍅", cuisine: "italian",
+    proteins: ["chicken"], tags: ["quick", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "sun-dried tomatoes", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Season the chicken and sear in a skillet 5-6 minutes per side until golden and cooked through; remove.",
+      "In the same pan, cook the garlic and sun-dried tomatoes 1-2 minutes.",
+      "Pour in the heavy cream, stir in the parmesan, and simmer until it thickens slightly.",
+      "Add the spinach and stir until wilted.",
+      "Return the chicken to the pan, spoon the sauce over, and serve."
+    ]
+  },
+  {
+    id: "chicken-gnocchi-soup", name: "Chicken Gnocchi Soup", emoji: "🥣", cuisine: "italian",
+    proteins: ["chicken"], tags: ["onepot", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "gnocchi", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Dice the chicken, onion, and carrots.",
+      "Cook the chicken in a soup pot until no longer pink, then add the onion and carrots and cook 4-5 minutes.",
+      "Pour in the chicken broth and simmer 10 minutes.",
+      "Add the gnocchi and cook 3-4 minutes, until they float.",
+      "Stir in the heavy cream and spinach, warm through, and serve."
+    ]
+  },
+  {
+    id: "sausage-tortellini-soup", name: "Sausage Tortellini Soup", emoji: "🍲", cuisine: "italian",
+    proteins: ["pork"], tags: ["quick", "onepot"], allergens: ["gluten", "dairy", "egg"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "cheese tortellini", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "heavy cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Brown the italian sausage in a soup pot, breaking it up as it cooks; drain.",
+      "Add the diced tomatoes and chicken broth and bring to a simmer.",
+      "Add the tortellini and cook 5-7 minutes, until tender.",
+      "Stir in the heavy cream and spinach, warm through, and serve."
+    ]
+  },
+  {
+    id: "cheese-ravioli-marinara", name: "Cheese Ravioli with Marinara", emoji: "🥟", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy", "egg"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "cheese ravioli", qty: 20, unit: "oz", category: "Pantry" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "basil", qty: 1, unit: "bunch", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the ravioli according to package directions and drain.",
+      "Warm the marinara sauce in the same pot.",
+      "Gently toss the ravioli with the sauce.",
+      "Top with parmesan and torn basil and serve."
+    ]
+  },
+  {
+    id: "pasta-primavera", name: "Pasta Primavera", emoji: "🥦", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "zucchini", qty: 1, unit: "whole", category: "Produce" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "broccoli", qty: 2, unit: "cup", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "olive oil", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the penne according to package directions; save a cup of the pasta water and drain.",
+      "Slice the zucchini and bell pepper.",
+      "Saute the vegetables and garlic in olive oil 5-6 minutes, until crisp-tender.",
+      "Toss the pasta with the vegetables, a splash of pasta water, and the parmesan.",
+      "Season and serve."
+    ]
+  },
+  {
+    id: "penne-alla-vodka", name: "Penne alla Vodka", emoji: "🍝", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "penne pasta", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "heavy cream", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
+      { name: "vodka", qty: 0.25, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook the penne according to package directions and drain.",
+      "Saute the diced onion and garlic until soft, then add the vodka and simmer 2 minutes (the alcohol cooks off).",
+      "Stir in the crushed tomatoes and simmer 10 minutes.",
+      "Stir in the heavy cream and parmesan, then toss with the pasta and serve."
+    ]
+  },
+  {
+    id: "chicken-cacciatore", name: "Chicken Cacciatore", emoji: "🍗", cuisine: "italian",
+    proteins: ["chicken"], tags: ["leftovers"], allergens: ["gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "chicken thighs", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "bell pepper", qty: 1, unit: "whole", category: "Produce" },
+      { name: "mushrooms", qty: 2, unit: "cup", category: "Produce" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+    ],
+    instructions: [
+      "Season the chicken thighs and brown them in a deep skillet; remove.",
+      "Saute the sliced onion, bell pepper, and mushrooms 5 minutes.",
+      "Add the crushed tomatoes, return the chicken, cover, and simmer 25 minutes.",
+      "Meanwhile, cook the spaghetti according to package directions and drain.",
+      "Serve the chicken and sauce over the spaghetti."
+    ]
+  },
+  {
+    id: "pasta-e-fagioli", name: "Pasta e Fagioli", emoji: "🍲", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["onepot", "vegetarian", "leftovers"], allergens: ["gluten"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "cannellini beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "elbow macaroni", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "celery", qty: 1, unit: "cup", category: "Produce" },
+      { name: "vegetable broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Saute the diced onion, carrots, and celery in a soup pot 5 minutes.",
+      "Add the diced tomatoes, beans, and vegetable broth and bring to a simmer.",
+      "Add the macaroni and cook 8-10 minutes, until tender.",
+      "Season well and serve — even better the next day."
+    ]
+  },
+  {
+    id: "baked-rigatoni-sausage", name: "Baked Rigatoni with Sausage", emoji: "🧀", cuisine: "italian",
+    proteins: ["pork"], tags: ["kidFriendly", "leftovers"], allergens: ["gluten", "dairy"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "rigatoni", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook the rigatoni a couple of minutes short of the package directions and drain.",
+      "Brown the italian sausage, breaking it up as it cooks; drain and stir in the marinara.",
+      "Toss the pasta with the sauce and dollops of ricotta in a baking dish.",
+      "Top with mozzarella and bake at 400F for 15-20 minutes, until bubbly."
+    ]
+  },
+  {
+    id: "margherita-flatbreads", name: "Margherita Flatbreads", emoji: "🍕", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "kidFriendly", "vegetarian"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "pita bread", qty: 4, unit: "count", category: "Pantry" },
+      { name: "marinara sauce", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "basil", qty: 1, unit: "bunch", category: "Produce" },
+      { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brush the pitas with olive oil and set them on a baking sheet.",
+      "Spread each with marinara and top with mozzarella.",
+      "Bake at 425F for 8-10 minutes, until the cheese is melted and the edges are crisp.",
+      "Top with torn basil, slice, and serve — kids can build their own."
+    ]
+  },
+  {
+    id: "pesto-chicken-pasta", name: "Pesto Chicken Pasta", emoji: "🌿", cuisine: "italian",
+    proteins: ["chicken"], tags: ["quick"], allergens: ["gluten", "dairy", "treeNut"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "penne pasta", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "pesto", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "tomato", qty: 2, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the penne according to package directions; save a splash of pasta water and drain.",
+      "Dice and cook the chicken in a skillet until golden and cooked through.",
+      "Toss the pasta, chicken, pesto, and a splash of pasta water together.",
+      "Top with diced tomato and parmesan and serve."
+    ]
+  },
+  {
+    id: "garlic-butter-gnocchi", name: "Garlic Butter Gnocchi with Spinach", emoji: "🧄", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "gnocchi", qty: 16, unit: "oz", category: "Pantry" },
+      { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
+      { name: "spinach", qty: 3, unit: "cup", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Cook the gnocchi according to package directions and drain.",
+      "Melt the butter in a big skillet and cook the garlic 1 minute.",
+      "Add the gnocchi and let them get golden, 3-4 minutes.",
+      "Stir in the spinach until wilted, top with parmesan, and serve."
+    ]
+  },
+  {
+    id: "slow-cooker-beef-ragu", name: "Slow Cooker Beef Ragu", emoji: "🥩", cuisine: "italian",
+    proteins: ["beef"], tags: ["slowcooker", "leftovers"], allergens: ["gluten", "egg"],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "beef stew meat", qty: 2, unit: "lb", category: "Meat & Seafood" },
+      { name: "canned crushed tomatoes", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "carrots", qty: 1, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
+      { name: "egg noodles", qty: 12, unit: "oz", category: "Pantry" }
+    ],
+    instructions: [
+      "Put the beef, crushed tomatoes, diced carrots, onion, and garlic in the slow cooker.",
+      "Cook on low 7-8 hours, until the beef shreds easily.",
+      "Shred the beef right in the sauce and season well.",
+      "Cook the egg noodles according to package directions and serve the ragu on top."
+    ]
+  },
+  {
+    id: "chicken-florentine", name: "Chicken Florentine", emoji: "🥬", cuisine: "italian",
+    proteins: ["chicken"], tags: ["leftovers"], allergens: ["gluten", "dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken breast", qty: 1.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "spinach", qty: 3, unit: "cup", category: "Produce" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" }
+    ],
+    instructions: [
+      "Cook the spaghetti according to package directions and drain.",
+      "Season the chicken and cook in a skillet until golden and cooked through; remove.",
+      "Cook the garlic 1 minute, then add the heavy cream and parmesan and simmer until slightly thickened.",
+      "Stir in the spinach until wilted and return the chicken to the pan.",
+      "Serve over the spaghetti."
+    ]
+  },
+  {
+    id: "one-pot-sausage-spaghetti", name: "One-Pot Spaghetti with Sausage", emoji: "🍝", cuisine: "italian",
+    proteins: ["pork"], tags: ["quick", "onepot", "kidFriendly"], allergens: ["gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "chicken broth", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the italian sausage with the diced onion in a deep pot; drain.",
+      "Add the marinara, chicken broth, and spaghetti (break it in half so it fits).",
+      "Simmer 10-12 minutes, stirring often, until the pasta is tender and the sauce clings.",
+      "One pot, done — serve it up."
+    ]
+  },
+  {
+    id: "zuppa-toscana", name: "Zuppa Toscana", emoji: "🥣", cuisine: "italian",
+    proteins: ["pork"], tags: ["onepot", "leftovers"], allergens: ["dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "potatoes", qty: 1.5, unit: "lb", category: "Produce" },
+      { name: "spinach", qty: 3, unit: "cup", category: "Produce" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "chicken broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the italian sausage in a soup pot with the diced onion and garlic; drain.",
+      "Add the chicken broth and sliced potatoes and simmer 15 minutes, until tender.",
+      "Stir in the heavy cream and spinach and warm through.",
+      "Season and serve — the famous restaurant soup, at home."
+    ]
+  },
+  {
+    id: "antipasto-dinner-salad", name: "Antipasto Dinner Salad", emoji: "🥗", cuisine: "italian",
+    proteins: ["pork"], tags: ["quick"], allergens: ["dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "lettuce", qty: 4, unit: "cup", category: "Produce" },
+      { name: "salami", qty: 6, unit: "oz", category: "Meat & Seafood" },
+      { name: "fresh mozzarella", qty: 8, unit: "oz", category: "Dairy & Eggs" },
+      { name: "olives", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "tomato", qty: 2, unit: "whole", category: "Produce" },
+      { name: "cucumber", qty: 1, unit: "whole", category: "Produce" },
+      { name: "italian dressing", qty: 0.5, unit: "cup", category: "Pantry" }
+    ],
+    instructions: [
+      "Chop the lettuce, tomato, and cucumber into a big bowl.",
+      "Cut the salami and mozzarella into bite-size pieces and add them with the olives.",
+      "Toss everything with the italian dressing.",
+      "Serve with crusty bread — a no-oven dinner for hot nights."
+    ]
+  },
+  {
+    id: "tuscan-bean-sausage-skillet", name: "Tuscan Sausage & White Bean Skillet", emoji: "🍳", cuisine: "italian",
+    proteins: ["pork"], tags: ["quick", "onepot"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "cannellini beans", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "diced tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
+      { name: "olive oil", qty: 1, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Brown the italian sausage in a skillet with the olive oil; drain.",
+      "Add the garlic and cook 1 minute.",
+      "Stir in the beans and diced tomatoes and simmer 8-10 minutes.",
+      "Fold in the spinach until wilted and serve — naturally gluten-free."
+    ]
+  },
+  {
+    id: "lemon-ricotta-pasta", name: "Lemon Ricotta Pasta", emoji: "🍋", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["quick", "vegetarian"], allergens: ["gluten", "dairy"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "lemon", qty: 1, unit: "whole", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "basil", qty: 1, unit: "bunch", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the spaghetti according to package directions; save a cup of pasta water and drain.",
+      "Stir the ricotta, the lemon's zest and juice, and the parmesan into a sauce, loosening it with pasta water.",
+      "Toss with the hot pasta.",
+      "Top with torn basil and serve — bright, creamy, and 20 minutes flat."
+    ]
+  },
+  {
+    id: "italian-stuffed-peppers", name: "Italian Stuffed Peppers", emoji: "🫑", cuisine: "italian",
+    proteins: ["pork"], tags: ["leftovers"], allergens: ["dairy"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "bell pepper", qty: 4, unit: "whole", category: "Produce" },
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "rice", qty: 1, unit: "cup", category: "Pantry" },
+      { name: "marinara sauce", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Cook the rice; halve the peppers and scoop out the seeds.",
+      "Brown the italian sausage with the diced onion; drain.",
+      "Mix the sausage, rice, and half the marinara; stuff the peppers and set them in a baking dish.",
+      "Spoon the rest of the marinara over, top with mozzarella, and bake at 375F for 25 minutes."
+    ]
+  },
+  {
+    id: "chicken-pesto-paninis", name: "Chicken Pesto Paninis", emoji: "🥪", cuisine: "italian",
+    proteins: ["chicken"], tags: ["quick", "kidFriendly"], allergens: ["gluten", "dairy", "treeNut"],
+    timeMinutes: 20,
+    ingredients: [
+      { name: "bread", qty: 8, unit: "count", category: "Pantry" },
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "pesto", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "tomato", qty: 2, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Slice and cook the chicken in a skillet until cooked through.",
+      "Spread pesto on the bread and layer with chicken, tomato slices, and mozzarella.",
+      "Toast the sandwiches in a skillet (press with a spatula) until golden and melty on both sides.",
+      "Slice diagonally — it matters — and serve."
+    ]
+  },
+  {
+    id: "lasagna-soup", name: "Lasagna Soup", emoji: "🍲", cuisine: "italian",
+    proteins: ["beef"], tags: ["onepot", "kidFriendly", "leftovers"], allergens: ["gluten", "dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "ground beef", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "lasagna noodles", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "beef broth", qty: 4, unit: "cup", category: "Pantry" },
+      { name: "ricotta cheese", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "shredded mozzarella", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" }
+    ],
+    instructions: [
+      "Brown the ground beef with the diced onion in a soup pot; drain.",
+      "Add the crushed tomatoes and beef broth and bring to a simmer.",
+      "Break the lasagna noodles into pieces, add them, and cook 10-12 minutes.",
+      "Ladle into bowls and top each with a scoop of ricotta and a handful of mozzarella — all the lasagna, none of the layering."
+    ]
+  },
+  {
+    id: "creamy-parmesan-orzo-chicken", name: "Creamy Parmesan Orzo with Chicken", emoji: "🍚", cuisine: "italian",
+    proteins: ["chicken"], tags: ["quick", "onepot", "kidFriendly"], allergens: ["gluten", "dairy"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "orzo", qty: 8, unit: "oz", category: "Pantry" },
+      { name: "chicken broth", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "parmesan", qty: 0.75, unit: "cup", category: "Dairy & Eggs" },
+      { name: "spinach", qty: 2, unit: "cup", category: "Produce" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Dice the chicken and cook it in the butter until golden; remove.",
+      "Toast the orzo in the same pan 1-2 minutes.",
+      "Add the chicken broth and simmer 8-10 minutes, stirring, until the orzo is tender.",
+      "Stir in the parmesan, spinach, and chicken and serve — like risotto, without the fuss."
+    ]
+  },
+  {
+    id: "shrimp-fra-diavolo", name: "Shrimp Fra Diavolo", emoji: "🍤", cuisine: "italian",
+    proteins: ["shrimp"], tags: ["quick", "spicy"], allergens: ["gluten", "shellfish"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "shrimp", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "spaghetti", qty: 12, unit: "oz", category: "Pantry" },
+      { name: "canned crushed tomatoes", qty: 2, unit: "cup", category: "Pantry" },
+      { name: "garlic", qty: 4, unit: "clove", category: "Produce" },
+      { name: "red pepper flakes", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "olive oil", qty: 2, unit: "tbsp", category: "Pantry" }
+    ],
+    instructions: [
+      "Cook the spaghetti according to package directions and drain.",
+      "Cook the garlic and red pepper flakes in olive oil 1 minute.",
+      "Add the crushed tomatoes and simmer 10 minutes.",
+      "Add the shrimp and cook 3-4 minutes, until pink.",
+      "Toss with the spaghetti and serve — dial the pepper flakes up or down."
+    ]
+  },
+  {
+    id: "eggplant-rollatini", name: "Eggplant Rollatini", emoji: "🍆", cuisine: "italian",
+    proteins: ["vegetarian"], tags: ["vegetarian"], allergens: ["dairy", "egg"],
+    timeMinutes: 50,
+    ingredients: [
+      { name: "eggplant", qty: 2, unit: "whole", category: "Produce" },
+      { name: "ricotta cheese", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "marinara sauce", qty: 3, unit: "cup", category: "Pantry" },
+      { name: "shredded mozzarella", qty: 1.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "eggs", qty: 1, unit: "count", category: "Dairy & Eggs" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Slice the eggplant lengthwise into thin planks, roast at 400F for 10 minutes to soften.",
+      "Mix the ricotta, egg, and parmesan.",
+      "Spread each plank with the ricotta mixture, roll it up, and nestle seam-down in a baking dish with marinara underneath.",
+      "Spoon more marinara over, top with mozzarella, and bake at 375F for 25 minutes, until bubbly."
+    ]
   }
 ];
 
