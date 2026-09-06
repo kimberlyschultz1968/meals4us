@@ -2731,13 +2731,23 @@ document.getElementById("btn-edit-2").addEventListener("click", () => {
   showScreen(1);
 });
 
+// This is also where she lands every time she edits the Family page for
+// any reason (household size, notes, likes/dislikes) and taps Continue —
+// not just the first time. It used to regenerate the whole week from
+// scratch unconditionally, with nothing archived first: any trip back
+// through here silently destroyed a real, already-locked-in week. Now it
+// only builds a week the first time one doesn't exist yet; an existing
+// week and Week 2 are left exactly as they are (they'll naturally reflect
+// an updated profile next time a week actually rotates).
 document.getElementById("btn-confirm-2").addEventListener("click", () => {
-  state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
-  state.weekStartDate = currentWeekStartDate();
-  generateWeek2();
-  saveState();
-  renderWeek(state.weekPlan);
-  renderWeek2(state.weekPlan2);
+  if (!state.weekPlan) {
+    state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
+    state.weekStartDate = currentWeekStartDate();
+    generateWeek2();
+    saveState();
+    renderWeek(state.weekPlan);
+    renderWeek2(state.weekPlan2);
+  }
   showScreen(3);
 });
 
