@@ -368,6 +368,13 @@
   </div>
 </template>
 
+<template id="tpl-grocery-store">
+  <div class="grocery-store">
+    <h2 class="grocery-store-title"></h2>
+    <div class="grocery-store-categories"></div>
+  </div>
+</template>
+
 <template id="tpl-grocery-category">
   <div class="grocery-category">
     <h2 class="grocery-category-title"></h2>
@@ -380,6 +387,7 @@
     <input type="checkbox" class="grocery-check" />
     <span class="grocery-item-name"></span>
     <span class="grocery-item-qty"></span>
+    <button type="button" class="grocery-item-store" title="Tap to set which store this comes from"></button>
     <button type="button" class="grocery-remove" aria-label="Remove item">✕</button>
   </label>
 </template>

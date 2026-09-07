@@ -8,6 +8,9 @@
 const STORAGE_KEY = "meals4us_state_v2"; // bumped to auto-discard old corrupted saves
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const GROCERY_CATEGORY_ORDER = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bread & Bakery", "Pasta & Grains", "Canned & Jarred", "Sauces & Condiments", "Spices & Seasonings", "Baking", "Snacks & Chips", "Beverages", "Frozen", "Pantry", "Other"];
+// Starting list of stores for the grocery-list store picker — hers to add
+// to or trim from the moment she first tags an item (see state.groceryStores).
+const DEFAULT_STORES = ["Kroger", "Walmart", "Costco", "Target", "Publix", "Aldi", "Sam's Club"];
 
 // ---------- Real calendar dates for each week ----------
 // state.weekPlan is anchored to state.weekStartDate (the Sunday it starts
@@ -467,7 +470,8 @@ function defaultState() {
       { id: "lunch-meat", name: "lunch meat", qty: "", unit: "", category: "Meat & Seafood" },
       { id: "cheese-slices", name: "cheese", qty: "", unit: "", category: "Dairy & Eggs" }
     ],
-    groceryList: null,    // [{ id, name, qty, unit, category, checked, custom, staple }]
+    groceryList: null,    // [{ id, name, qty, unit, category, store, checked, custom, staple }]
+    groceryStores: DEFAULT_STORES.slice(), // her stores — grows as she types a new one into any store picker
     currentScreen: 1
   };
 }
@@ -517,6 +521,7 @@ function hydrateStateDefaults(s) {
   if (!s.lockPasswordHash) s.weekLocked = false; // can't be locked with nothing to unlock it
   if (s.weekPlanBackup === undefined) s.weekPlanBackup = null;
   if (!s.lockedWeekHistory) s.lockedWeekHistory = [];
+  if (!s.groceryStores || !s.groceryStores.length) s.groceryStores = DEFAULT_STORES.slice();
   // Backfill for any account that predates real dates — anchor it to the
   // Sunday of the week she's actually in right now, so it lines up with
   // whatever week she already has open, no matter when this first runs.
@@ -1432,6 +1437,38 @@ function closeModal() {
 const UNIT_OPTIONS = ["count", "lb", "oz", "cup", "tbsp", "tsp", "clove", "whole", "bunch"];
 const CATEGORY_OPTIONS = ["Produce", "Meat & Seafood", "Dairy & Eggs", "Bread & Bakery", "Pasta & Grains", "Canned & Jarred", "Sauces & Condiments", "Spices & Seasonings", "Baking", "Snacks & Chips", "Beverages", "Frozen", "Pantry", "Other"];
 
+// ---------- Which store an item comes from ----------
+// A single reusable <option> list for every store picker in the app —
+// her own stores plus "No store set" and a way to add a new one on the spot.
+function storeOptionsHtml(selected) {
+  const opts = [`<option value=""${!selected ? " selected" : ""}>No store set</option>`];
+  state.groceryStores.forEach(store => {
+    opts.push(`<option value="${escapeHtmlAttr(store)}"${store === selected ? " selected" : ""}>${store}</option>`);
+  });
+  opts.push(`<option value="__add_new__">+ Add a store...</option>`);
+  return opts.join("");
+}
+
+// Wires the shared "+ Add a store..." behavior onto any <select> built with
+// storeOptionsHtml — picking it prompts for a name, adds it to her list for
+// good (every store picker everywhere offers it from then on), and selects
+// it. Picking anything else just runs onPicked normally.
+function wireStoreSelect(selectEl, onPicked) {
+  selectEl.addEventListener("change", () => {
+    if (selectEl.value !== "__add_new__") { if (onPicked) onPicked(selectEl.value); return; }
+    const prev = selectEl.dataset.prevValue || "";
+    const name = (prompt("Add a store (e.g. Costco, Publix):") || "").trim();
+    if (!name) { selectEl.value = prev; return; }
+    const existing = state.groceryStores.find(s => s.toLowerCase() === name.toLowerCase());
+    if (!existing) { state.groceryStores.push(name); saveState(); }
+    const finalName = existing || name;
+    selectEl.innerHTML = storeOptionsHtml(finalName);
+    selectEl.dataset.prevValue = finalName;
+    if (onPicked) onPicked(finalName);
+  });
+  selectEl.dataset.prevValue = selectEl.value;
+}
+
 // Looks a typed ingredient name up in everything the app already knows —
 // the built-in recipes, her own recipes, and the sauce library — so a new
 // ingredient can inherit the right aisle and unit instead of guessing.
@@ -1638,6 +1675,10 @@ function openRecipeModal(recipe) {
         <label for="ing-add-category" class="empty-note" style="margin:0;align-self:center;white-space:nowrap">Grocery aisle:</label>
         <select id="ing-add-category" class="aisle-select" title="Which grocery-list section it lands in">${CATEGORY_OPTIONS.map(c => `<option value="${c}"${c === "Other" ? " selected" : ""}>${c}</option>`).join("")}</select>
       </div>
+      <div class="add-word-row" style="margin-top:6px">
+        <label for="ing-add-store" class="empty-note" style="margin:0;align-self:center;white-space:nowrap">Store:</label>
+        <select id="ing-add-store" class="aisle-select" title="Which store you buy this from">${storeOptionsHtml("")}</select>
+      </div>
       <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up. Pick the aisle so it lands in the right spot on the grocery list (we'll guess it for foods we know).</p>` : "";
 
     // 🥣 Sauces — attached ones listed with their mixing steps; the picker
@@ -1702,15 +1743,17 @@ function openRecipeModal(recipe) {
         afterEdit();
       });
     });
+    wireStoreSelect(document.getElementById("ing-add-store"));
     document.getElementById("ing-add-btn").addEventListener("click", () => {
       const input = document.getElementById("ing-add-input");
       const name = input.value.trim().toLowerCase();
       if (!name) return;
       const known = knownIngredientInfo(name);
       const category = document.getElementById("ing-add-category").value;
+      const store = document.getElementById("ing-add-store").value;
       const c = custom();
       if (!c.added) c.added = [];
-      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: known ? known.unit : "count", category });
+      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: known ? known.unit : "count", category, store });
       c.removed = (c.removed || []).filter(n => n !== name);
       afterEdit();
     });
@@ -2515,6 +2558,7 @@ function buildGroceryList(weekPlan, keepAtHome, staples = []) {
     qty: item.qty,
     unit: item.unit,
     category: GROCERY_CATEGORY_ORDER.includes(item.category) ? item.category : "Other",
+    store: item.store || "",
     checked: false,
     custom: false,
     staple: false
@@ -2533,6 +2577,7 @@ function buildGroceryList(weekPlan, keepAtHome, staples = []) {
       qty: s.qty || "",
       unit: s.unit || "",
       category: GROCERY_CATEGORY_ORDER.includes(s.category) ? s.category : "Other",
+      store: s.store || "",
       checked: false,
       custom: false,
       staple: true
@@ -2557,6 +2602,7 @@ function refreshGroceryList() {
   fresh.forEach(item => {
     const prev = oldByKey.get(`${item.name}|${item.unit}`);
     if (prev && prev.checked) item.checked = true;
+    if (prev && prev.store && !item.store) item.store = prev.store;
   });
   const freshKeys = new Set(fresh.map(i => `${i.name}|${i.unit}`));
   old.forEach(i => { if (i.custom && !freshKeys.has(`${i.name}|${i.unit}`)) fresh.push(i); });
@@ -2565,54 +2611,107 @@ function refreshGroceryList() {
   renderGrocery(state.groceryList);
 }
 
+// Store is the top-level grouping (so she can shop one store at a time),
+// aisle/category nested underneath exactly as before within each store.
+// Anything with no store picked yet lands in its own group at the end.
 function renderGrocery(list) {
   const container = document.getElementById("grocery-list");
   container.innerHTML = "";
+  const storeTpl = document.getElementById("tpl-grocery-store");
   const catTpl = document.getElementById("tpl-grocery-category");
   const itemTpl = document.getElementById("tpl-grocery-item");
 
-  GROCERY_CATEGORY_ORDER.forEach(category => {
-    const items = list.filter(i => i.category === category);
-    if (!items.length) return;
+  const byStore = new Map(); // "" = no store set yet
+  list.forEach(item => {
+    const key = item.store || "";
+    if (!byStore.has(key)) byStore.set(key, []);
+    byStore.get(key).push(item);
+  });
+  const storeOrder = [...byStore.keys()].filter(k => k).sort((a, b) => a.localeCompare(b));
+  if (byStore.has("")) storeOrder.push("");
 
-    const catNode = catTpl.content.cloneNode(true);
-    catNode.querySelector(".grocery-category-title").textContent = category;
-    const itemsEl = catNode.querySelector(".grocery-items");
+  storeOrder.forEach(storeName => {
+    const storeItems = byStore.get(storeName);
+    const storeNode = storeTpl.content.cloneNode(true);
+    storeNode.querySelector(".grocery-store-title").textContent = storeName || "No store set";
+    const catsEl = storeNode.querySelector(".grocery-store-categories");
 
-    items.forEach(item => {
-      const itemNode = itemTpl.content.cloneNode(true);
-      const label = itemNode.querySelector(".grocery-item");
-      const check = itemNode.querySelector(".grocery-check");
-      check.checked = item.checked;
-      label.classList.toggle("checked", item.checked);
-      itemNode.querySelector(".grocery-item-name").textContent = item.name + (item.staple ? " 🔁" : "");
-      itemNode.querySelector(".grocery-item-qty").textContent = `${formatQty(item.qty)} ${item.unit === "count" ? "" : item.unit}`.trim();
+    GROCERY_CATEGORY_ORDER.forEach(category => {
+      const items = storeItems.filter(i => i.category === category);
+      if (!items.length) return;
 
-      check.addEventListener("change", () => {
-        item.checked = check.checked;
+      const catNode = catTpl.content.cloneNode(true);
+      catNode.querySelector(".grocery-category-title").textContent = category;
+      const itemsEl = catNode.querySelector(".grocery-items");
+
+      items.forEach(item => {
+        const itemNode = itemTpl.content.cloneNode(true);
+        const label = itemNode.querySelector(".grocery-item");
+        const check = itemNode.querySelector(".grocery-check");
+        check.checked = item.checked;
         label.classList.toggle("checked", item.checked);
-        saveState();
+        itemNode.querySelector(".grocery-item-name").textContent = item.name + (item.staple ? " 🔁" : "");
+        itemNode.querySelector(".grocery-item-qty").textContent = `${formatQty(item.qty)} ${item.unit === "count" ? "" : item.unit}`.trim();
+
+        const storeBtn = itemNode.querySelector(".grocery-item-store");
+        storeBtn.textContent = item.store || "Set store";
+        storeBtn.classList.toggle("unset", !item.store);
+        storeBtn.addEventListener("click", () => openStorePickerFor(item));
+
+        check.addEventListener("change", () => {
+          item.checked = check.checked;
+          label.classList.toggle("checked", item.checked);
+          saveState();
+        });
+
+        itemNode.querySelector(".grocery-remove").addEventListener("click", () => {
+          state.groceryList = state.groceryList.filter(g => g.id !== item.id);
+          // A staple's ✕ means "stop buying this every week," not just "not this week."
+          if (item.staple && item.stapleId) {
+            state.staples = state.staples.filter(s => s.id !== item.stapleId);
+          }
+          saveState();
+          renderGrocery(state.groceryList);
+        });
+
+        itemsEl.appendChild(itemNode);
       });
 
-      itemNode.querySelector(".grocery-remove").addEventListener("click", () => {
-        state.groceryList = state.groceryList.filter(g => g.id !== item.id);
-        // A staple's ✕ means "stop buying this every week," not just "not this week."
-        if (item.staple && item.stapleId) {
-          state.staples = state.staples.filter(s => s.id !== item.stapleId);
-        }
-        saveState();
-        renderGrocery(state.groceryList);
-      });
-
-      itemsEl.appendChild(itemNode);
+      catsEl.appendChild(catNode);
     });
 
-    container.appendChild(catNode);
+    container.appendChild(storeNode);
   });
 
   if (!list.length) {
     container.innerHTML = `<p class="empty-note">Your grocery list is empty — add items below.</p>`;
   }
+}
+
+// Small modal so tapping an item's store tag can change it without leaving
+// the list — matches the picker pattern used everywhere else in the app.
+function openStorePickerFor(item) {
+  openModal(`
+    <div class="modal-body-title">Which store for "${titleCase(item.name)}"?</div>
+    <select id="item-store-select" class="aisle-select" style="width:100%;margin-top:10px">${storeOptionsHtml(item.store || "")}</select>
+    <div class="recipe-form-actions" style="margin-top:16px">
+      <button type="button" class="btn btn-secondary" id="item-store-cancel">Cancel</button>
+      <button type="button" class="btn btn-primary" id="item-store-save">Save</button>
+    </div>
+  `);
+  const select = document.getElementById("item-store-select");
+  wireStoreSelect(select);
+  document.getElementById("item-store-cancel").addEventListener("click", closeModal);
+  document.getElementById("item-store-save").addEventListener("click", () => {
+    item.store = select.value;
+    if (item.staple && item.stapleId) {
+      const staple = state.staples.find(s => s.id === item.stapleId);
+      if (staple) staple.store = item.store;
+    }
+    saveState();
+    closeModal();
+    renderGrocery(state.groceryList);
+  });
 }
 
 // ---------- Event wiring ----------
@@ -2907,18 +3006,32 @@ function escapeHtmlAttr(s) {
 }
 
 // Formatted for pasting into a shopping app's search or a notes app —
-// grouped by aisle/category, skips anything already checked off (already
-// have it), includes quantities where they're meaningful.
+// grouped by store then aisle/category (matching what's on screen), skips
+// anything already checked off (already have it), includes quantities
+// where they're meaningful.
 function buildGroceryListText() {
   const lines = ["🛒 Grocery List"];
-  GROCERY_CATEGORY_ORDER.forEach(category => {
-    const items = state.groceryList.filter(g => g.category === category && !g.checked);
-    if (!items.length) return;
-    lines.push("", category.toUpperCase());
-    items.forEach(item => {
-      const qty = formatQty(item.qty);
-      const amount = qty && item.unit !== "count" ? ` (${qty}${item.unit ? " " + item.unit : ""})` : (qty && Number(qty) > 1 ? ` (${qty})` : "");
-      lines.push(`- ${titleCase(item.name)}${amount}`);
+  const byStore = new Map();
+  state.groceryList.filter(g => !g.checked).forEach(item => {
+    const key = item.store || "";
+    if (!byStore.has(key)) byStore.set(key, []);
+    byStore.get(key).push(item);
+  });
+  const storeOrder = [...byStore.keys()].filter(k => k).sort((a, b) => a.localeCompare(b));
+  if (byStore.has("")) storeOrder.push("");
+
+  storeOrder.forEach(storeName => {
+    const storeItems = byStore.get(storeName);
+    lines.push("", "🏬 " + (storeName || "NO STORE SET"));
+    GROCERY_CATEGORY_ORDER.forEach(category => {
+      const items = storeItems.filter(g => g.category === category);
+      if (!items.length) return;
+      lines.push("", "  " + category.toUpperCase());
+      items.forEach(item => {
+        const qty = formatQty(item.qty);
+        const amount = qty && item.unit !== "count" ? ` (${qty}${item.unit ? " " + item.unit : ""})` : (qty && Number(qty) > 1 ? ` (${qty})` : "");
+        lines.push(`  - ${titleCase(item.name)}${amount}`);
+      });
     });
   });
   return lines.join("\n").trim();
@@ -2951,6 +3064,10 @@ function openAddGroceryItemForm() {
       <label>Category</label>
       <select id="gi-category">${CATEGORY_OPTIONS.map(c => `<option value="${c}">${c}</option>`).join("")}</select>
     </div>
+    <div class="recipe-form-field">
+      <label>Store (optional)</label>
+      <select id="gi-store">${storeOptionsHtml("")}</select>
+    </div>
     <label style="display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;color:var(--ink);margin:14px 0 4px;">
       <input type="checkbox" id="gi-weekly" style="width:19px;height:19px;accent-color:var(--red);" />
       Add this every week (a staple like coffee or bread), not just this once
@@ -2961,6 +3078,7 @@ function openAddGroceryItemForm() {
     </div>
   `);
   document.getElementById("gi-cancel").addEventListener("click", closeModal);
+  wireStoreSelect(document.getElementById("gi-store"));
   document.getElementById("gi-save").addEventListener("click", saveGroceryItem);
   document.getElementById("gi-name").addEventListener("keydown", e => {
     if (e.key === "Enter") { e.preventDefault(); saveGroceryItem(); }
@@ -2972,18 +3090,19 @@ function saveGroceryItem() {
   const name = document.getElementById("gi-name").value.trim().toLowerCase();
   if (!name) { alert("Type what you want to add first."); return; }
   const category = document.getElementById("gi-category").value;
+  const store = document.getElementById("gi-store").value;
   const weekly = document.getElementById("gi-weekly").checked;
 
   if (weekly) {
     const stapleId = `custom-${Date.now()}`;
-    state.staples.push({ id: stapleId, name, qty: "", unit: "", category });
+    state.staples.push({ id: stapleId, name, qty: "", unit: "", category, store });
     state.groceryList.push({
-      id: `staple-item-${stapleId}`, stapleId, name, qty: "", unit: "", category,
+      id: `staple-item-${stapleId}`, stapleId, name, qty: "", unit: "", category, store,
       checked: false, custom: true, staple: true
     });
   } else {
     state.groceryList.push({
-      id: `custom-${Date.now()}`, name, qty: "", unit: "", category,
+      id: `custom-${Date.now()}`, name, qty: "", unit: "", category, store,
       checked: false, custom: true, staple: false
     });
   }
