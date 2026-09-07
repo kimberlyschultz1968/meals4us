@@ -165,6 +165,15 @@
           </div>
         </div>
 
+        <div class="household-box" id="grocery-stores-box">
+          <p class="field-label" style="margin-top:0">Your grocery stores <span>(so the grocery list can sort itself by where you shop)</span></p>
+          <div class="tag-list store-tag-list" id="store-tag-list"></div>
+          <div class="add-word-row">
+            <input type="text" id="store-add-input" class="add-word-input" placeholder="Add a store (e.g. Costco)..." />
+            <button type="button" class="add-word-btn" id="store-add-btn">+ Add</button>
+          </div>
+        </div>
+
         <p class="field-label">Tap a section to open it — the next page shows everything we learned:</p>
         <div class="chip-row" id="chip-row" aria-label="Tap a section to open it, then tap words to add them">
           <button type="button" class="chip" id="familytext-banner"><span class="chip-emoji">💬</span>Tell us in your own words</button>
@@ -387,7 +396,7 @@
     <input type="checkbox" class="grocery-check" />
     <span class="grocery-item-name"></span>
     <span class="grocery-item-qty"></span>
-    <button type="button" class="grocery-item-store" title="Tap to set which store this comes from"></button>
+    <select class="grocery-item-store-select" title="Which store this comes from"></select>
     <button type="button" class="grocery-remove" aria-label="Remove item">✕</button>
   </label>
 </template>

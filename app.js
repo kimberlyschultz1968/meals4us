@@ -1460,7 +1460,7 @@ function wireStoreSelect(selectEl, onPicked) {
     const name = (prompt("Add a store (e.g. Costco, Publix):") || "").trim();
     if (!name) { selectEl.value = prev; return; }
     const existing = state.groceryStores.find(s => s.toLowerCase() === name.toLowerCase());
-    if (!existing) { state.groceryStores.push(name); saveState(); }
+    if (!existing) { state.groceryStores.push(name); saveState(); renderStoreTagList(); }
     const finalName = existing || name;
     selectEl.innerHTML = storeOptionsHtml(finalName);
     selectEl.dataset.prevValue = finalName;
@@ -1468,6 +1468,43 @@ function wireStoreSelect(selectEl, onPicked) {
   });
   selectEl.dataset.prevValue = selectEl.value;
 }
+
+// Screen 1's list of her own stores — add here, or on the spot from any
+// store picker (they land in the same place either way). Removing one only
+// takes it out of future pickers; anything already tagged with it keeps
+// showing that store's name on the grocery list.
+function renderStoreTagList() {
+  const box = document.getElementById("store-tag-list");
+  if (!box) return;
+  box.innerHTML = state.groceryStores.map(store => `
+    <span class="store-tag">${store}<button type="button" class="store-tag-remove" data-remove-store="${escapeHtmlAttr(store)}" aria-label="Remove ${escapeHtmlAttr(store)}" title="Remove ${escapeHtmlAttr(store)}">✕</button></span>
+  `).join("");
+  box.querySelectorAll("[data-remove-store]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.groceryStores = state.groceryStores.filter(s => s !== btn.dataset.removeStore);
+      saveState();
+      renderStoreTagList();
+      if (state.groceryList) renderGrocery(state.groceryList); // drop it from every picker's options too
+    });
+  });
+}
+
+document.getElementById("store-add-btn").addEventListener("click", () => {
+  const input = document.getElementById("store-add-input");
+  const name = input.value.trim();
+  if (!name) return;
+  if (!state.groceryStores.some(s => s.toLowerCase() === name.toLowerCase())) {
+    state.groceryStores.push(name);
+    saveState();
+    renderStoreTagList();
+    if (state.groceryList) renderGrocery(state.groceryList);
+  }
+  input.value = "";
+  input.focus();
+});
+document.getElementById("store-add-input").addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); document.getElementById("store-add-btn").click(); }
+});
 
 // Looks a typed ingredient name up in everything the app already knows —
 // the built-in recipes, her own recipes, and the sauce library — so a new
@@ -2653,10 +2690,18 @@ function renderGrocery(list) {
         itemNode.querySelector(".grocery-item-name").textContent = item.name + (item.staple ? " 🔁" : "");
         itemNode.querySelector(".grocery-item-qty").textContent = `${formatQty(item.qty)} ${item.unit === "count" ? "" : item.unit}`.trim();
 
-        const storeBtn = itemNode.querySelector(".grocery-item-store");
-        storeBtn.textContent = item.store || "Set store";
-        storeBtn.classList.toggle("unset", !item.store);
-        storeBtn.addEventListener("click", () => openStorePickerFor(item));
+        const storeSelect = itemNode.querySelector(".grocery-item-store-select");
+        storeSelect.innerHTML = storeOptionsHtml(item.store || "");
+        storeSelect.classList.toggle("unset", !item.store);
+        wireStoreSelect(storeSelect, newStore => {
+          item.store = newStore;
+          if (item.staple && item.stapleId) {
+            const staple = state.staples.find(s => s.id === item.stapleId);
+            if (staple) staple.store = item.store;
+          }
+          saveState();
+          renderGrocery(state.groceryList); // moves the item straight into its new store's group
+        });
 
         check.addEventListener("change", () => {
           item.checked = check.checked;
@@ -2686,32 +2731,6 @@ function renderGrocery(list) {
   if (!list.length) {
     container.innerHTML = `<p class="empty-note">Your grocery list is empty — add items below.</p>`;
   }
-}
-
-// Small modal so tapping an item's store tag can change it without leaving
-// the list — matches the picker pattern used everywhere else in the app.
-function openStorePickerFor(item) {
-  openModal(`
-    <div class="modal-body-title">Which store for "${titleCase(item.name)}"?</div>
-    <select id="item-store-select" class="aisle-select" style="width:100%;margin-top:10px">${storeOptionsHtml(item.store || "")}</select>
-    <div class="recipe-form-actions" style="margin-top:16px">
-      <button type="button" class="btn btn-secondary" id="item-store-cancel">Cancel</button>
-      <button type="button" class="btn btn-primary" id="item-store-save">Save</button>
-    </div>
-  `);
-  const select = document.getElementById("item-store-select");
-  wireStoreSelect(select);
-  document.getElementById("item-store-cancel").addEventListener("click", closeModal);
-  document.getElementById("item-store-save").addEventListener("click", () => {
-    item.store = select.value;
-    if (item.staple && item.stapleId) {
-      const staple = state.staples.find(s => s.id === item.stapleId);
-      if (staple) staple.store = item.store;
-    }
-    saveState();
-    closeModal();
-    renderGrocery(state.groceryList);
-  });
 }
 
 // ---------- Event wiring ----------
@@ -3186,6 +3205,7 @@ function boot() {
   document.getElementById("household-kids").value = state.household.kids;
   document.getElementById("no-repeat-weeks").value = state.noRepeatWeeks;
   document.getElementById("season").value = state.season;
+  renderStoreTagList();
 
   if (state.profile) renderLearned(state.profile);
   if (state.weekPlan) renderWeek(state.weekPlan);

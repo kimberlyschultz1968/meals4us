@@ -1018,26 +1018,54 @@ h1 {
   padding: 2px;
 }
 
-.grocery-item-store {
+.grocery-item-store-select {
   flex-shrink: 0;
   background: var(--card);
   color: var(--red);
   border: 1px solid var(--red);
   border-radius: 20px;
-  padding: 2px 9px;
+  padding: 2px 4px;
   font-size: 11px;
   font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  white-space: nowrap;
-  max-width: 90px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  max-width: 92px;
 }
 
-.grocery-item-store.unset {
+.grocery-item-store-select.unset {
   color: var(--ink-soft);
   border-color: var(--line);
 }
+
+.grocery-item-store-select:focus { outline: none; border-color: var(--red); }
+
+/* Screen 1 — grocery stores */
+.store-tag-list { margin-top: 6px; }
+
+.store-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #F7F4EF;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 6px 4px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.store-tag-remove {
+  border: none;
+  background: none;
+  color: var(--ink-soft);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px;
+  line-height: 1;
+}
+
+.store-tag-remove:hover { color: var(--red); }
 
 /* Modal (recipe view) */
 .modal-backdrop {
