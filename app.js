@@ -55,6 +55,123 @@ function updateLockStatusUI() {
   document.getElementById("week-lock-status").classList.toggle("hidden", !state.weekLocked);
 }
 
+// Shows/hides the "your week just updated from another device" banner —
+// present whenever a backup is sitting there waiting to be looked at.
+function updateWeekBackupBanner() {
+  const banner = document.getElementById("week-updated-banner");
+  if (banner) banner.classList.toggle("hidden", !state.weekPlanBackup);
+}
+
+document.getElementById("btn-see-backup").addEventListener("click", () => {
+  const b = state.weekPlanBackup;
+  if (!b) return;
+  const dayList = b.weekPlan.map(entry => {
+    if (entry.freeDay) return `<li><b>${entry.day}:</b> Free day</li>`;
+    const r = entry.recipeId ? recipeById(entry.recipeId) : null;
+    return `<li><b>${entry.day}:</b> ${r ? (entry.customName || r.name) : "—"}</li>`;
+  }).join("");
+  openModal(`
+    <div class="modal-body-title">Your previous week</div>
+    <div class="modal-body-meta">Saved automatically ${new Date(b.savedAt).toLocaleString()}, right before a newer save from another device replaced it with what's showing now.</div>
+    <ul style="line-height:1.8; padding-left:20px; margin:0 0 4px;">${dayList}</ul>
+    <div class="recipe-form-actions">
+      <button type="button" class="btn btn-secondary" id="backup-cancel">Close</button>
+      <button type="button" class="btn btn-primary" id="backup-restore">Restore This Instead</button>
+    </div>
+  `);
+  document.getElementById("backup-cancel").addEventListener("click", closeModal);
+  document.getElementById("backup-restore").addEventListener("click", () => {
+    state.weekPlan = b.weekPlan;
+    state.weekPlan2 = b.weekPlan2;
+    state.weekStartDate = b.weekStartDate;
+    state.weekPlanBackup = null;
+    refreshGroceryList();
+    saveState();
+    renderWeek(state.weekPlan);
+    if (state.weekPlan2) renderWeek2(state.weekPlan2);
+    closeModal();
+  });
+});
+
+document.getElementById("btn-dismiss-backup").addEventListener("click", () => {
+  state.weekPlanBackup = null;
+  saveState();
+  updateWeekBackupBanner();
+});
+
+// ---------- Locked-week history: a real, permanent record ----------
+// Called from lockItIn() (sync.js) right when a lock-in actually succeeds.
+// One entry per calendar week (matched by weekStartDate) — locking in the
+// same week again (after further edits) updates that week's entry instead
+// of piling up near-duplicates. Capped generously (2 years' worth) so the
+// record can't grow forever.
+const LOCKED_WEEK_HISTORY_CAP = 104;
+function recordLockedWeekSnapshot() {
+  if (!state.weekPlan || !state.weekStartDate) return;
+  const snapshot = {
+    weekStartDate: state.weekStartDate,
+    lockedAt: Date.now(),
+    weekPlan: JSON.parse(JSON.stringify(state.weekPlan))
+  };
+  const existingIndex = state.lockedWeekHistory.findIndex(w => w.weekStartDate === state.weekStartDate);
+  if (existingIndex >= 0) state.lockedWeekHistory[existingIndex] = snapshot;
+  else state.lockedWeekHistory.push(snapshot);
+  state.lockedWeekHistory.sort((a, b) => a.weekStartDate.localeCompare(b.weekStartDate));
+  while (state.lockedWeekHistory.length > LOCKED_WEEK_HISTORY_CAP) state.lockedWeekHistory.shift();
+}
+
+function openPastWeeksModal() {
+  const weeks = [...state.lockedWeekHistory].reverse(); // newest first
+  if (!weeks.length) {
+    openModal(`
+      <div class="modal-body-title">📜 Past Weeks</div>
+      <p class="empty-note">Nothing locked in yet — every week you Lock It In gets saved here for good.</p>
+      <div class="recipe-form-actions"><button type="button" class="btn btn-primary" id="pw-close">Close</button></div>
+    `);
+    document.getElementById("pw-close").addEventListener("click", closeModal);
+    return;
+  }
+  const rows = weeks.map((w, i) => {
+    const endDate = dateForDayIndex(w.weekStartDate, 6);
+    const rangeLabel = `${formatShortDate(dateForDayIndex(w.weekStartDate, 0))} – ${formatShortDate(endDate)}`;
+    const mealLines = w.weekPlan.map(entry => {
+      if (entry.freeDay) return `${entry.day}: Free day`;
+      const r = entry.recipeId ? recipeById(entry.recipeId) : null;
+      return `${entry.day}: ${r ? (entry.customName || r.name) : "—"}`;
+    }).join("<br>");
+    return `
+      <div class="past-week-card">
+        <div class="past-week-range">${rangeLabel}</div>
+        <div class="past-week-meals">${mealLines}</div>
+        <button type="button" class="btn btn-secondary btn-full" data-reuse-week="${i}">🔁 Use These Meals Again</button>
+      </div>
+    `;
+  }).join("");
+  openModal(`
+    <div class="modal-body-title">📜 Past Weeks</div>
+    <div class="modal-body-meta">Every week you've Locked In, saved for good — pick one to start your current week over with the same meals.</div>
+    ${rows}
+  `);
+  document.querySelectorAll("[data-reuse-week]").forEach(btn => {
+    btn.addEventListener("click", () => requireUnlockedWeek(() => {
+      const w = weeks[Number(btn.dataset.reuseWeek)];
+      if (!confirm(`Start this week over with the same meals from ${formatShortDate(dateForDayIndex(w.weekStartDate, 0))}? This replaces what's currently on your week.`)) return;
+      state.weekPlan = w.weekPlan.map(entry => ({
+        day: entry.day,
+        recipeId: entry.recipeId,
+        proteinOverride: entry.proteinOverride || null,
+        freeDay: !!entry.freeDay,
+        customName: entry.customName || null
+      }));
+      refreshGroceryList();
+      saveState();
+      renderWeek(state.weekPlan);
+      closeModal();
+    }));
+  });
+}
+document.getElementById("btn-past-weeks").addEventListener("click", openPastWeeksModal);
+
 // ---------- Password-locking a week once it's Locked In ----------
 // Client-side only — a safety rail against an accidental tap (hers, or
 // anything else clicking through the UI) changing a week she's already
@@ -325,6 +442,8 @@ function defaultState() {
     weekStartDate: null,  // "YYYY-MM-DD" — the Sunday state.weekPlan starts on; Week 2 is always the 7 days right after
     weekLocked: false,    // true once she's Locked In and set a password — blocks further changes to Week 1 until unlocked
     lockPasswordHash: null, // SHA-256 hex of her chosen password; never the password itself
+    weekPlanBackup: null, // { weekPlan, weekPlan2, weekStartDate, savedAt } — auto-saved right before a sync from another device replaces a genuinely different week, so a switch is never silent and never unrecoverable
+    lockedWeekHistory: [], // [{ weekStartDate, lockedAt, weekPlan }] — one entry per calendar week she's ever actually Locked In, oldest first; re-locking the same week updates its entry instead of duplicating it
     weekPlan2: null,      // [{ day, recipeId }] — Week 2, a look-ahead plan shown alongside the current week
     includeWeek2Groceries: false, // opt-in: whether "Create Grocery List" folds Week 2's ingredients in too
     feedback: {},         // { recipeId: score }
@@ -396,6 +515,8 @@ function hydrateStateDefaults(s) {
   if (typeof s.weekLocked !== "boolean") s.weekLocked = false;
   if (s.lockPasswordHash === undefined) s.lockPasswordHash = null;
   if (!s.lockPasswordHash) s.weekLocked = false; // can't be locked with nothing to unlock it
+  if (s.weekPlanBackup === undefined) s.weekPlanBackup = null;
+  if (!s.lockedWeekHistory) s.lockedWeekHistory = [];
   // Backfill for any account that predates real dates — anchor it to the
   // Sunday of the week she's actually in right now, so it lines up with
   // whatever week she already has open, no matter when this first runs.
@@ -1070,6 +1191,7 @@ function renderWeek(weekPlan) {
   });
 
   updateLockStatusUI();
+  updateWeekBackupBanner();
   renderNextWeekPreview();
 }
 
@@ -2732,13 +2854,23 @@ document.getElementById("btn-edit-2").addEventListener("click", () => {
   showScreen(1);
 });
 
+// This is also where she lands every time she edits the Family page for
+// any reason (household size, notes, likes/dislikes) and taps Continue —
+// not just the first time. It used to regenerate the whole week from
+// scratch unconditionally, with nothing archived first: any trip back
+// through here silently destroyed a real, already-locked-in week. Now it
+// only builds a week the first time one doesn't exist yet; an existing
+// week and Week 2 are left exactly as they are (they'll naturally reflect
+// an updated profile next time a week actually rotates).
 document.getElementById("btn-confirm-2").addEventListener("click", () => {
-  state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
-  state.weekStartDate = currentWeekStartDate();
-  generateWeek2();
-  saveState();
-  renderWeek(state.weekPlan);
-  renderWeek2(state.weekPlan2);
+  if (!state.weekPlan) {
+    state.weekPlan = pickWeek(state.profile, state.feedback, recentHistoryIds(), state.neverSuggest);
+    state.weekStartDate = currentWeekStartDate();
+    generateWeek2();
+    saveState();
+    renderWeek(state.weekPlan);
+    renderWeek2(state.weekPlan2);
+  }
   showScreen(3);
 });
 
