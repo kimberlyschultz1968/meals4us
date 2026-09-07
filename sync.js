@@ -192,6 +192,35 @@ function lockItIn() {
 }
 document.getElementById("btn-lock-in").addEventListener("click", lockItIn);
 
+// "Save List" — the grocery screen's own version of Lock It In: same visible
+// Saving…/✓ Saved pattern so checking things off, adjusting a quantity, or
+// setting a store is never just trusted to a silent background sync. Unlike
+// Lock It In this never locks anything or takes a snapshot — the list is
+// meant to keep changing all the way through the store, not get frozen.
+function saveGroceryList() {
+  const btn = document.getElementById("btn-save-grocery");
+  if (!isSignedIn()) {
+    btn.textContent = "⚠️ Not signed in";
+    setTimeout(() => { btn.textContent = "Save List"; }, 2500);
+    return;
+  }
+  clearTimeout(cloudSaveTimer);
+  stampState();
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+  api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
+    .then(() => { btn.textContent = "✓ Saved!"; })
+    .catch(err => {
+      console.error("Meals4Us: Save List failed", err);
+      btn.textContent = "⚠️ Couldn't save — tap to retry";
+    })
+    .finally(() => {
+      btn.disabled = false;
+      setTimeout(() => { btn.textContent = "Save List"; }, 3500);
+    });
+}
+document.getElementById("btn-save-grocery").addEventListener("click", saveGroceryList);
+
 // ---------- Billing: 7-day free trial, then $2.99/mo ----------
 // The trial clock is the account's own creation date (from the server, not the
 // browser). Once it's over, her plan (kept current via /meals4us/me — checked at

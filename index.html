@@ -309,9 +309,10 @@
 
         <div class="grocery-list" id="grocery-list"></div>
 
-        <div class="screen-footer-split" style="margin-bottom:10px">
+        <div class="week-actions" style="margin-bottom:10px">
           <button class="btn btn-secondary" id="btn-copy-list">Copy List</button>
           <button class="btn btn-secondary" id="btn-add-item">+ Add an item</button>
+          <button class="btn btn-secondary" id="btn-save-grocery" title="Save everything right now and confirm it's on the server">Save List</button>
         </div>
       </div>
 
@@ -395,7 +396,10 @@
   <label class="grocery-item">
     <input type="checkbox" class="grocery-check" />
     <span class="grocery-item-name"></span>
-    <span class="grocery-item-qty"></span>
+    <span class="grocery-item-qty-wrap">
+      <input type="number" class="grocery-item-qty-input" min="0" step="0.25" inputmode="decimal" title="Adjust the quantity" />
+      <span class="grocery-item-qty-unit"></span>
+    </span>
     <select class="grocery-item-store-select" title="Which store this comes from"></select>
     <button type="button" class="grocery-remove" aria-label="Remove item">✕</button>
   </label>

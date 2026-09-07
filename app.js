@@ -2644,6 +2644,9 @@ function refreshGroceryList() {
     const prev = oldByKey.get(`${item.name}|${item.unit}`);
     if (prev && prev.checked) item.checked = true;
     if (prev && prev.store && !item.store) item.store = prev.store;
+    // She adjusted this one by hand — a rebuild (a different meal changing,
+    // household size, etc.) shouldn't quietly recompute over her own number.
+    if (prev && prev.qtyOverridden) { item.qty = prev.qty; item.qtyOverridden = true; }
   });
   const freshKeys = new Set(fresh.map(i => `${i.name}|${i.unit}`));
   old.forEach(i => { if (i.custom && !freshKeys.has(`${i.name}|${i.unit}`)) fresh.push(i); });
@@ -2692,7 +2695,16 @@ function renderGrocery(list) {
         check.checked = item.checked;
         label.classList.toggle("checked", item.checked);
         itemNode.querySelector(".grocery-item-name").textContent = item.name + (item.staple ? " 🔁" : "");
-        itemNode.querySelector(".grocery-item-qty").textContent = `${formatQty(item.qty)} ${item.unit === "count" ? "" : item.unit}`.trim();
+
+        const qtyInput = itemNode.querySelector(".grocery-item-qty-input");
+        qtyInput.value = item.qty === "" || item.qty === null || item.qty === undefined ? "" : formatQty(item.qty);
+        itemNode.querySelector(".grocery-item-qty-unit").textContent = item.unit === "count" ? "" : item.unit;
+        qtyInput.addEventListener("change", () => {
+          const v = qtyInput.value.trim();
+          item.qty = v === "" ? "" : Number(v);
+          item.qtyOverridden = true; // a later rebuild (a meal or household size changing) won't recompute over this
+          saveState();
+        });
 
         const storeSelect = itemNode.querySelector(".grocery-item-store-select");
         storeSelect.innerHTML = storeOptionsHtml(item.store || "");
