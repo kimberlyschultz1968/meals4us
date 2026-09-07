@@ -1712,11 +1712,7 @@ function openRecipeModal(recipe) {
         <label for="ing-add-category" class="empty-note" style="margin:0;align-self:center;white-space:nowrap">Grocery aisle:</label>
         <select id="ing-add-category" class="aisle-select" title="Which grocery-list section it lands in">${CATEGORY_OPTIONS.map(c => `<option value="${c}"${c === "Other" ? " selected" : ""}>${c}</option>`).join("")}</select>
       </div>
-      <div class="add-word-row" style="margin-top:6px">
-        <label for="ing-add-store" class="empty-note" style="margin:0;align-self:center;white-space:nowrap">Store:</label>
-        <select id="ing-add-store" class="aisle-select" title="Which store you buy this from">${storeOptionsHtml("")}</select>
-      </div>
-      <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up. Pick the aisle so it lands in the right spot on the grocery list (we'll guess it for foods we know).</p>` : "";
+      <p class="empty-note" style="margin-top:6px">✕ takes an ingredient out of this meal, + Add puts your own in — changes stick for every future time this meal comes up. Pick the aisle so it lands in the right spot on the grocery list (we'll guess it for foods we know). Which store it comes from is set on the grocery list itself.</p>` : "";
 
     // 🥣 Sauces — attached ones listed with their mixing steps; the picker
     // offers her own sauces first, then the built-in library.
@@ -1780,17 +1776,15 @@ function openRecipeModal(recipe) {
         afterEdit();
       });
     });
-    wireStoreSelect(document.getElementById("ing-add-store"));
     document.getElementById("ing-add-btn").addEventListener("click", () => {
       const input = document.getElementById("ing-add-input");
       const name = input.value.trim().toLowerCase();
       if (!name) return;
       const known = knownIngredientInfo(name);
       const category = document.getElementById("ing-add-category").value;
-      const store = document.getElementById("ing-add-store").value;
       const c = custom();
       if (!c.added) c.added = [];
-      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: known ? known.unit : "count", category, store });
+      if (!c.added.some(a => a.name === name)) c.added.push({ name, qty: 1, unit: known ? known.unit : "count", category });
       c.removed = (c.removed || []).filter(n => n !== name);
       afterEdit();
     });
