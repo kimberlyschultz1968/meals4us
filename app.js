@@ -2604,9 +2604,13 @@ function buildGroceryList(weekPlan, keepAtHome, staples = []) {
   // Staples & lunch items — things like coffee, bread, lunch meat that don't
   // change week to week. Added every time a new list is built, not derived
   // from the meal plan, so they show up automatically without re-typing them.
+  // Never filtered by "keep at home" — that list means "skip this recipe
+  // ingredient, we always have it"; a staple means the opposite ("buy this
+  // every week," a deliberate per-item choice), and it used to silently lose
+  // that fight any time its name happened to share a word with something on
+  // the keep-at-home list (e.g. a real "A2 Milk" staple vanishing because
+  // "milk" was marked kept at home).
   staples.forEach(s => {
-    const haveAtHome = keepAtHome.some(k => s.name.includes(k) || k.includes(s.name));
-    if (haveAtHome) return;
     list.push({
       id: `staple-item-${s.id}`,
       stapleId: s.id,
