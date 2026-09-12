@@ -4826,5 +4826,102 @@ const SAUCE_LIBRARY = [
       { name: "avocados", qty: 2, unit: "whole", category: "Produce" },
       { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" },
       { name: "garlic salt", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
-    instructions: ["Mash the avocados with lime juice and garlic salt — chunky or smooth, your call."] }
+    instructions: ["Mash the avocados with lime juice and garlic salt — chunky or smooth, your call."] },
+  { id: "sauce-lib-alabama-white", name: "Alabama White BBQ Sauce", ingredients: [
+      { name: "mayo", qty: 1, unit: "cup", category: "Sauces & Condiments" },
+      { name: "apple cider vinegar", qty: 2, unit: "tbsp", category: "Pantry" },
+      { name: "prepared horseradish", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "black pepper", qty: 1, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Whisk everything together and chill — brush it on grilled chicken instead of red BBQ sauce."] },
+  { id: "sauce-lib-honey-garlic", name: "Honey Garlic Sauce", ingredients: [
+      { name: "honey", qty: 0.33, unit: "cup", category: "Pantry" },
+      { name: "soy sauce", qty: 3, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
+      { name: "butter", qty: 1, unit: "tbsp", category: "Dairy & Eggs" }],
+    instructions: ["Simmer everything together 3-4 minutes until it thickens slightly."] },
+  { id: "sauce-lib-yum-yum", name: "Yum Yum Sauce", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "ketchup", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "butter", qty: 1, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "paprika", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "garlic powder", qty: 0.25, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Melt the butter and whisk it into everything else — the hibachi-restaurant dip."] },
+  { id: "sauce-lib-copycat-chicken-sauce", name: "Copycat Chicken Sauce", ingredients: [
+      { name: "mayo", qty: 0.25, unit: "cup", category: "Sauces & Condiments" },
+      { name: "bbq sauce", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "dijon mustard", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "sweet pickle juice", qty: 1, unit: "tbsp", category: "Sauces & Condiments" }],
+    instructions: ["Stir it all together — the sweet-tangy dip everyone asks for at the drive-thru."] },
+  { id: "sauce-lib-alfredo", name: "Alfredo Sauce", ingredients: [
+      { name: "butter", qty: 4, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "parmesan", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "garlic", qty: 1, unit: "clove", category: "Produce" }],
+    instructions: ["Melt the butter with the garlic, stir in the cream and simmer 2 minutes, then whisk in the parmesan off the heat."] },
+  { id: "sauce-lib-pesto", name: "Basil Pesto", ingredients: [
+      { name: "fresh basil", qty: 2, unit: "cup", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "pine nuts", qty: 0.25, unit: "cup", category: "Snacks & Chips" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" },
+      { name: "olive oil", qty: 0.5, unit: "cup", category: "Pantry" }],
+    instructions: ["Blend everything but the oil, then stream the oil in until smooth."] },
+  { id: "sauce-lib-chimichurri", name: "Chimichurri", ingredients: [
+      { name: "fresh parsley", qty: 1, unit: "cup", category: "Produce" },
+      { name: "garlic", qty: 3, unit: "clove", category: "Produce" },
+      { name: "red wine vinegar", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "olive oil", qty: 0.5, unit: "cup", category: "Pantry" },
+      { name: "red pepper flakes", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Finely chop the parsley and garlic, then stir in the vinegar, oil, and pepper flakes — great on steak or grilled chicken."] },
+  { id: "sauce-lib-remoulade", name: "Remoulade", ingredients: [
+      { name: "mayo", qty: 0.5, unit: "cup", category: "Sauces & Condiments" },
+      { name: "creole mustard", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "sweet pickle relish", qty: 1, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "hot sauce", qty: 1, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "paprika", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Stir everything together and chill — built for fried shrimp or crab cakes."] },
+  { id: "sauce-lib-brown-gravy", name: "Brown Gravy", ingredients: [
+      { name: "butter", qty: 3, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
+      { name: "beef broth", qty: 2, unit: "cup", category: "Canned & Jarred" }],
+    instructions: ["Melt the butter, whisk in the flour 1-2 minutes, then whisk in the broth and simmer until it thickens."] },
+  { id: "sauce-lib-sausage-gravy", name: "Sausage Gravy", ingredients: [
+      { name: "breakfast sausage", qty: 0.5, unit: "lb", category: "Meat & Seafood" },
+      { name: "flour", qty: 3, unit: "tbsp", category: "Baking" },
+      { name: "milk", qty: 2, unit: "cup", category: "Dairy & Eggs" },
+      { name: "black pepper", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Brown the sausage, sprinkle the flour over it and stir 1 minute, then slowly whisk in the milk and simmer until thick — biscuits and gravy."] },
+  { id: "sauce-lib-horseradish-cream", name: "Horseradish Cream Sauce", ingredients: [
+      { name: "sour cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "prepared horseradish", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "dijon mustard", qty: 1, unit: "tsp", category: "Sauces & Condiments" }],
+    instructions: ["Stir together and chill — classic with roast beef or steak."] },
+  { id: "sauce-lib-honey-butter", name: "Honey Butter", ingredients: [
+      { name: "butter", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "honey", qty: 3, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Beat the softened butter and honey together until fluffy — melts into cornbread or biscuits."] },
+  { id: "sauce-lib-enchilada", name: "Red Enchilada Sauce", ingredients: [
+      { name: "chili powder", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "flour", qty: 2, unit: "tbsp", category: "Baking" },
+      { name: "tomato paste", qty: 2, unit: "tbsp", category: "Canned & Jarred" },
+      { name: "chicken broth", qty: 2, unit: "cup", category: "Canned & Jarred" },
+      { name: "garlic powder", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Whisk the chili powder and flour into a little broth to make a paste, then whisk in the rest and simmer 8-10 minutes until it thickens."] },
+  { id: "sauce-lib-salsa-verde", name: "Salsa Verde", ingredients: [
+      { name: "tomatillos", qty: 1, unit: "lb", category: "Produce" },
+      { name: "jalapeno", qty: 1, unit: "whole", category: "Produce" },
+      { name: "fresh cilantro", qty: 0.5, unit: "cup", category: "Produce" },
+      { name: "lime juice", qty: 1, unit: "tbsp", category: "Pantry" }],
+    instructions: ["Boil the tomatillos and jalapeño 5 minutes until soft, then blend with the cilantro and lime juice."] },
+  { id: "sauce-lib-nashville-hot", name: "Nashville Hot Sauce", ingredients: [
+      { name: "butter", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "cayenne pepper", qty: 2, unit: "tbsp", category: "Spices & Seasonings" },
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Baking" },
+      { name: "paprika", qty: 1, unit: "tsp", category: "Spices & Seasonings" }],
+    instructions: ["Melt the butter and whisk in everything else — brush it over fried chicken right out of the fryer."] },
+  { id: "sauce-lib-carolina-gold", name: "Carolina Gold BBQ Sauce", ingredients: [
+      { name: "yellow mustard", qty: 0.75, unit: "cup", category: "Sauces & Condiments" },
+      { name: "brown sugar", qty: 0.33, unit: "cup", category: "Baking" },
+      { name: "apple cider vinegar", qty: 3, unit: "tbsp", category: "Pantry" },
+      { name: "worcestershire sauce", qty: 1, unit: "tsp", category: "Sauces & Condiments" }],
+    instructions: ["Whisk everything together and simmer 5 minutes — a South Carolina mustard-style BBQ sauce."] }
 ];
