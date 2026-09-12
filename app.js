@@ -3341,7 +3341,13 @@ function startNewWeek() {
     ? ` ${state.nextWeekQueue.length} meal(s) you moved forward will be placed in.`
     : "";
   if (!confirm(`Start a new week? This keeps your family profile and what we've learned, but clears this week's meals and grocery list.${queuedNote}`)) return;
-  requireUnlockedWeek(() => rotateToNextWeek());
+  // No password gate here — same as marking Saturday's meal Love It/OK,
+  // which has never required one. Ending a locked week and moving to the
+  // next isn't the kind of "accidental change" the lock protects against;
+  // she already confirmed it above. Gating it a second time behind a
+  // password prompt she isn't expecting just made this silently do nothing
+  // if that prompt didn't get completed.
+  rotateToNextWeek();
 }
 document.getElementById("btn-start-over").addEventListener("click", startNewWeek);
 document.getElementById("btn-start-next-week").addEventListener("click", startNewWeek);
