@@ -4668,6 +4668,156 @@ const RECIPES = [
       "Pile the lettuce with steak, peppers, and diced avocado.",
       "Whisk the sour cream with lime juice for a quick dressing and drizzle over."
     ]
+  },
+  {
+    id: "herb-butter-chicken-potatoes", name: "Herb Butter Chicken with Roasted Potatoes and Carrots", emoji: "🍗", cuisine: "american",
+    proteins: ["chicken"], tags: [], allergens: ["dairy"],
+    timeMinutes: 40,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "yukon gold potatoes", qty: 12, unit: "oz", category: "Produce" },
+      { name: "carrot", qty: 8, unit: "oz", category: "Produce" },
+      { name: "shallot", qty: 1, unit: "whole", category: "Produce" },
+      { name: "orange", qty: 1, unit: "whole", category: "Produce" },
+      { name: "butter", qty: 2, unit: "tbsp", category: "Dairy & Eggs" },
+      { name: "chicken broth", qty: 1, unit: "cup", category: "Canned & Jarred" },
+      { name: "parsley", qty: 0.25, unit: "oz", category: "Produce" },
+      { name: "thyme", qty: 3, unit: "whole", category: "Produce" },
+      { name: "cornstarch", qty: 1, unit: "tsp", category: "Baking" },
+      { name: "poultry seasoning", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "garlic salt", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Peel and chop the carrots; halve and quarter the potatoes. Chop the thyme and parsley. Zest, halve, and juice the orange; quarter the shallot.",
+      "Whisk the cornstarch with the orange juice, a splash of water, the chicken broth, and half the thyme in a small bowl for the pan sauce.",
+      "Season chicken with poultry seasoning and sear in olive oil over medium-high heat, 2-3 minutes per side, then set aside — it finishes cooking in the oven.",
+      "Brown the potatoes, carrots, shallot, and a pinch of garlic salt in the same pan, 4-6 minutes, then stir in the orange sauce and bring to a simmer.",
+      "Nestle the chicken back into the pan and roast at 425°F until the chicken reaches 165°F and the vegetables are tender, 18-22 minutes.",
+      "Mix softened butter with the remaining parsley, thyme, and orange zest for an herb butter. Plate chicken and vegetables topped with pan sauce and a pat of herb butter."
+    ]
+  },
+  {
+    id: "garlic-pepper-chicken-alfredo", name: "Garlic Pepper Chicken Alfredo with Broccoli", emoji: "🍝", cuisine: "italian",
+    proteins: ["chicken"], tags: [], allergens: ["dairy", "gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "gemelli pasta", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "heavy cream", qty: 0.5, unit: "cup", category: "Dairy & Eggs" },
+      { name: "broccoli florets", qty: 4, unit: "oz", category: "Produce" },
+      { name: "parmesan", qty: 2, unit: "oz", category: "Dairy & Eggs" },
+      { name: "flour", qty: 0.5, unit: "oz", category: "Baking" },
+      { name: "chicken broth", qty: 2, unit: "tsp", category: "Canned & Jarred" },
+      { name: "lemon", qty: 1, unit: "whole", category: "Produce" },
+      { name: "chives", qty: 6, unit: "whole", category: "Produce" },
+      { name: "garlic pepper seasoning", qty: 2, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Season chicken with garlic pepper seasoning and cook in olive oil over medium-high heat until browned and cooked through, 5-7 minutes per side. Rest, tented with foil, then slice.",
+      "Cut broccoli into small pieces; halve the lemon; mince the chives.",
+      "Cook broccoli in the same pan with a splash of water, covered, until just tender, 4-6 minutes.",
+      "Stir flour into the pan with the broccoli until no dry flour remains, then whisk in the chicken broth and cream; simmer until slightly thickened.",
+      "Add the cooked pasta and half the parmesan; toss until coated and heated through.",
+      "Plate the pasta topped with sliced chicken, the remaining parmesan, chives, and a squeeze of lemon."
+    ]
+  },
+  {
+    id: "chicken-enchilada-rice-bowl", name: "Chicken Enchilada Rice Bowl", emoji: "🌯", cuisine: "mexican",
+    proteins: ["chicken"], tags: [], allergens: ["dairy"],
+    timeMinutes: 35,
+    ingredients: [
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "white rice", qty: 1, unit: "cup", category: "Pasta & Grains" },
+      { name: "black beans", qty: 4, unit: "oz", category: "Canned & Jarred" },
+      { name: "frozen corn", qty: 3, unit: "oz", category: "Frozen" },
+      { name: "enchilada sauce", qty: 2, unit: "oz", category: "Canned & Jarred" },
+      { name: "sour cream", qty: 1, unit: "oz", category: "Dairy & Eggs" },
+      { name: "shredded cheddar", qty: 1, unit: "oz", category: "Dairy & Eggs" },
+      { name: "tortilla strips", qty: 0.5, unit: "oz", category: "Snacks & Chips" },
+      { name: "chicken broth", qty: 2, unit: "tsp", category: "Canned & Jarred" },
+      { name: "fajita seasoning", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Toss diced chicken with olive oil and roast at 425°F, 10 minutes.",
+      "Drain the black beans. Stir the sour cream with a splash of water and a pinch of salt for a quick crema.",
+      "Break up the roasted chicken and stir in the beans, corn, half the enchilada sauce, half the broth, fajita seasoning, and salt; top with cheese and bake until melted and chicken reaches 165°F, 10-15 minutes.",
+      "Microwave the rice with the remaining broth and enchilada sauce, covered, 2-3 minutes; fluff with a fork.",
+      "Top the rice with the chicken mixture and garnish with the crema and tortilla strips."
+    ]
+  },
+  {
+    id: "creamy-italian-sausage-penne", name: "Creamy Italian Sausage Penne with Spinach", emoji: "🍝", cuisine: "italian",
+    proteins: ["pork"], tags: [], allergens: ["dairy", "gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "italian sausage", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "penne pasta", qty: 8, unit: "oz", category: "Pasta & Grains" },
+      { name: "heavy cream", qty: 1, unit: "cup", category: "Dairy & Eggs" },
+      { name: "baby spinach", qty: 1, unit: "oz", category: "Produce" },
+      { name: "parmesan", qty: 0.5, unit: "oz", category: "Dairy & Eggs" },
+      { name: "flour", qty: 1, unit: "tbsp", category: "Baking" },
+      { name: "lemon juice", qty: 1, unit: "tsp", category: "Pantry" },
+      { name: "garlic powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" },
+      { name: "onion powder", qty: 1, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Remove sausage from its casing, break into pieces, and bake at 425°F, uncovered, 10 minutes.",
+      "Drain any excess fat, then stir in the flour until no dry flour remains.",
+      "Stir in the cream, garlic powder, onion powder, cooked pasta, and spinach until combined.",
+      "Bake again, uncovered, until sausage reaches 160°F, 10-15 minutes.",
+      "Stir in the lemon juice and half the parmesan until melted; garnish with the remaining parmesan."
+    ]
+  },
+  {
+    id: "crispy-chicken-cordon-bleu-mash", name: "Crispy Chicken Cordon Bleu with Mashed Potatoes", emoji: "🍗", cuisine: "american",
+    proteins: ["chicken"], tags: [], allergens: ["dairy", "gluten"],
+    timeMinutes: 45,
+    ingredients: [
+      { name: "red potatoes", qty: 1, unit: "lb", category: "Produce" },
+      { name: "chicken breast", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "broccoli florets", qty: 8, unit: "oz", category: "Produce" },
+      { name: "canola oil", qty: 3, unit: "oz", category: "Pantry" },
+      { name: "panko breadcrumbs", qty: 0.5, unit: "cup", category: "Baking" },
+      { name: "shredded swiss cheese", qty: 1, unit: "oz", category: "Dairy & Eggs" },
+      { name: "cream cheese", qty: 1, unit: "oz", category: "Dairy & Eggs" },
+      { name: "sour cream", qty: 1, unit: "oz", category: "Dairy & Eggs" },
+      { name: "bacon", qty: 0.5, unit: "oz", category: "Meat & Seafood" },
+      { name: "garlic", qty: 2, unit: "clove", category: "Produce" }
+    ],
+    instructions: [
+      "Boil chunked potatoes until fork-tender, 14-18 minutes; drain, reserving a little cooking water, and mash with butter and a splash of the reserved water.",
+      "Toss broccoli and minced garlic with olive oil and salt; roast at 400°F until tender, 8-10 minutes.",
+      "Pound chicken to an even 1/4-inch thickness, then press into panko to coat both sides.",
+      "Pan-fry chicken in canola oil until golden and cooked through, 3-5 minutes per side; rest 5 minutes.",
+      "Cook bacon until crisp; set half aside. Add cream cheese and a little water to the pan with the remaining bacon; simmer until smooth, then stir in the shredded swiss cheese until melted.",
+      "Plate chicken over mashed potatoes and broccoli, topped with the cheese sauce and reserved crispy bacon."
+    ]
+  },
+  {
+    id: "sheet-pan-sesame-salmon-rice", name: "Sheet Pan Sesame Salmon with Carrots and Rice", emoji: "🐟", cuisine: "asian",
+    proteins: ["fish"], tags: [], allergens: ["fish", "dairy", "soy", "sesame"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "salmon", qty: 1.25, unit: "lb", category: "Meat & Seafood" },
+      { name: "carrot", qty: 8, unit: "oz", category: "Produce" },
+      { name: "white rice", qty: 1, unit: "cup", category: "Pasta & Grains" },
+      { name: "mayo", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "sriracha", qty: 1, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "butter", qty: 0.6, unit: "oz", category: "Dairy & Eggs" },
+      { name: "honey", qty: 0.5, unit: "oz", category: "Pantry" },
+      { name: "green onions", qty: 2, unit: "whole", category: "Produce" },
+      { name: "soy sauce", qty: 1, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "garlic chili paste", qty: 1, unit: "tsp", category: "Sauces & Condiments" },
+      { name: "sesame seeds", qty: 2, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Slice carrots on an angle; slice green onions, keeping white and green parts separate.",
+      "Toss carrots with olive oil and salt; roast at 425°F, 10 minutes.",
+      "Pat salmon dry and season with half the soy sauce and a little salt. Stir the garlic chili paste into the roasted carrots, then nestle salmon on the sheet skin-down; top with sesame seeds.",
+      "Roast until carrots are tender and salmon reaches 145°F, 10-12 minutes. Stir remaining soy sauce, honey, and butter into the carrots.",
+      "Microwave the rice until heated through; stir in butter and the white parts of the green onions.",
+      "Top rice and salmon with the green onion tops. Whisk mayo with the sriracha and a drizzle of honey for a quick dipping sauce; serve alongside."
+    ]
   }
 ];
 
