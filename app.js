@@ -549,6 +549,19 @@ function recentHistoryIds() {
   return [...state.recentWeeksHistory.flat(), ...state.heldBackRecipes.map(h => h.recipeId)];
 }
 
+// For manual picking, not the auto-generator: everything that already
+// counts as "recently on the menu" — the rolling history window PLUS
+// whatever's sitting on the current week and Week 2 right now. Used to
+// flag/warn on a manual pick (Pick Recipe, Meal Ideas' Add to Day); the
+// auto-generator already keeps these out of its pool on its own.
+function recentlyUsedIds() {
+  return new Set([
+    ...recentHistoryIds(),
+    ...(state.weekPlan || []).map(e => e.recipeId).filter(Boolean),
+    ...(state.weekPlan2 || []).map(e => e.recipeId).filter(Boolean)
+  ]);
+}
+
 // Called once per "Start a New Week" — counts down how much longer each
 // held-back meal stays out of the pool, dropping it once its time is up.
 function tickHeldBack() {
@@ -2279,6 +2292,7 @@ function openMeatPicker(dayIndex) {
 function openRecipePicker(dayIndex) {
   const entry = state.weekPlan[dayIndex];
   const all = [...allRecipes()].filter(r => !state.neverSuggest.includes(r.id)).sort((a, b) => a.name.localeCompare(b.name));
+  const recentIds = recentlyUsedIds();
 
   function renderResults(query) {
     const q = query.trim().toLowerCase();
@@ -2289,7 +2303,7 @@ function openRecipePicker(dayIndex) {
       return;
     }
     list.innerHTML = matches.map(r => {
-      const flagged = recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "";
+      const flagged = (recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "") + (recentIds.has(r.id) ? " 🔁" : "");
       return `<button type="button" class="day-pick-option" data-recipe-id="${r.id}">
         <span class="day-pick-meal" style="text-align:left;">${r.emoji} ${r.name}${flagged}</span>
         <span class="day-pick-day" style="text-transform:none;letter-spacing:0;">${r.timeMinutes} min</span>
@@ -2297,7 +2311,12 @@ function openRecipePicker(dayIndex) {
     }).join("");
     list.querySelectorAll("[data-recipe-id]").forEach(btn => {
       btn.addEventListener("click", () => {
-        state.weekPlan[dayIndex] = { day: entry.day, recipeId: btn.dataset.recipeId, proteinOverride: null, freeDay: false };
+        const id = btn.dataset.recipeId;
+        if (recentIds.has(id)) {
+          const r = recipeById(id);
+          if (!confirm(`"${r.name}" has been on the menu in the last ${state.noRepeatWeeks} week${state.noRepeatWeeks === 1 ? "" : "s"}. Add it anyway?`)) return;
+        }
+        state.weekPlan[dayIndex] = { day: entry.day, recipeId: id, proteinOverride: null, freeDay: false };
         refreshGroceryList();
         saveState();
         renderWeek(state.weekPlan);
@@ -2308,7 +2327,7 @@ function openRecipePicker(dayIndex) {
 
   openModal(`
     <div class="modal-body-title">Pick a recipe for ${entry.day}</div>
-    <div class="modal-body-meta">⚠️ means it conflicts with an allergy or dislike in your profile — still pickable, just flagged.</div>
+    <div class="modal-body-meta">⚠️ means it conflicts with an allergy or dislike in your profile. 🔁 means it's been on the menu in the last ${state.noRepeatWeeks} weeks. Both still pickable, just flagged.</div>
     <input type="text" id="rp-search" class="recipe-picker-search" placeholder="Search by name..." />
     <div class="recipe-picker-list" id="rp-results"></div>
   `);
@@ -2358,7 +2377,7 @@ function ideaTagLabels(r) {
 function openMealIdeas() {
   openModal(`
     <div class="modal-body-title">📖 Meal Ideas</div>
-    <div class="modal-body-meta">📅 Add to Day puts a meal on a day of your week. 👁 shows the recipe, 🗑 deletes ideas you never want to see. ⚠️ = conflicts with your profile.</div>
+    <div class="modal-body-meta">📅 Add to Day puts a meal on a day of your week. 👁 shows the recipe, 🗑 deletes ideas you never want to see. ⚠️ = conflicts with your profile. 🔁 = on the menu in the last ${state.noRepeatWeeks} weeks.</div>
     <div class="idea-filters" id="idea-filters"></div>
     <div class="idea-toolbar">
       <input type="text" id="idea-search" class="recipe-picker-search" placeholder="Search meals..." />
@@ -2397,8 +2416,9 @@ function renderIdeaResults() {
     list.innerHTML = `<p class="recipe-picker-empty">Nothing matches — try a different filter or search.</p>`;
     return;
   }
+  const recentIds = recentlyUsedIds();
   list.innerHTML = matches.map(r => {
-    const flagged = recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "";
+    const flagged = (recipeViolatesProfile(r, state.profile, []) ? " ⚠️" : "") + (recentIds.has(r.id) ? " 🔁" : "");
     const meta = [capitalize(r.cuisine), `${r.timeMinutes} min`, ideaTagLabels(r)].filter(Boolean).join(" · ");
     return `<div class="idea-row">
       <button type="button" class="idea-main" data-pick="${r.id}">
@@ -2454,10 +2474,14 @@ function openIdeaDayPicker(recipeId) {
   document.getElementById("idea-day-back").addEventListener("click", openMealIdeas);
   document.querySelectorAll("[data-slot]").forEach(btn => {
     btn.addEventListener("click", () => {
+      if (recentlyUsedIds().has(recipeId)) {
+        if (!confirm(`"${recipe.name}" has been on the menu in the last ${state.noRepeatWeeks} week${state.noRepeatWeeks === 1 ? "" : "s"}. Add it anyway?`)) return;
+      }
       const [wk, iStr] = btn.dataset.slot.split(":");
       const i = Number(iStr);
       const plan = wk === "w2" ? state.weekPlan2 : state.weekPlan;
       plan[i] = { day: plan[i].day, recipeId, proteinOverride: null, freeDay: false };
+      refreshGroceryList();
       saveState();
       if (wk === "w2") renderWeek2(state.weekPlan2); else renderWeek(state.weekPlan);
       closeModal();
