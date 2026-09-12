@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About Meals4Us — Weekly Family Meal Planner</title>
+<meta name="description" content="Meals4Us plans your family's week around what you actually eat, then turns it straight into a grocery list sorted by where you shop." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://meals4us.com/about.html" />
+<meta property="og:title" content="About Meals4Us" />
+<meta property="og:description" content="Meals4Us plans your family's week around what you actually eat, then turns it straight into a grocery list sorted by where you shop." />
+<meta property="og:image" content="https://meals4us.com/social-card.png" />
+<link rel="icon" href="icon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .about-shell { max-width: 560px; margin: 0 auto; padding-bottom: 40px; }
+  .about-hero {
+    background: var(--header-gradient);
+    padding: 32px 20px 28px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+  .about-icon { width: 56px; height: 56px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+  .about-brand { font-size: 26px; font-weight: 800; color: #fff; margin: 12px 0 2px; letter-spacing: -0.01em; }
+  .about-brand span { color: #FFB3B8; }
+  .about-tag { font-size: 15px; color: rgba(255,255,255,.82); margin: 0; }
+  .about-body { padding: 24px 20px 0; }
+  .about-lede { font-size: 15.5px; line-height: 1.55; color: var(--ink); margin: 0 0 22px; }
+  .about-section-title {
+    font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--red); margin: 28px 0 10px;
+  }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .about-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 10px 12px; box-shadow: var(--shadow);
+  }
+  .about-card b { display: block; font-size: 13.5px; color: var(--ink); font-weight: 700; margin-bottom: 2px; }
+  .about-card span { display: block; font-size: 12.5px; color: var(--ink-soft); line-height: 1.35; }
+  .about-who { font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+  .about-cta { padding: 30px 20px 0; text-align: center; }
+  .about-price { font-size: 13px; color: var(--ink-soft); margin: 10px 0 0; }
+  .about-back { display: block; text-align: center; margin: 18px 0 0; font-size: 13.5px; color: var(--ink-soft); text-decoration: none; }
+  .about-back:hover { color: var(--red); }
+  @media (max-width: 380px) { .about-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="about-shell">
+  <div class="about-hero">
+    <img src="icon.svg" alt="" class="about-icon" />
+    <div class="about-brand">Meals<span>4</span>Us</div>
+    <p class="about-tag">Dinner, planned. Groceries, done.</p>
+  </div>
+
+  <div class="about-body">
+    <p class="about-lede">
+      Meals4Us builds your family's week around what you actually eat — the
+      foods everyone loves, the ones nobody will touch, any allergies — and
+      turns it straight into a grocery list, sorted by where you shop. Not a
+      diet plan. Not a recipe blog to scroll through. Just dinner, figured
+      out, every week.
+    </p>
+
+    <h2 class="about-section-title">What it does</h2>
+    <div class="about-grid">
+      <div class="about-card"><b>Fits your family</b><span>Plans dinners around your likes, dislikes, and allergies.</span></div>
+      <div class="about-card"><b>245 meal ideas + yours</b><span>Browse, search, or add your own recipes.</span></div>
+      <div class="about-card"><b>Make any meal yours</b><span>Rename it, swap ingredients, rewrite the steps — saved for good.</span></div>
+      <div class="about-card"><b>Sauces, sides, and swaps</b><span>Mix your own sauces, add a side, swap the meat.</span></div>
+      <div class="about-card"><b>Store-sorted grocery list</b><span>Sorted by where you shop, quantities you can edit, saved with one tap.</span></div>
+      <div class="about-card"><b>Learns what you love</b><span>Love it / It's OK feedback shapes next week's plan.</span></div>
+      <div class="about-card"><b>Two weeks at a glance</b><span>Real calendar dates, free days, a no-repeat rule.</span></div>
+      <div class="about-card"><b>Lock a week in</b><span>Add a password so nothing changes by accident.</span></div>
+      <div class="about-card"><b>Nothing's ever lost</b><span>Every locked-in week is saved for good — reuse any of them.</span></div>
+      <div class="about-card"><b>Follows you everywhere</b><span>One account keeps your computer and phone in step.</span></div>
+    </div>
+
+    <h2 class="about-section-title">Who it's for</h2>
+    <p class="about-who">
+      Whoever in your house keeps answering "what's for dinner" — juggling
+      picky eaters, a budget, an allergy or two, and a grocery list that
+      actually has to match what's cooking. Meals4Us keeps track of all of
+      it, so you don't have to hold it in your head. Change anything that's
+      not a fit — it's your plan, we're just doing the remembering.
+    </p>
+  </div>
+
+  <div class="about-cta">
+    <a href="index.html" class="btn btn-primary" style="display:inline-block;text-decoration:none;padding:12px 28px;">Start planning your week →</a>
+    <p class="about-price">7-day free trial, then $2.99/month. Cancel anytime.</p>
+    <a href="index.html" class="about-back">← Back to Meals4Us</a>
+  </div>
+</div>
+
+</body>
+</html>
