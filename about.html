@@ -38,6 +38,13 @@
   .about-card b { display: block; font-size: 13.5px; color: var(--ink); font-weight: 700; margin-bottom: 2px; }
   .about-card span { display: block; font-size: 12.5px; color: var(--ink-soft); line-height: 1.35; }
   .about-who { font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+  .about-learn-list { display: flex; flex-direction: column; gap: 10px; }
+  .about-learn-item {
+    background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 11px 13px; box-shadow: var(--shadow); font-size: 13.5px; line-height: 1.5; color: var(--ink);
+  }
+  .about-learn-item b { color: var(--red); }
+  .about-learn-note { font-size: 13px; line-height: 1.5; color: var(--ink-soft); margin: 12px 2px 0; font-style: italic; }
   .about-cta { padding: 30px 20px 0; text-align: center; }
   .about-price { font-size: 13px; color: var(--ink-soft); margin: 10px 0 0; }
   .about-back { display: block; text-align: center; margin: 18px 0 0; font-size: 13.5px; color: var(--ink-soft); text-decoration: none; }
@@ -76,6 +83,18 @@
       <div class="about-card"><b>Nothing's ever lost</b><span>Every locked-in week is saved for good — reuse any of them.</span></div>
       <div class="about-card"><b>Follows you everywhere</b><span>One account keeps your computer and phone in step.</span></div>
     </div>
+
+    <h2 class="about-section-title">How it actually learns</h2>
+    <p class="about-who" style="margin-bottom:10px">
+      The family profile you fill in when you start is the foundation — but
+      three things keep shaping your plan every week after that:
+    </p>
+    <div class="about-learn-list">
+      <div class="about-learn-item"><b>Love It / It's OK / Remove It.</b> This is the real learning — every tap changes that meal's ranking for good. Love It counts more than It's OK, and Remove It means it's never suggested again. Nothing decays or resets; a meal you keep loving keeps climbing.</div>
+      <div class="about-learn-item"><b>Your no-repeat window.</b> Nothing comes back within however many weeks you've set on your Family page (2 to 6) — and "Beyond" can hold any one meal out even longer, any time you ask.</div>
+      <div class="about-learn-item"><b>Built-in variety.</b> No same protein two nights running, no one cuisine taking over the week, and dish types like tacos or bowls get spaced out — automatically, on top of whatever your feedback has taught it.</div>
+    </div>
+    <p class="about-learn-note">Likes, dislikes, and allergies get re-checked fresh every week too — that part's a fixed rule, not something that adapts on its own. The more you tap Love It / It's OK as you go, the more it actually learns.</p>
 
     <h2 class="about-section-title">Who it's for</h2>
     <p class="about-who">
