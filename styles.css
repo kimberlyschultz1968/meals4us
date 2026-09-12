@@ -799,6 +799,23 @@ h1 {
 
 .free-day-toggle:hover { color: var(--red); }
 
+/* Leftovers night: a Free day that says what's being eaten */
+.day-toggles { display: flex; align-items: center; gap: 12px; }
+.lo-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.lo-chip {
+  font: inherit; font-size: 12.5px; line-height: 1.25; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: 999px; padding: 5px 11px; text-align: left;
+}
+.lo-chip:hover { border-color: var(--red); }
+.lo-chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+.fd-switch {
+  display: block; margin-top: 8px; padding: 0; background: none; border: none; cursor: pointer;
+  font: inherit; font-size: 12px; font-weight: 700; color: var(--ink-soft); text-decoration: underline; text-underline-offset: 2px;
+}
+.fd-switch:hover { color: var(--red); }
+.lo-note { font-size: 12.5px; font-weight: 600; color: var(--red); margin-top: 3px; }
+
 .free-day-card {
   border-style: dashed;
   background: #F7F4EF;
@@ -1298,14 +1315,13 @@ h1 {
 /* Lock It In / Start Next Week — sit just below the week's day cards */
 .week-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 10px 0 4px;
 }
-.week-actions .btn { flex: 1; padding: 10px 6px; font-size: 13.5px; white-space: nowrap; }
-
-@media (max-width: 380px) {
-  .week-actions { flex-direction: column; }
-}
+/* five buttons: one row on wide screens, wrapping onto a second row on phones
+   instead of pushing the page sideways */
+.week-actions .btn { flex: 1 1 auto; padding: 10px 10px; font-size: 13.5px; white-space: nowrap; }
 
 /* Auth gate — full-screen sign in / create account overlay */
 .auth-gate {

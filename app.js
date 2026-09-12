@@ -69,7 +69,7 @@ document.getElementById("btn-see-backup").addEventListener("click", () => {
   const b = state.weekPlanBackup;
   if (!b) return;
   const dayList = b.weekPlan.map(entry => {
-    if (entry.freeDay) return `<li><b>${entry.day}:</b> Free day</li>`;
+    if (entry.freeDay) return `<li><b>${entry.day}:</b> ${freeLabel(entry)}</li>`;
     const r = entry.recipeId ? recipeById(entry.recipeId) : null;
     return `<li><b>${entry.day}:</b> ${r ? (entry.customName || r.name) : "—"}</li>`;
   }).join("");
@@ -138,7 +138,7 @@ function openPastWeeksModal() {
     const endDate = dateForDayIndex(w.weekStartDate, 6);
     const rangeLabel = `${formatShortDate(dateForDayIndex(w.weekStartDate, 0))} – ${formatShortDate(endDate)}`;
     const mealLines = w.weekPlan.map(entry => {
-      if (entry.freeDay) return `${entry.day}: Free day`;
+      if (entry.freeDay) return `${entry.day}: ${freeLabel(entry)}`;
       const r = entry.recipeId ? recipeById(entry.recipeId) : null;
       return `${entry.day}: ${r ? (entry.customName || r.name) : "—"}`;
     }).join("<br>");
@@ -164,6 +164,8 @@ function openPastWeeksModal() {
         recipeId: entry.recipeId,
         proteinOverride: entry.proteinOverride || null,
         freeDay: !!entry.freeDay,
+        leftovers: !!entry.leftovers,
+        leftoversFrom: entry.leftoversFrom || "",
         customName: entry.customName || null
       }));
       refreshGroceryList();
@@ -1097,6 +1099,96 @@ function pickReplacement(profile, feedback, weekPlan, dayIndex, neverSuggest = [
 // "Swap Meat" — keep the same kind of dish where possible, just change the
 // protein. Falls back to same-cuisine, then any eligible different-protein
 // recipe, so it (almost) always finds something instead of giving up.
+// ---------- Leftovers night ----------
+// Kimberly, 12 Sep 2026: "add leftovers night" (busy nights are covered by Free
+// day). A leftovers night is a Free day that says what's being eaten, stored as
+// freeDay:true + leftovers:true — so every existing Free-day path (no groceries
+// for that night, Past Weeks, Change Day, the idea picker) keeps working, and a
+// copy of the app that doesn't know about it simply shows a Free day.
+// leftoversFrom names the earlier day whose meal gets cooked double; the grocery
+// list buys twice that meal's ingredients so there really is enough.
+function isLeftovers(entry) { return !!(entry && entry.freeDay && entry.leftovers); }
+function freeLabel(entry) {
+  if (!isLeftovers(entry)) return "Free day";
+  return entry.leftoversFrom ? `Leftovers night (from ${entry.leftoversFrom})` : "Leftovers night";
+}
+function earlierCookedDays(plan, index) {
+  const out = [];
+  for (let j = 0; j < index; j++) {
+    const e = plan[j];
+    if (!e || e.freeDay || !e.recipeId) continue;
+    const r = getEffectiveRecipe(e);
+    if (r) out.push({ day: e.day, name: e.customName || r.name });
+  }
+  return out;
+}
+function makeLeftovers(plan, index) {
+  const prev = earlierCookedDays(plan, index);
+  // suggest the nearest earlier meal, so most weeks it's one tap and done
+  return { day: plan[index].day, recipeId: null, proteinOverride: null, freeDay: true,
+           leftovers: true, leftoversFrom: prev.length ? prev[prev.length - 1].day : "" };
+}
+function leftoversRelyingOn(plan, index) {
+  return plan.filter((e, j) => j > index && isLeftovers(e) && e.leftoversFrom === plan[index].day).map(e => e.day);
+}
+// Fill a Free-day card: plain Free days get a one-tap switch to leftovers; a
+// leftovers night shows which earlier meal it's eating, as tap-to-pick choices.
+// guard wraps each change (Week 1 goes through requireUnlockedWeek; Week 2 doesn't).
+function fillFreeCard(node, plan, index, guard, rerender) {
+  const entry = plan[index];
+  const box = node.querySelector(".free-day-body > div");
+  const change = fn => () => guard(() => { fn(); refreshGroceryList(); saveState(); rerender(); });
+  const sw = document.createElement("button");
+  sw.type = "button"; sw.className = "fd-switch";
+  if (!isLeftovers(entry)) {
+    sw.textContent = "Make it a leftovers night";
+    sw.addEventListener("click", change(() => { plan[index] = makeLeftovers(plan, index); }));
+    box.appendChild(sw);
+    return;
+  }
+  node.querySelector(".free-day-emoji").textContent = "🥡";
+  node.querySelector(".free-day-title").textContent = "Leftovers night";
+  const sub = node.querySelector(".free-day-subtitle");
+  const prev = earlierCookedDays(plan, index);
+  if (!prev.length) {
+    sub.textContent = "Whatever’s in the fridge — nothing new to cook tonight.";
+  } else {
+    sub.textContent = "Leftovers from:";
+    // only an earlier day counts (a night moved ahead of its meal falls back to the fridge)
+    const cur = prev.some(p => p.day === entry.leftoversFrom) ? entry.leftoversFrom : "";
+    const chips = document.createElement("div");
+    chips.className = "lo-chips";
+    [...prev.map(p => ({ day: p.day, label: `${p.day.slice(0, 3)} · ${p.name}` })),
+     { day: "", label: "Whatever’s in the fridge" }].forEach(o => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "lo-chip" + (cur === o.day ? " on" : "");
+      chip.textContent = o.label;
+      chip.addEventListener("click", change(() => { plan[index].leftoversFrom = o.day; }));
+      chips.appendChild(chip);
+    });
+    box.appendChild(chips);
+    if (cur) {
+      const n = document.createElement("div");
+      n.className = "lo-note";
+      n.textContent = `${entry.leftoversFrom}’s groceries are doubled so there’s enough.`;
+      box.appendChild(n);
+    }
+  }
+  sw.textContent = "Make it a plain free day";
+  sw.addEventListener("click", change(() => { plan[index] = { day: entry.day, recipeId: null, proteinOverride: null, freeDay: true }; }));
+  box.appendChild(sw);
+}
+function markCookingDouble(node, plan, index) {
+  const nights = leftoversRelyingOn(plan, index);
+  if (!nights.length) return;
+  const n = document.createElement("div");
+  n.className = "lo-note";
+  n.textContent = `🥡 Cooking double — leftovers ${nights.join(" & ")}`;
+  const info = node.querySelector(".meal-info");
+  if (info) info.appendChild(n);
+}
+
 function renderWeek(weekPlan) {
   const listEl = document.getElementById("week-list");
   listEl.innerHTML = "";
@@ -1114,6 +1206,7 @@ function renderWeek(weekPlan) {
         saveState();
         renderWeek(state.weekPlan);
       }));
+      fillFreeCard(node, state.weekPlan, index, requireUnlockedWeek, () => renderWeek(state.weekPlan));
       listEl.appendChild(node);
       return;
     }
@@ -1127,6 +1220,13 @@ function renderWeek(weekPlan) {
       saveState();
       renderWeek(state.weekPlan);
     }));
+    node.querySelector(".leftovers-toggle").addEventListener("click", () => requireUnlockedWeek(() => {
+      state.weekPlan[index] = makeLeftovers(state.weekPlan, index);
+      refreshGroceryList();
+      saveState();
+      renderWeek(state.weekPlan);
+    }));
+    markCookingDouble(node, state.weekPlan, index);
     node.querySelector(".pick-recipe-btn").addEventListener("click", () => requireUnlockedWeek(() => openRecipePicker(index)));
     node.querySelector(".side-editor-btn").addEventListener("click", () => requireUnlockedWeek(() => openSideEditor(index)));
     node.querySelector(".sauce-editor-btn").addEventListener("click", () => requireUnlockedWeek(() => openSauceEditor(index)));
@@ -1258,6 +1358,7 @@ function renderWeek2(weekPlan2) {
         saveState();
         renderWeek2(state.weekPlan2);
       });
+      fillFreeCard(node, state.weekPlan2, index, fn => fn(), () => renderWeek2(state.weekPlan2));
       listEl.appendChild(node);
       return;
     }
@@ -1271,6 +1372,13 @@ function renderWeek2(weekPlan2) {
       saveState();
       renderWeek2(state.weekPlan2);
     });
+    node.querySelector(".leftovers-toggle").addEventListener("click", () => {
+      state.weekPlan2[index] = makeLeftovers(state.weekPlan2, index);
+      refreshGroceryList();
+      saveState();
+      renderWeek2(state.weekPlan2);
+    });
+    markCookingDouble(node, state.weekPlan2, index);
     node.querySelector(".pick-recipe-btn").addEventListener("click", () => openRecipePicker2(index));
     const actionRows = node.querySelectorAll(".meal-actions");
     if (actionRows[1]) actionRows[1].remove(); // Change Day / Swap Meat / Remove It — Week-1-only
@@ -1850,7 +1958,7 @@ function showWelcomeSplash() {
   const today = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()];
   const entry = (state.weekPlan || []).find(e => e.day === today);
   if (entry && entry.freeDay) {
-    tonightEl.textContent = "Tonight: 🍽️ Free day";
+    tonightEl.textContent = isLeftovers(entry) ? "Tonight: 🥡 Leftovers night" : "Tonight: 🍽️ Free day";
     tonightEl.classList.remove("hidden");
   } else if (entry && entry.recipeId) {
     const r = getEffectiveRecipe(entry);
@@ -2031,7 +2139,7 @@ function openDayPicker(dayIndex) {
     .filter(({ i }) => i !== dayIndex)
     .map(({ entry, i }) => {
       const r = entry.recipeId ? getEffectiveRecipe(entry) : null;
-      const label = entry.freeDay ? "🍽️ Free day" : (r ? `${r.emoji} ${r.name}` : "No meal");
+      const label = entry.freeDay ? (isLeftovers(entry) ? "🥡 Leftovers night" : "🍽️ Free day") : (r ? `${r.emoji} ${r.name}` : "No meal");
       return `<button type="button" class="day-pick-option" data-day-index="${i}">
         <span class="day-pick-day">${entry.day}</span>
         <span class="day-pick-meal">${label}</span>
@@ -2063,15 +2171,20 @@ function openDayPicker(dayIndex) {
       // Swap the whole entry (recipe + any meat swap + free-day status +
       // rename) so a swapped meal takes its substitution and custom name
       // with it to the new day.
-      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay, customName: state.weekPlan[dayIndex].customName || null };
+      const temp = { recipeId: state.weekPlan[dayIndex].recipeId, proteinOverride: state.weekPlan[dayIndex].proteinOverride, freeDay: state.weekPlan[dayIndex].freeDay, customName: state.weekPlan[dayIndex].customName || null,
+                     leftovers: !!state.weekPlan[dayIndex].leftovers, leftoversFrom: state.weekPlan[dayIndex].leftoversFrom || "" };
       state.weekPlan[dayIndex].recipeId = state.weekPlan[targetIndex].recipeId;
       state.weekPlan[dayIndex].proteinOverride = state.weekPlan[targetIndex].proteinOverride;
       state.weekPlan[dayIndex].freeDay = state.weekPlan[targetIndex].freeDay;
       state.weekPlan[dayIndex].customName = state.weekPlan[targetIndex].customName || null;
+      state.weekPlan[dayIndex].leftovers = !!state.weekPlan[targetIndex].leftovers;
+      state.weekPlan[dayIndex].leftoversFrom = state.weekPlan[targetIndex].leftoversFrom || "";
       state.weekPlan[targetIndex].recipeId = temp.recipeId;
       state.weekPlan[targetIndex].proteinOverride = temp.proteinOverride;
       state.weekPlan[targetIndex].freeDay = temp.freeDay;
       state.weekPlan[targetIndex].customName = temp.customName;
+      state.weekPlan[targetIndex].leftovers = temp.leftovers;
+      state.weekPlan[targetIndex].leftoversFrom = temp.leftoversFrom;
       saveState();
       renderWeek(state.weekPlan);
       closeModal();
@@ -2319,7 +2432,7 @@ function openIdeaDayPicker(recipeId) {
   const recipe = recipeById(recipeId);
   if (!recipe) return;
   const slotLabel = (entry) => {
-    if (entry.freeDay) return "Free day";
+    if (entry.freeDay) return freeLabel(entry);
     const r = entry.recipeId ? getEffectiveRecipe(entry) : null;
     return r ? `${r.emoji} ${r.name}` : "Nothing yet";
   };
@@ -2567,13 +2680,25 @@ function formatQty(qty) {
 function buildGroceryList(weekPlan, keepAtHome, staples = []) {
   const combined = new Map(); // key: name|unit -> {name, qty, unit, category}
 
-  weekPlan.forEach(entry => {
+  // A leftovers night that names an earlier day means that day's meal gets
+  // cooked double — look back from each leftovers night to the nearest entry
+  // for that day (works when Week 1 and Week 2 are combined, too).
+  const extra = weekPlan.map(() => 0);
+  weekPlan.forEach((e, i) => {
+    if (!isLeftovers(e) || !e.leftoversFrom) return;
+    for (let j = i - 1; j >= 0; j--) {
+      const src = weekPlan[j];
+      if (src.day === e.leftoversFrom) { if (src.recipeId && !src.freeDay) extra[j]++; break; }
+    }
+  });
+
+  weekPlan.forEach((entry, i) => {
     const recipe = entry.recipeId ? getEffectiveRecipe(entry) : null;
     if (!recipe) return;
     recipe.ingredients.forEach(ing => {
       const haveAtHome = keepAtHome.some(k => ing.name.includes(k) || k.includes(ing.name));
       if (haveAtHome) return;
-      const scaledQty = scaleQty(ing.qty, ing.unit);
+      const scaledQty = scaleQty(ing.qty * (1 + extra[i]), ing.unit);
       const key = `${ing.name}|${ing.unit}`;
       if (combined.has(key)) {
         combined.get(key).qty += scaledQty;
