@@ -1257,6 +1257,17 @@ h1 {
 .account-strip.hidden { display: none; }
 .account-strip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
+.account-strip .strip-link {
+  flex-shrink: 0;
+  border: 1px solid rgba(245, 241, 236, 0.3);
+  border-radius: 8px;
+  color: rgba(245, 241, 236, 0.9);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  text-decoration: none;
+}
+
 .account-strip button {
   flex-shrink: 0;
   background: none;
