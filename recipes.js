@@ -4818,6 +4818,46 @@ const RECIPES = [
       "Microwave the rice until heated through; stir in butter and the white parts of the green onions.",
       "Top rice and salmon with the green onion tops. Whisk mayo with the sriracha and a drizzle of honey for a quick dipping sauce; serve alongside."
     ]
+  },
+  {
+    id: "kielbasa-sauerkraut-skillet", name: "Kielbasa & Sauerkraut Skillet", emoji: "🌭", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "onepot"], allergens: [],
+    timeMinutes: 25,
+    ingredients: [
+      { name: "kielbasa", qty: 1, unit: "lb", category: "Meat & Seafood" },
+      { name: "sauerkraut", qty: 2, unit: "cup", category: "Produce" },
+      { name: "onion", qty: 1, unit: "whole", category: "Produce" },
+      { name: "apple", qty: 1, unit: "whole", category: "Produce" },
+      { name: "brown sugar", qty: 1, unit: "tbsp", category: "Baking" },
+      { name: "caraway seeds", qty: 0.5, unit: "tsp", category: "Spices & Seasonings" }
+    ],
+    instructions: [
+      "Slice the kielbasa into 1/2-inch coins, thinly slice the onion, and dice the apple.",
+      "Brown the kielbasa in a skillet 4-5 minutes, then add the onion and cook 3-4 minutes until softened.",
+      "Stir in the drained sauerkraut, apple, brown sugar, and caraway seeds.",
+      "Cover and simmer 10-12 minutes, stirring occasionally, until heated through."
+    ]
+  },
+  {
+    id: "beer-brats-onions-peppers", name: "Beer Brats with Onions & Peppers", emoji: "🌭", cuisine: "american",
+    proteins: ["pork"], tags: ["quick", "onepot"], allergens: ["gluten"],
+    timeMinutes: 30,
+    ingredients: [
+      { name: "bratwurst", qty: 6, unit: "count", category: "Meat & Seafood" },
+      { name: "beer", qty: 12, unit: "oz", category: "Beverages" },
+      { name: "onion", qty: 2, unit: "whole", category: "Produce" },
+      { name: "bell pepper", qty: 2, unit: "whole", category: "Produce" },
+      { name: "brat buns", qty: 6, unit: "count", category: "Bread & Bakery" },
+      { name: "mustard", qty: 2, unit: "tbsp", category: "Sauces & Condiments" },
+      { name: "butter", qty: 1, unit: "tbsp", category: "Dairy & Eggs" }
+    ],
+    instructions: [
+      "Slice the onions and bell peppers.",
+      "Simmer the bratwurst in the beer in a large skillet or pot, 10 minutes, turning once.",
+      "Remove the brats and sear in the butter until browned, 3-4 minutes per side.",
+      "Saute the onions and peppers in the same pan until softened, 6-8 minutes.",
+      "Serve the brats in buns, topped with the onions, peppers, and mustard."
+    ]
   }
 ];
 
