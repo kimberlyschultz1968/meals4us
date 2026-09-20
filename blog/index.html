@@ -39,6 +39,18 @@
   h1{font-size:26px; line-height:1.2; color:var(--ink);}
   .lede{color:var(--ink-soft); margin:6px 0 20px;}
   footer{max-width:900px; margin:18px auto 40px; padding:0 16px; text-align:center; font-size:13px; color:var(--ink-soft); line-height:1.7;}
+  /* The free-plan box under the articles — the blog's own way onto the email
+     list, so a reader never has to go hunting for the guide page. */
+  .signup{margin-top:26px; border:1px solid var(--line); border-radius:12px; padding:18px; background:#FBF8F4;}
+  .signup b{font-size:1.15rem; color:var(--ink);}
+  .signup p{margin:6px 0 12px; color:var(--ink-soft); font-size:.95rem;}
+  .signup input[type=email]{width:100%; box-sizing:border-box; padding:11px 12px; font-size:1rem; border:1px solid var(--line); border-radius:8px;}
+  .signup .consent{display:flex; gap:9px; align-items:flex-start; margin:11px 0 12px; font-size:.88rem; color:var(--ink-soft);}
+  .signup .consent input{margin-top:3px;}
+  .signup button{background:var(--red); color:#fff; border:0; border-radius:999px; padding:12px 26px; font-size:1rem; font-weight:600; cursor:pointer;}
+  .signup button:disabled{opacity:.6; cursor:default;}
+  .bl-msg{min-height:20px; margin-top:9px; font-size:.9rem;}
+  .bl-msg.bad{color:#9b2c2c;} .bl-msg.good{color:#1f6b4a;}
   @media (max-width:560px){ .card{padding:18px 16px;} h1{font-size:22px;} .brand{font-size:20px;} .bar nav{margin-left:0;} }
 </style>
 </head>
@@ -60,6 +72,16 @@
     <!-- Soro blog embed — articles are published from the Soro dashboard -->
     <div id="soro-blog"></div>
     <script src="https://app.trysoro.com/api/embed/6cce0a15-445b-456e-8842-4ef5b4b8fd77" defer></script>
+    <div class="signup" id="blogSignup">
+      <b>Get the free 7-dinner plan</b>
+      <p>Seven easy family dinners with the grocery list, emailed to you — plus the odd
+      tip on planning the week. Unsubscribe from any of them.</p>
+      <input id="bl_e" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+      <label class="consent"><input id="bl_c" type="checkbox">
+        <span>Yes, email me the plan and occasional tips. I can unsubscribe any time.</span></label>
+      <button id="bl_b" type="button">Email me the plan</button>
+      <div class="bl-msg" id="bl_m" role="status"></div>
+    </div>
   </div>
 </main>
 
@@ -88,5 +110,35 @@
 })();
 </script>
 
+
+<script>
+// Blog readers who want the free guide. Same rules as the guide page: the
+// checkbox is the permission record, and the button refuses to send without
+// it. Nothing here touches the Soro embed above.
+(function () {
+  var API = 'https://the-binder-api.onrender.com';
+  var b = document.getElementById('bl_b'); if (!b) return;
+  var e = document.getElementById('bl_e'), c = document.getElementById('bl_c'), m = document.getElementById('bl_m');
+  function send() {
+    var addr = (e.value || '').trim();
+    m.className = 'bl-msg';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(addr)) { m.className = 'bl-msg bad'; m.textContent = 'Please enter a valid email address.'; return; }
+    if (!c.checked) { m.className = 'bl-msg bad'; m.textContent = 'Please tick the box so we know it is OK to email you.'; return; }
+    var src = 'blog';
+    try { src = localStorage.getItem('meals4us_src') || 'blog'; } catch (_) {}
+    b.disabled = true; m.textContent = 'Sending…';
+    fetch(API + '/meals4us/lead', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: addr, source: src, consent: true }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.error || 'Something went wrong — please try again.');
+        m.className = 'bl-msg good'; m.textContent = 'Thank you — the plan is on its way to your inbox.';
+        e.disabled = true; c.disabled = true;
+      }); })
+      .catch(function (err) { b.disabled = false; m.className = 'bl-msg bad'; m.textContent = err.message; });
+  }
+  b.addEventListener('click', send);
+  e.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') send(); });
+})();
+</script>
 </body>
 </html>
