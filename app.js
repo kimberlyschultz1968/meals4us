@@ -465,6 +465,7 @@ function defaultState() {
     season: detectSeason(), // nudges scoring toward heartier/lighter meals — auto-detected, overridable on Screen 1
     recentWeeksHistory: [], // completed weeks' recipe ids, trimmed to noRepeatWeeks - 1 entries
     heldBackRecipes: [],   // [{ recipeId, weeksRemaining }] — moved "Beyond" next week, held out of the pool that long
+    rotationUndo: null,    // snapshot taken right before a week change (Start Next Week / Saturday's Love It) so "Undo last week change" can put everything back exactly; see rotateToNextWeek
     staples: [             // recurring items added to every week's grocery list automatically
       { id: "coffee", name: "coffee", qty: "", unit: "", category: "Beverages" },
       { id: "creamer", name: "creamer", qty: "", unit: "", category: "Dairy & Eggs" },
@@ -516,6 +517,7 @@ function hydrateStateDefaults(s) {
   if (!s.season) s.season = detectSeason();
   if (!s.recentWeeksHistory) s.recentWeeksHistory = [];
   if (!s.heldBackRecipes) s.heldBackRecipes = [];
+  if (s.rotationUndo === undefined) s.rotationUndo = null;
   if (s.weekPlan2 === undefined) s.weekPlan2 = null;
   if (typeof s.includeWeek2Groceries !== "boolean") s.includeWeek2Groceries = false;
   if (typeof s.weekLocked !== "boolean") s.weekLocked = false;
@@ -1310,6 +1312,7 @@ function renderWeek(weekPlan) {
 
   updateLockStatusUI();
   updateWeekBackupBanner();
+  updateUndoWeekUI();
   renderNextWeekPreview();
 }
 
@@ -3296,6 +3299,25 @@ function saveGroceryItem() {
 // Saturday's meal Love It/OK (no confirm — finishing out the week is just
 // how the week ends, not a "start over" she needs to approve each time).
 function rotateToNextWeek(showNotice) {
+  // Snapshot everything this rotation is about to change, so "Undo last week
+  // change" can put it all back exactly (including the grocery list, which the
+  // rotation clears). Only the most recent change is kept.
+  const snap = o => (o === undefined || o === null) ? null : JSON.parse(JSON.stringify(o));
+  const rotatingFrom = state.weekStartDate;
+  if (state.weekPlan && rotatingFrom) {
+    state.rotationUndo = {
+      at: Date.now(),
+      fromWeekStartDate: rotatingFrom,
+      toWeekStartDate: addDaysToDateString(rotatingFrom, 7),
+      weekPlan: snap(state.weekPlan),
+      weekPlan2: snap(state.weekPlan2),
+      recentWeeksHistory: snap(state.recentWeeksHistory) || [],
+      heldBackRecipes: snap(state.heldBackRecipes) || [],
+      nextWeekQueue: snap(state.nextWeekQueue) || [],
+      groceryList: snap(state.groceryList),
+      includeWeek2Groceries: !!state.includeWeek2Groceries
+    };
+  }
   const presetByDay = {};
   // Whatever she already planned in Week 2 carries forward as the starting
   // point for the new week — those were deliberate choices, not just a
@@ -3326,8 +3348,62 @@ function rotateToNextWeek(showNotice) {
   renderWeek2(state.weekPlan2);
   document.getElementById("include-week2-groceries").checked = false;
   showScreen(3);
-  if (showNotice) alert("Saturday's done — this week's tucked away and next week is now up top, with a fresh Week 2 behind it.");
+  if (showNotice) alert("Saturday's done — this week's tucked away and next week is now up top, with a fresh Week 2 behind it. If that wasn't meant to happen, there's an Undo button under your week.");
 }
+
+// "Undo last week change" is only offered for a few days after a rotation —
+// long enough to catch an accidental tap, short enough that it can never
+// quietly throw away a whole week she has since lived and edited.
+const ROTATION_UNDO_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
+
+function rotationUndoAvailable() {
+  const u = state.rotationUndo;
+  return !!(u && u.weekPlan && state.weekStartDate === u.toWeekStartDate && (Date.now() - u.at) < ROTATION_UNDO_WINDOW_MS);
+}
+
+function weekRangeLabel(weekStartDate) {
+  return `${formatShortDate(dateForDayIndex(weekStartDate, 0))} – ${formatShortDate(dateForDayIndex(weekStartDate, 6))}`;
+}
+
+function updateUndoWeekUI() {
+  const btn = document.getElementById("btn-undo-week-change");
+  if (!btn) return;
+  const show = rotationUndoAvailable();
+  btn.classList.toggle("hidden", !show);
+  if (show) btn.textContent = `Undo week change — back to ${weekRangeLabel(state.rotationUndo.fromWeekStartDate)}`;
+}
+
+// Puts the app back exactly where it was before the last week change: the
+// old week returns (with its grocery list), and what's showing as this week
+// becomes Week 2 again — so any edits she made to it since are kept.
+function undoWeekChange() {
+  if (!rotationUndoAvailable()) { updateUndoWeekUI(); return; }
+  const u = state.rotationUndo;
+  const backTo = weekRangeLabel(u.fromWeekStartDate);
+  if (!confirm(`Go back to ${backTo}?\n\nThat week returns with its meals${u.groceryList ? " and grocery list" : ""} exactly as they were. What's showing as this week now moves back to Week 2, and the Week 2 suggestions made since will be replaced.`)) return;
+  const copy = o => (o === undefined || o === null) ? null : JSON.parse(JSON.stringify(o));
+  const undoneWeekStart = state.weekStartDate;
+  state.weekPlan2 = copy(state.weekPlan);
+  state.weekPlan = copy(u.weekPlan);
+  state.weekStartDate = u.fromWeekStartDate;
+  state.recentWeeksHistory = copy(u.recentWeeksHistory) || [];
+  state.heldBackRecipes = copy(u.heldBackRecipes) || [];
+  state.nextWeekQueue = copy(u.nextWeekQueue) || [];
+  state.groceryList = copy(u.groceryList);
+  state.includeWeek2Groceries = !!u.includeWeek2Groceries;
+  // If she'd Locked In the week we just stepped back out of, it isn't a lived
+  // week anymore — it shouldn't sit in Past Weeks.
+  state.lockedWeekHistory = state.lockedWeekHistory.filter(w => w.weekStartDate !== undoneWeekStart);
+  state.rotationUndo = null;
+  saveState();
+  renderWeek(state.weekPlan);
+  renderWeek2(state.weekPlan2);
+  document.getElementById("include-week2-groceries").checked = state.includeWeek2Groceries;
+  if (state.groceryList) renderGrocery(state.groceryList);
+  showScreen(3);
+  updateUndoWeekUI();
+}
+document.getElementById("btn-undo-week-change").addEventListener("click", undoWeekChange);
 
 // Shared by the button at the bottom of the grocery list and the quick-access
 // one in the header, so "start a new week" works the same no matter where

@@ -287,6 +287,24 @@ h1 {
   margin: 12px 0 6px;
 }
 
+/* Only shown for a few days after a week change — a quiet text link, not a
+   fifth action button. */
+.btn-undo-week {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  text-align: center;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .week-lock-status {
   background: var(--red-tint);
   border: 1px solid var(--red);
