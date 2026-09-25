@@ -221,7 +221,7 @@ function saveGroceryList() {
 }
 document.getElementById("btn-save-grocery").addEventListener("click", saveGroceryList);
 
-// ---------- Billing: 7-day free trial, then $2.99/mo ----------
+// ---------- Billing: 7-day free trial, then $3.99/mo ----------
 // The trial clock is the account's own creation date (from the server, not the
 // browser). Once it's over, her plan (kept current via /meals4us/me — checked at
 // sign-in and again right after returning from Stripe checkout) decides whether
