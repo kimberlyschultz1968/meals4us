@@ -43,6 +43,7 @@
       <a href="/blog/" class="strip-link" title="Dinner ideas and meal-planning tips">Blog</a>
       <button type="button" id="btn-welcome-tour" title="See everything Meals4Us can do">Tour</button>
       <button type="button" id="btn-sign-out">Sign out</button>
+      <button type="button" id="btn-delete-account" class="strip-delete">Delete account</button>
     </div>
     <ol class="progress" id="progress" aria-label="Steps">
       <li data-step="1" class="active">Family</li>
@@ -96,6 +97,20 @@
 
       <button type="button" class="btn btn-primary btn-full" id="btn-subscribe">Subscribe — $2.99/mo</button>
       <button type="button" class="auth-link" id="btn-paywall-sign-out">Sign out</button>
+      <button type="button" class="auth-link" id="btn-paywall-delete">Delete my account</button>
+    </div>
+  </div>
+
+  <!-- Delete-my-account: Google Play requires this inside any app that lets people sign up. -->
+  <div class="auth-gate hidden" id="delete-gate">
+    <div class="auth-card">
+      <img src="icon.svg" alt="" class="auth-icon" />
+      <h1>Delete my account</h1>
+      <p class="subtitle" style="text-align:left">This permanently deletes your account and the meal plans saved with it from our server. Your subscription, if you have one, is cancelled right away. Anything saved on this device stays here until you clear it.</p>
+      <input type="password" id="delete-password" class="auth-input" placeholder="Type your password to confirm" autocomplete="current-password" />
+      <p class="auth-error hidden" id="delete-error"></p>
+      <button type="button" class="btn btn-primary btn-full" id="btn-delete-confirm">Delete my account for good</button>
+      <button type="button" class="btn btn-secondary btn-full" id="btn-delete-cancel" style="margin-top:8px">Keep my account</button>
     </div>
   </div>
 

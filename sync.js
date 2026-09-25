@@ -343,6 +343,41 @@ function signOut() {
 }
 document.getElementById("btn-sign-out").addEventListener("click", signOut);
 
+// ---------- Delete my account (Google Play requires this inside the app) ----------
+// Password re-entry proves it is really them; the server cancels any subscription first.
+// Anything saved on this device is left alone - it is their own copy.
+function openDeleteGate() {
+  document.getElementById("delete-password").value = "";
+  document.getElementById("delete-error").classList.add("hidden");
+  document.getElementById("delete-gate").classList.remove("hidden");
+}
+function closeDeleteGate() { document.getElementById("delete-gate").classList.add("hidden"); }
+document.getElementById("btn-delete-account").addEventListener("click", openDeleteGate);
+document.getElementById("btn-paywall-delete").addEventListener("click", openDeleteGate);
+document.getElementById("btn-delete-cancel").addEventListener("click", closeDeleteGate);
+document.getElementById("btn-delete-confirm").addEventListener("click", async () => {
+  const pw = document.getElementById("delete-password").value;
+  const err = document.getElementById("delete-error");
+  const btn = document.getElementById("btn-delete-confirm");
+  err.classList.add("hidden");
+  if (!pw) { err.textContent = "Type your password first."; err.classList.remove("hidden"); return; }
+  btn.disabled = true;
+  try {
+    await api("/meals4us/account/delete", { method: "POST", body: JSON.stringify({ password: pw }) });
+    setSession(null);
+    document.getElementById("account-strip").classList.add("hidden");
+    initialCloudSyncDone = false;
+    hidePaywall();
+    closeDeleteGate();
+    showAuthGate();
+    showAuthMessage("Your account has been deleted. Anything saved on this device is still here.", true);
+  } catch (e) {
+    err.textContent = e.message || "Could not delete the account. Try again.";
+    err.classList.remove("hidden");
+  }
+  btn.disabled = false;
+});
+
 document.getElementById("btn-sign-in").addEventListener("click", async () => {
   const email = document.getElementById("auth-email").value.trim();
   const password = document.getElementById("auth-password").value;

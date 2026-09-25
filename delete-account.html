@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Delete your account — Meals4Us</title>
+<meta name="description" content="How to delete your Meals4Us account and the meal plans saved with it." />
+<link rel="canonical" href="https://meals4us.com/delete-account" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<style>
+  :root { --bg:#EFECE7; --card:#FFFFFF; --ink:#1B1512; --ink-soft:#6B645C; --line:#E2DCD3; --red:#8C1D24; --red-bright:#B0222E;
+          --header-gradient: linear-gradient(135deg, #A81D26 0%, #5C0F14 55%, #171111 100%); }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  header { background:var(--header-gradient); color:#fff; padding:22px 18px; text-align:center; font-weight:800; font-size:22px; letter-spacing:.2px; }
+  header span { color:#F2C433; }
+  main { max-width:640px; margin:22px auto 60px; background:var(--card); border-radius:14px; padding:26px 24px; box-shadow:0 1px 2px rgba(27,21,18,.06),0 6px 16px rgba(27,21,18,.06); }
+  h1 { font-size:24px; margin:0 0 6px; }
+  h2 { font-size:17px; margin:26px 0 6px; color:var(--red); }
+  p, li { color:var(--ink); } ul, ol { padding-left:22px; }
+  a { color:var(--red-bright); }
+  label { display:block; font-weight:600; margin-top:14px; }
+  input { width:100%; padding:13px 14px; font:inherit; font-size:16px; color:var(--ink); background:#fff; border:1px solid var(--line); border-radius:10px; margin-top:4px; }
+  input:focus { outline:none; border-color:var(--red); box-shadow:0 0 0 3px rgba(140,29,36,.12); }
+  button { margin-top:18px; padding:13px 24px; font:inherit; font-weight:700; border:0; border-radius:999px; color:#fff; cursor:pointer; background:linear-gradient(135deg,var(--red-bright),#3A0D10); }
+  button:disabled { opacity:.55; cursor:default; }
+  #msg { margin-top:12px; min-height:1.4em; font-weight:600; }
+  #msg.ok { color:#2E7D32; } #msg.bad { color:var(--red); }
+</style>
+</head>
+<body>
+<header>Meals<span>4</span>Us</header>
+<main>
+  <h1>Delete your account</h1>
+  <p>You can delete your Meals4Us account and the meal plans saved with it at any time. It takes about a minute.</p>
+
+  <h2>In the app</h2>
+  <ol>
+    <li>Open Meals4Us and look at the row at the top with your email address.</li>
+    <li>Tap <b>Delete account</b>.</li>
+    <li>Type your password and confirm.</li>
+  </ol>
+
+  <h2>Or here on the web</h2>
+  <p>Sign in with the email and password you use for Meals4Us, and your account will be deleted.</p>
+  <form id="f" autocomplete="on">
+    <label for="e">Email</label>
+    <input id="e" type="email" autocomplete="email" required />
+    <label for="p">Password</label>
+    <input id="p" type="password" autocomplete="current-password" required />
+    <button id="go" type="submit">Delete my account for good</button>
+  </form>
+  <div id="msg" role="status"></div>
+
+  <h2>What is deleted</h2>
+  <ul>
+    <li>Your account, your email address and your password.</li>
+    <li>Your family profile, meal plans, recipes, grocery lists and everything else saved on our server.</li>
+    <li>Your subscription, if you have one, is cancelled first, so you are not billed again.</li>
+    <li>If you asked us to email you the free 7-dinner plan, that address is removed too.</li>
+  </ul>
+
+  <h2>What is not affected</h2>
+  <ul>
+    <li>Anything saved on your own phone or computer stays there until you clear it.</li>
+    <li>Payment records held by Stripe are kept by Stripe, as the law requires.</li>
+  </ul>
+
+  <h2>Can't sign in?</h2>
+  <p>Email <a href="mailto:thebinderapps@gmail.com?subject=Delete%20my%20Meals4Us%20account">thebinderapps@gmail.com</a>
+  from the address you used and we will delete your account.</p>
+
+  <p style="margin-top:26px"><a href="https://thebinderapps.com/privacy.html">Privacy Policy</a> &middot; <a href="/">Back to Meals4Us</a></p>
+</main>
+<script>
+(function(){
+  var API = 'https://the-binder-api.onrender.com';
+  var f = document.getElementById('f'), msg = document.getElementById('msg'), go = document.getElementById('go');
+  function say(t, cls){ msg.textContent = t; msg.className = cls || ''; }
+  async function post(path, body, token){
+    var r = await fetch(API + path, { method: 'POST',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, token ? { Authorization: 'Bearer ' + token } : {}),
+      body: JSON.stringify(body) });
+    var d = await r.json().catch(function(){ return {}; });
+    if (!r.ok) throw new Error(d.error || 'Something went wrong. Please try again.');
+    return d;
+  }
+  f.addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var email = document.getElementById('e').value.trim(), pw = document.getElementById('p').value;
+    if (!email || !pw) { say('Type your email and password first.', 'bad'); return; }
+    go.disabled = true; say('Checking your details… this can take a few seconds the first time.');
+    try {
+      var s = await post('/meals4us/auth/login', { email: email, password: pw });
+      say('Deleting…');
+      await post('/meals4us/account/delete', { password: pw }, s.token);
+      try { localStorage.removeItem('meals4us.session'); } catch (e) {}
+      f.reset(); f.style.display = 'none';
+      say('Your account has been deleted. We sent a confirmation to your email.', 'ok');
+    } catch (err) {
+      say(err.message, 'bad'); go.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
