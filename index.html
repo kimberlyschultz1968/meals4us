@@ -58,11 +58,14 @@
   <div class="auth-gate hidden" id="auth-gate">
     <div class="auth-card">
       <img src="icon.svg" alt="" class="auth-icon" />
+
+      <div id="auth-main">
       <h1>Sign in to sync</h1>
       <p class="subtitle">One account, every device — your family's plan follows you from phone to computer automatically.</p>
 
       <input type="email" id="auth-email" class="auth-input" placeholder="Email address" autocomplete="email" />
       <input type="password" id="auth-password" class="auth-input" placeholder="Password" autocomplete="current-password" />
+      <button type="button" class="auth-link auth-forgot" id="btn-forgot">Forgot password?</button>
       <div style="position:absolute;left:-9999px" aria-hidden="true"><input id="auth-website" type="text" tabindex="-1" autocomplete="off"></div>
       <p class="auth-error hidden" id="auth-error"></p>
 
@@ -82,6 +85,23 @@
         </label>
         <p class="auth-error hidden" id="lead-error"></p>
         <button type="button" class="btn btn-secondary btn-full" id="btn-submit-lead">Keep Me Posted</button>
+      </div>
+      </div>
+
+      <!-- Forgot password: same window, swaps in for the sign-in form. -->
+      <div id="auth-forgot" class="hidden">
+        <h1>Reset your password</h1>
+        <div id="forgot-form">
+          <p class="subtitle">Type the email you signed up with and we will email you a link.</p>
+          <input type="email" id="forgot-email" class="auth-input" placeholder="Email address" autocomplete="email" />
+          <p class="auth-error hidden" id="forgot-error" role="alert"></p>
+          <button type="button" class="btn btn-primary btn-full" id="btn-forgot-send">Send reset link</button>
+        </div>
+        <div class="forgot-done hidden" id="forgot-done" role="status">
+          <p class="forgot-done-msg" id="forgot-done-msg"></p>
+          <p class="forgot-done-extra">It can take a few minutes; look in your spam folder too.</p>
+        </div>
+        <button type="button" class="auth-link" id="btn-forgot-back">Back to sign in</button>
       </div>
     </div>
   </div>

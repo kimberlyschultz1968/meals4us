@@ -402,6 +402,60 @@ document.getElementById("btn-sign-up").addEventListener("click", async () => {
   } catch (e) { showAuthMessage(e.message); }
 });
 
+// ---------- Forgot password (sign-in screen) ----------
+// The server answers the same friendly message whether or not the address has an account (so
+// this can never be used to find out who is signed up). The email holds a link to the
+// reset page on thebinderapps.com, which finishes the job on the web.
+(function () {
+  const el = id => document.getElementById(id);
+  const main = el("auth-main"), panel = el("auth-forgot");
+  if (!main || !panel) return;
+  const email = el("forgot-email"), err = el("forgot-error"), send = el("btn-forgot-send");
+  const form = el("forgot-form"), done = el("forgot-done");
+  const DEFAULT_MSG = "If that email has an account, we have sent a link to reset the password. The link works for one hour.";
+  const NETWORK_MSG = "Could not reach the server. Check your connection and try again.";
+
+  el("btn-forgot").addEventListener("click", () => {
+    email.value = el("auth-email").value.trim();
+    err.classList.add("hidden");
+    done.classList.add("hidden");
+    form.classList.remove("hidden");
+    clearAuthMessage();
+    main.classList.add("hidden");
+    panel.classList.remove("hidden");
+    if (!email.value) email.focus();
+  });
+
+  el("btn-forgot-back").addEventListener("click", () => {
+    if (email.value.trim()) el("auth-email").value = email.value.trim();
+    panel.classList.add("hidden");
+    main.classList.remove("hidden");
+  });
+
+  async function sendLink() {
+    if (send.disabled) return;
+    const address = email.value.trim();
+    err.classList.add("hidden");
+    if (!address) { err.textContent = "Enter your email first."; err.classList.remove("hidden"); email.focus(); return; }
+    send.disabled = true;
+    send.textContent = "Sending…";
+    try {
+      const r = await api("/meals4us/auth/forgot", { method: "POST", body: JSON.stringify({ email: address }) });
+      el("forgot-done-msg").textContent = (r && r.message) || DEFAULT_MSG;
+      form.classList.add("hidden");
+      done.classList.remove("hidden");
+    } catch (e) {
+      // fetch itself failing (offline, server down) shows up as a TypeError; anything else is the server's own message
+      err.textContent = (e instanceof TypeError) ? NETWORK_MSG : (e.message || "Something went wrong. Try again.");
+      err.classList.remove("hidden");
+    }
+    send.disabled = false;
+    send.textContent = "Send reset link";
+  }
+  send.addEventListener("click", sendLink);
+  email.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); sendLink(); } });
+})();
+
 // ---------- Lead capture: visitors who aren't ready to sign up yet ----------
 
 document.getElementById("btn-show-lead-form").addEventListener("click", () => {
