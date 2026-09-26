@@ -85,19 +85,28 @@ function stampState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
 }
 
+// Which edits has the account not seen yet? Every queued edit bumps editSeq; a save the
+// server accepted moves syncedSeq up to the editSeq it was carrying. Signing out uses the
+// difference to know whether a final save has to be confirmed before this device is cleared.
+let editSeq = 0, syncedSeq = 0;
+let clearingDevice = false; // true once sign-out has started wiping this device: nothing may write again
+
 function queueCloudSave() {
-  if (applyingRemoteState) return;
+  if (applyingRemoteState || clearingDevice) return;
   stampState();
   if (!isSignedIn()) return;
+  editSeq++;
   clearTimeout(cloudSaveTimer);
   cloudSaveTimer = setTimeout(pushCloudState, 800);
 }
 
 function pushCloudState() {
-  if (!isSignedIn()) return;
+  if (!isSignedIn() || clearingDevice) return;
   if (!initialCloudSyncDone) { cloudSaveTimer = setTimeout(pushCloudState, 400); return; }
   if (!state._syncStamp) stampState(); // pre-stamp-era data being seeded up for the first time
+  const seq = editSeq;
   api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
+    .then(() => { syncedSeq = Math.max(syncedSeq, seq); })
     .catch(err => console.error("Meals4Us: cloud save failed", err));
 }
 
@@ -105,6 +114,7 @@ async function connectCloud() {
   try {
     const { data } = await api("/meals4us/data");
     const cloudHas = data && Object.keys(data).length > 0;
+    if (!isSignedIn()) return; // signed out while this was in flight: do not bring the data back
     initialCloudSyncDone = true;
     const cloudStamp = (cloudHas && data._syncStamp) || 0;
     const localStamp = state._syncStamp || 0;
@@ -132,7 +142,10 @@ async function connectCloud() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
         boot();
       } finally { applyingRemoteState = false; }
+      syncedSeq = editSeq; // the account's copy won: nothing on this device is waiting to be saved any more
     } else {
+      // seeding a new account from this device, or a local copy that is ahead: it counts as "waiting" until the save lands
+      if ((!cloudHas && hasMeaningfulLocalData()) || localStamp > cloudStamp) editSeq++;
       pushCloudState(); // seed her account with what's on this device, or push a newer local edit up
     }
   } catch (err) {
@@ -165,10 +178,12 @@ function lockItIn() {
     if (state.lockPasswordHash) state.weekLocked = true;
     recordLockedWeekSnapshot(); // permanent record of this exact week, for Past Weeks
     stampState(); // a real, deliberate save — this one SHOULD win a sync conflict
+    const seq = ++editSeq;
     btn.disabled = true;
     btn.textContent = "Saving…";
     api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
       .then(() => {
+        syncedSeq = Math.max(syncedSeq, seq);
         btn.textContent = "✓ Locked in!";
         renderWeek(state.weekPlan);
       })
@@ -206,10 +221,11 @@ function saveGroceryList() {
   }
   clearTimeout(cloudSaveTimer);
   stampState();
+  const seq = ++editSeq;
   btn.disabled = true;
   btn.textContent = "Saving…";
   api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
-    .then(() => { btn.textContent = "✓ Saved!"; })
+    .then(() => { syncedSeq = Math.max(syncedSeq, seq); btn.textContent = "✓ Saved!"; })
     .catch(err => {
       console.error("Meals4Us: Save List failed", err);
       btn.textContent = "⚠️ Couldn't save — tap to retry";
@@ -255,7 +271,15 @@ async function checkBilling() {
   }
 
   let me;
-  try { me = await api("/meals4us/me"); } catch (e) { console.error("Meals4Us: billing check failed", e); return; }
+  try {
+    me = await api("/meals4us/me");
+    // remember the last answer for this account, so a sleeping server or a dropped connection never turns the app free
+    try { localStorage.setItem("meals4us.me", JSON.stringify({ email: session.email, plan: me.plan, created_at: me.created_at })); } catch (e) {}
+  } catch (e) {
+    console.error("Meals4Us: billing check failed", e);
+    try { const c = JSON.parse(localStorage.getItem("meals4us.me") || "null"); if (c && c.email === session.email) me = c; } catch (e2) {}
+    if (!me) return;   // never heard an answer for this account: nothing to judge by (the server also refuses saves after the trial)
+  }
   const paid = me.plan === "meals4us";
   manageBtn.classList.toggle("hidden", !paid);
 
@@ -333,13 +357,64 @@ function onSignedIn(session) {
   });
 }
 
-function signOut() {
-  if (!confirm("Sign out of this device?")) return;
-  setSession(null);
-  document.getElementById("account-strip").classList.add("hidden");
+// Signing out also clears this device. The account keeps the meal plans; before this, the login
+// was removed but the plans stayed in the browser — so the next person to sign up or sign in on
+// this phone/computer had them copied into THEIR account. Order: confirm -> make sure the account
+// has the latest copy (or warn) -> clear the login and the saved plans -> load a fresh signed-out
+// page. Kept on purpose: things that are not personal (tour seen, the ?src= tag).
+let signingOut = false;
+
+// Resolves true once the account holds this device's latest copy (or nothing was waiting);
+// false when that could not be confirmed in time, e.g. offline.
+async function flushToAccount() {
+  clearTimeout(cloudSaveTimer);
+  if (!isSignedIn() || editSeq <= syncedSeq) return true;
+  const deadline = Date.now() + 10000;
+  // never overwrite the account before this device has compared its copy with it
+  while (!initialCloudSyncDone && Date.now() < deadline) await new Promise(r => setTimeout(r, 200));
+  if (!initialCloudSyncDone) return false;
+  if (editSeq <= syncedSeq) return true; // the account's newer copy may have been adopted while we waited
+  if (!state._syncStamp) stampState();
+  const seq = editSeq;
+  try {
+    await Promise.race([
+      api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), Math.max(1500, deadline - Date.now())))
+    ]);
+    syncedSeq = Math.max(syncedSeq, seq);
+    return true;
+  } catch (e) { return false; }
+}
+
+function forgetThisDevice() {
+  clearingDevice = true;
+  clearTimeout(cloudSaveTimer); cloudSaveTimer = null;
   initialCloudSyncDone = false;
-  hidePaywall();
-  showAuthGate();
+  try { state = hydrateStateDefaults(defaultState()); } catch (e) {} // anything that saves from here on writes a blank plan, not the old one
+  setSession(null);
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+  try { localStorage.removeItem("meals4us.me"); } catch (e) {}
+  // text still sitting in the page's boxes (family notes, the email typed into sign-in) must not survive the reload either
+  try { document.querySelectorAll("input, textarea").forEach(el => { if (!/^(file|hidden|checkbox|radio)$/.test(el.type)) el.value = ""; }); } catch (e) {}
+}
+
+async function signOut() {
+  if (signingOut) return;
+  if (!confirm("Sign out? Your meal plans stay safe in your account - this just clears them off this device.")) return;
+  signingOut = true;
+  const btns = Array.from(document.querySelectorAll("#btn-sign-out, #btn-paywall-sign-out"));
+  const labels = btns.map(b => b.textContent);
+  btns.forEach(b => { b.disabled = true; b.textContent = "Saving…"; });
+  let saved = false;
+  try { saved = await flushToAccount(); } catch (e) {}
+  if (!saved && !confirm("Some recent changes could not be saved to your account yet (are you offline?). Signing out now would lose them. Sign out anyway?")) {
+    signingOut = false;
+    btns.forEach((b, i) => { b.disabled = false; b.textContent = labels[i]; });
+    if (isSignedIn() && editSeq > syncedSeq) cloudSaveTimer = setTimeout(pushCloudState, 800); // keep trying in the background
+    return;
+  }
+  forgetThisDevice();
+  location.replace(location.pathname); // a fresh, signed-out page (not a reload, so the browser won't refill old text)
 }
 document.getElementById("btn-sign-out").addEventListener("click", signOut);
 
