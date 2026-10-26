@@ -91,8 +91,21 @@ function stampState() {
 let editSeq = 0, syncedSeq = 0;
 let clearingDevice = false; // true once sign-out has started wiping this device: nothing may write again
 
+// What counts as a real edit. Tapping between tabs (currentScreen) or the
+// "your week updated" banner is not one — it used to stamp the copy as "newest",
+// so an out-of-date phone that was merely opened and tapped could overwrite the
+// account's newer weeks with its old ones.
+function contentSig() {
+  const { _syncStamp, currentScreen, weekPlanBackup, ...rest } = state;
+  return JSON.stringify(rest);
+}
+let lastSig = contentSig();
+
 function queueCloudSave() {
   if (applyingRemoteState || clearingDevice) return;
+  const sig = contentSig();
+  if (sig === lastSig) return; // only the screen changed — nothing to stamp or save
+  lastSig = sig;
   stampState();
   if (!isSignedIn()) return;
   editSeq++;
@@ -100,25 +113,51 @@ function queueCloudSave() {
   cloudSaveTimer = setTimeout(pushCloudState, 800);
 }
 
+// Every save is a fresh look at the account first (connectCloud), never a blind
+// overwrite — it pushes only if this device really is the newer one.
 function pushCloudState() {
   if (!isSignedIn() || clearingDevice) return;
-  if (!initialCloudSyncDone) { cloudSaveTimer = setTimeout(pushCloudState, 400); return; }
-  if (!state._syncStamp) stampState(); // pre-stamp-era data being seeded up for the first time
-  const seq = editSeq;
-  api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
-    .then(() => { syncedSeq = Math.max(syncedSeq, seq); })
-    .catch(err => console.error("Meals4Us: cloud save failed", err));
+  connectCloud();
 }
 
-async function connectCloud() {
+// Which copy is newer: this device's, or the account's? A later calendar week
+// always beats an earlier one (so a device that is behind can never put an old
+// week back), unless the earlier week came from a deliberate "Undo week change"
+// made after the later week's last edit. Same week: newest edit wins.
+function whichCopyWins(cloud) {
+  const lw = state.weekStartDate, cw = cloud.weekStartDate;
+  if (lw && cw && lw !== cw) {
+    const cloudLater = cw > lw;
+    const later = cloudLater ? cloud : state, earlier = cloudLater ? state : cloud;
+    const undone = (earlier.weekMovedBackStamp || 0) > (later._syncStamp || 0);
+    return (cloudLater !== undone) ? "cloud" : "local";
+  }
+  const cs = cloud._syncStamp || 0, ls = state._syncStamp || 0;
+  return cs > ls ? "cloud" : ls > cs ? "local" : "same";
+}
+
+// One sync at a time; a request that arrives mid-sync waits for its own turn
+// afterward so it always sees the latest edits.
+let syncRunning = null, syncNext = null, connectRetryMs = 0;
+function connectCloud() {
+  if (!syncRunning) {
+    syncRunning = doConnectCloud().finally(() => { syncRunning = null; });
+    return syncRunning;
+  }
+  if (!syncNext) syncNext = syncRunning.then(() => { syncNext = null; return connectCloud(); });
+  return syncNext;
+}
+window.addEventListener("online", () => { if (isSignedIn()) connectCloud(); });
+
+async function doConnectCloud() {
   try {
     const { data } = await api("/meals4us/data");
     const cloudHas = data && Object.keys(data).length > 0;
-    if (!isSignedIn()) return; // signed out while this was in flight: do not bring the data back
+    if (!isSignedIn() || clearingDevice) return "skipped"; // signed out while this was in flight: do not bring the data back
     initialCloudSyncDone = true;
-    const cloudStamp = (cloudHas && data._syncStamp) || 0;
-    const localStamp = state._syncStamp || 0;
-    if (cloudHas && (!hasMeaningfulLocalData() || cloudStamp > localStamp)) {
+    connectRetryMs = 0;
+    const winner = cloudHas ? whichCopyWins(data) : "local";
+    if (cloudHas && (!hasMeaningfulLocalData() || winner === "cloud")) {
       // The cloud copy is newer (another device edited more recently) — adopt
       // it. If it's about to replace a genuinely different week than the one
       // sitting here, snapshot the one being replaced first — so a sync
@@ -142,15 +181,27 @@ async function connectCloud() {
         try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
         boot();
       } finally { applyingRemoteState = false; }
+      lastSig = contentSig();
       syncedSeq = editSeq; // the account's copy won: nothing on this device is waiting to be saved any more
-    } else {
-      // seeding a new account from this device, or a local copy that is ahead: it counts as "waiting" until the save lands
-      if ((!cloudHas && hasMeaningfulLocalData()) || localStamp > cloudStamp) editSeq++;
-      pushCloudState(); // seed her account with what's on this device, or push a newer local edit up
+      return "adopted";
     }
+    if (winner === "local" && (cloudHas || hasMeaningfulLocalData())) {
+      // seeding a new account from this device, or this device really holds the newer copy
+      if (!state._syncStamp) stampState(); // pre-stamp-era data being seeded up for the first time
+      const seq = editSeq;
+      await api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) });
+      syncedSeq = Math.max(syncedSeq, seq);
+      return "pushed";
+    }
+    return "in-sync";
   } catch (err) {
-    console.error("Meals4Us: cloud connect failed", err);
-    initialCloudSyncDone = true; // don't block local saves forever if the initial pull failed
+    // The account could not be reached (a sleeping server, no signal). Local edits stay safe on
+    // this device, but NOTHING is written to the account until a pull has worked — a device that
+    // couldn't look first must never overwrite what's there. Try again shortly.
+    console.error("Meals4Us: cloud sync failed", err);
+    connectRetryMs = Math.min(60000, (connectRetryMs || 3000) * 2);
+    setTimeout(() => { if (isSignedIn() && !clearingDevice) connectCloud(); }, connectRetryMs);
+    return "failed";
   }
 }
 
@@ -178,18 +229,22 @@ function lockItIn() {
     if (state.lockPasswordHash) state.weekLocked = true;
     recordLockedWeekSnapshot(); // permanent record of this exact week, for Past Weeks
     stampState(); // a real, deliberate save — this one SHOULD win a sync conflict
-    const seq = ++editSeq;
+    lastSig = contentSig();
+    editSeq++;
     btn.disabled = true;
     btn.textContent = "Saving…";
-    api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
-      .then(() => {
-        syncedSeq = Math.max(syncedSeq, seq);
-        btn.textContent = "✓ Locked in!";
-        renderWeek(state.weekPlan);
-      })
-      .catch(err => {
-        console.error("Meals4Us: Lock It In failed", err);
-        btn.textContent = "⚠️ Couldn't save — tap to retry";
+    // Goes through the same look-first sync as every other save: it only writes if this
+    // device really holds the newest week, and it waits for the account to confirm.
+    connectCloud()
+      .then(res => {
+        if (res === "pushed" || res === "in-sync") {
+          btn.textContent = "✓ Locked in!";
+          renderWeek(state.weekPlan);
+        } else if (res === "adopted") {
+          btn.textContent = "↻ Loaded a newer week from your account";
+        } else {
+          btn.textContent = "⚠️ Couldn't save — tap to retry";
+        }
       })
       .finally(() => {
         btn.disabled = false;
@@ -221,14 +276,15 @@ function saveGroceryList() {
   }
   clearTimeout(cloudSaveTimer);
   stampState();
-  const seq = ++editSeq;
+  lastSig = contentSig();
+  editSeq++;
   btn.disabled = true;
   btn.textContent = "Saving…";
-  api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) })
-    .then(() => { syncedSeq = Math.max(syncedSeq, seq); btn.textContent = "✓ Saved!"; })
-    .catch(err => {
-      console.error("Meals4Us: Save List failed", err);
-      btn.textContent = "⚠️ Couldn't save — tap to retry";
+  connectCloud()
+    .then(res => {
+      if (res === "pushed" || res === "in-sync") btn.textContent = "✓ Saved!";
+      else if (res === "adopted") btn.textContent = "↻ Loaded a newer week from your account";
+      else btn.textContent = "⚠️ Couldn't save — tap to retry";
     })
     .finally(() => {
       btn.disabled = false;
@@ -369,21 +425,15 @@ let signingOut = false;
 async function flushToAccount() {
   clearTimeout(cloudSaveTimer);
   if (!isSignedIn() || editSeq <= syncedSeq) return true;
-  const deadline = Date.now() + 10000;
-  // never overwrite the account before this device has compared its copy with it
-  while (!initialCloudSyncDone && Date.now() < deadline) await new Promise(r => setTimeout(r, 200));
-  if (!initialCloudSyncDone) return false;
-  if (editSeq <= syncedSeq) return true; // the account's newer copy may have been adopted while we waited
-  if (!state._syncStamp) stampState();
-  const seq = editSeq;
+  // the normal look-first sync does the saving (and never overwrites a newer copy);
+  // give it up to 10 seconds, then report whether the account really has everything
   try {
     await Promise.race([
-      api("/meals4us/data", { method: "PUT", body: JSON.stringify({ data: state }) }),
-      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), Math.max(1500, deadline - Date.now())))
+      connectCloud(),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 10000))
     ]);
-    syncedSeq = Math.max(syncedSeq, seq);
-    return true;
   } catch (e) { return false; }
+  return editSeq <= syncedSeq;
 }
 
 function forgetThisDevice() {

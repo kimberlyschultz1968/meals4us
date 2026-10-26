@@ -3395,6 +3395,9 @@ function undoWeekChange() {
   // week anymore — it shouldn't sit in Past Weeks.
   state.lockedWeekHistory = state.lockedWeekHistory.filter(w => w.weekStartDate !== undoneWeekStart);
   state.rotationUndo = null;
+  // Tells every device this earlier week is on purpose, so another device still
+  // holding the later week doesn't "correct" it back when it syncs.
+  state.weekMovedBackStamp = Date.now();
   saveState();
   renderWeek(state.weekPlan);
   renderWeek2(state.weekPlan2);
