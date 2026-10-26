@@ -38,7 +38,7 @@ async function api(path, opts) {
   if (s && s.token) headers.Authorization = "Bearer " + s.token;
   const r = await fetch(MEALS4US_API + path, Object.assign({}, opts, { headers }));
   const d = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(d.error || "Something went wrong");
+  if (!r.ok) { const e = new Error(d.error || "Something went wrong"); e.status = r.status; throw e; }
   return d;
 }
 
@@ -138,7 +138,7 @@ function whichCopyWins(cloud) {
 
 // One sync at a time; a request that arrives mid-sync waits for its own turn
 // afterward so it always sees the latest edits.
-let syncRunning = null, syncNext = null, connectRetryMs = 0;
+let syncRunning = null, syncNext = null, connectRetryMs = 0, lastStaleRetry = 0;
 function connectCloud() {
   if (!syncRunning) {
     syncRunning = doConnectCloud().finally(() => { syncRunning = null; });
@@ -199,6 +199,13 @@ async function doConnectCloud() {
     // this device, but NOTHING is written to the account until a pull has worked — a device that
     // couldn't look first must never overwrite what's there. Try again shortly.
     console.error("Meals4Us: cloud sync failed", err);
+    if (err && err.status === 409 && Date.now() - lastStaleRetry > 5000) {
+      // The account itself refused: it holds a newer week than this device. Look again right
+      // away — the next pull will bring that newer week down instead of trying to save over it.
+      lastStaleRetry = Date.now();
+      setTimeout(() => { if (isSignedIn() && !clearingDevice) connectCloud(); }, 100);
+      return "failed";
+    }
     connectRetryMs = Math.min(60000, (connectRetryMs || 3000) * 2);
     setTimeout(() => { if (isSignedIn() && !clearingDevice) connectCloud(); }, connectRetryMs);
     return "failed";
@@ -267,11 +274,13 @@ document.getElementById("btn-lock-in").addEventListener("click", lockItIn);
 // setting a store is never just trusted to a silent background sync. Unlike
 // Lock It In this never locks anything or takes a snapshot — the list is
 // meant to keep changing all the way through the store, not get frozen.
-function saveGroceryList() {
-  const btn = document.getElementById("btn-save-grocery");
+// "Save Week" does the same for the week itself: saves what's on this device to her account
+// right now, waits for the account to confirm, and says so — so every other device shows it.
+function saveVisibly(btnId, idleLabel, okLabel) {
+  const btn = document.getElementById(btnId);
   if (!isSignedIn()) {
     btn.textContent = "⚠️ Not signed in";
-    setTimeout(() => { btn.textContent = "Save List"; }, 2500);
+    setTimeout(() => { btn.textContent = idleLabel; }, 2500);
     return;
   }
   clearTimeout(cloudSaveTimer);
@@ -282,16 +291,19 @@ function saveGroceryList() {
   btn.textContent = "Saving…";
   connectCloud()
     .then(res => {
-      if (res === "pushed" || res === "in-sync") btn.textContent = "✓ Saved!";
+      if (res === "pushed" || res === "in-sync") btn.textContent = okLabel;
       else if (res === "adopted") btn.textContent = "↻ Loaded a newer week from your account";
       else btn.textContent = "⚠️ Couldn't save — tap to retry";
     })
     .finally(() => {
       btn.disabled = false;
-      setTimeout(() => { btn.textContent = "Save List"; }, 3500);
+      setTimeout(() => { btn.textContent = idleLabel; }, 3500);
     });
 }
+function saveGroceryList() { saveVisibly("btn-save-grocery", "Save List", "✓ Saved!"); }
+function saveWeek() { saveVisibly("btn-save-week", "Save Week", "✓ Saved to your account"); }
 document.getElementById("btn-save-grocery").addEventListener("click", saveGroceryList);
+document.getElementById("btn-save-week").addEventListener("click", saveWeek);
 
 // ---------- Billing: 7-day free trial, then $3.99/mo ----------
 // The trial clock is the account's own creation date (from the server, not the
